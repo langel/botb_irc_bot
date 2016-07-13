@@ -1,0 +1,7 @@
+/*
+
+this is a placeholder
+
+this module will manage the commands available in other channels
+
+*/

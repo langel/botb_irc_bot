@@ -2,6 +2,7 @@ var irc = require('irc');
 var curl = require('curl');
 
 var private_chat = require('./commands/private.js');
+var main_chat = require('./commands/main.js');
 
 var config = {
 	channels: ['#botb_bot_test'],
@@ -24,7 +25,7 @@ bot.addListener('part', function(channel, who) {
 });
 
 
-bot.addListener("message", function(from, to, text, message) {
+bot.addListener("message", function(from, to, text, info) {
 
 	// break text into words
 	var words = text.split(' ').filter(e => e !== '')
@@ -37,6 +38,7 @@ bot.addListener("message", function(from, to, text, message) {
 	}
 	else if (config.channels.indexOf(to) != -1) {
 		console.log('PUBLIC_MESSAGE in ' + to);
+		main_chat.delegate(bot, info, words);
 	}
 	console.log(from + ' : ' +text);
 });
