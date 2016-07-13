@@ -23,11 +23,17 @@ bot.addListener('part', function(channel, who) {
 	console.log(who + ' has parted ' + channel);
 });
 
+
 bot.addListener("message", function(from, to, text, message) {
+
+	// break text into words
+	var words = text.split(' ').filter(e => e !== '')
+	console.log(words);
+
 	// check if it is a PM
 	if (to === config.bot_name) {
 		console.log('PRIVATE_MESSAGE');
-		private_chat.delegate(bot, from, text, message);
+		private_chat.delegate(bot, from, to, words);
 	}
 	else if (config.channels.indexOf(to) != -1) {
 		console.log('PUBLIC_MESSAGE in ' + to);
