@@ -29,16 +29,14 @@ bot.addListener("message", function(from, to, text, info) {
 
 	// break text into words
 	var words = text.split(' ').filter(e => e !== '')
-	console.log(words);
 
 	// check if it is a PM
 	if (to === config.bot_name) {
-		console.log('PRIVATE_MESSAGE');
+		console.log('PM <' + from + '> ' + text);
 		private_chat.delegate(bot, from, to, words);
 	}
 	else if (config.channels.indexOf(to) != -1) {
-		console.log('PUBLIC_MESSAGE in ' + to);
+		console.log(to + ' <' + from + '> ' + text);
 		main_chat.delegate(bot, info, words);
 	}
-	console.log(from + ' : ' +text);
 });
