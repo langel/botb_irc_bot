@@ -59,10 +59,14 @@ bot.addListener("message", function(from, to, text, info) {
 			return false;
 		}
 		// remove command prefix
-		words[0] = words[0].substr(1);
+		var command = words[0].substr(1);
+		// check if the command is an alias
+		if (typeof main_chat.aliases[command] !== 'undefined') {
+			command = main_chat.aliases[command];
+		}
 		// call main chat command
-		if (typeof main_chat[words[0]] === "function") {
-			main_chat[words[0]](bot, info, words);
+		if (typeof main_chat[command] === "function") {
+			return main_chat[command](bot, info, words);
 		}
 	}
 });

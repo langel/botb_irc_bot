@@ -5,6 +5,21 @@ var botb_api = require('./botb_api.js');
 module.exports = {
 
 
+	aliases: {
+		chord: 'ultrachord',
+		g: 'google',
+		gi: 'image',
+		h: 'help',
+		i: 'imdb',
+		images: 'image',
+		uc: 'ultrachord',
+		w: 'wikipedia',
+		wiki: 'wikipedia',
+		y: 'youtube',
+		yt: 'youtube',
+	},
+
+
 	battle: function(bot, info, words) {
 		var p = botb_api.request('battle/current');
 		p.then(function(data) {
@@ -157,14 +172,14 @@ module.exports = {
 		String.prototype.toHHMMSS = function () {
 			var sec_num = parseInt(this, 10); // don't forget the second param
 			var hours   = Math.floor(sec_num / 3600);
-		    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-		    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+			var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+			var seconds = sec_num - (hours * 3600) - (minutes * 60);
 
-		    // if (hours   < 10) {hours   = "0" + hours;}
-		    // if (minutes < 10) {minutes = "0" + minutes;}
-		    // if (seconds < 10) {seconds = "0" + seconds;}
-		    var time    = hours + ' hours, ' + minutes + ' minutes, and ' + seconds + " seconds.";
-		    return time;
+			// if (hours   < 10) {hours   = "0" + hours;}
+			// if (minutes < 10) {minutes = "0" + minutes;}
+			// if (seconds < 10) {seconds = "0" + seconds;}
+			var time    = hours + ' hours, ' + minutes + ' minutes, and ' + seconds + " seconds.";
+			return time;
 		}
 
 		var time = process.uptime();
@@ -175,23 +190,23 @@ module.exports = {
 
 	/// web commands
 
-	g: function(bot, info, words) {
+	google: function(bot, info, words) {
 		bot.say(info.args[0], "https://encrypted.google.com/search?q=" + words.slice(1).join('%20'));
 	},
 
-	gi: function(bot, info, words) {
+	image: function(bot, info, words) {
 		bot.say(info.args[0], "https://www.google.com/search?tbm=isch&q=" + words.slice(1).join('%20'));
 	},
 
-	w: function(bot, info, words) {
+	wikipedia: function(bot, info, words) {
 		bot.say(info.args[0], "https://en.wikipedia.org/w/index.php?search=" + words.slice(1).join('%20'));
 	},
 
-	i: function(bot, info, words) {
+	imdb: function(bot, info, words) {
 		bot.say(info.args[0], "http://www.imdb.com/find?s=all&q=" + words.slice(1).join('%20'));
 	},
 
-	y: function(bot, info, words) {
+	youtube: function(bot, info, words) {
 		bot.say(info.args[0], "https://www.youtube.com/results?search_query=" + words.slice(1).join('%20'))
 	},
 
