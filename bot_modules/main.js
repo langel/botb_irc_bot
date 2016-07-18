@@ -171,7 +171,24 @@ module.exports = {
 		var uptime = (time + "").toHHMMSS();
 
 		bot.say(info.args[0], "BotB has been running for " + uptime);
+	},
+
+	g: function(bot, info, words) {
+		bot.say(info.args[0], "https://encrypted.google.com/search?q=" + words.slice(1).join('%20'));
+	},
+
+	gi: function(bot, info, words) {
+		bot.say(info.args[0], "https://www.google.com/search?tbm=isch&q=" + words.slice(1).join('%20'));
+	},
+
+	w: function(bot, info, words) {
+		bot.say(info.args[0], "https://en.wikipedia.org/w/index.php?search=" + words.slice(1).join('%20'));
+	},
+
+	i: function(bot, info, words) {
+		bot.say(info.args[0], "http://www.imdb.com/find?s=all&q=" + words.slice(1).join('%20'));
+	},
+	y: function(bot, info, words) {
+		bot.say(info.args[0], "https://www.youtube.com/results?search_query=" + words.slice(1).join('%20'))
 	}
-
-
 };
