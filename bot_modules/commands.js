@@ -133,7 +133,7 @@ module.exports = {
 		} else if (words[1] === "levelup" || words[1] === "h") {
 			bot.say(info.args[0], "Usage: !levelup <botbr> | Returns BotBr's current level, current points, calculated points per year, estimated time to level up, estimated time to reach GRAND WIZARD STATUS of level 33, current boons, and calculated boons per year.");
 		} else if (words[1] === "ultrachord" || words[1] === "uc" || words[1] === "chord") {
-			bot.say(info.args[0], "Usage: !ultrachord <notes> [timbre] | Aliases: !uc, !chord | Returns a URL to a .wav file of the notes and timbre provided, in a format such as 'C4 E4 G4 sawtooth'. Available notes range from C0 to C7. If number is omitted it will pick octave 2. Default timbre is sin. Available timbres are sin, sawtooth, square, triangle, and pluck.");
+			bot.say(info.args[0], "Usage: !ultrachord <notes> [timbre] | Aliases: !uc, !chord | Returns a URL to a .wav file of the notes and timbre provided, in a format such as 'C4 E4 G4 sawtooth'. Available notes range from C0 to B7. If number is omitted it will pick octave 2. Default timbre is sin. Available timbres are sin, sawtooth, square, triangle, and pluck.");
 		} else if (words[1] === "google" || words[1] === "g") {
 			bot.say(info.args[0], "Usage: !google <query> | Aliases: !g | Returns a URL of the Google search of your query.");
 		} else if (words[1] === "imdb" || words[1] === "i") {
@@ -264,10 +264,16 @@ module.exports = {
 		var note_names = [
 			'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b',
 		];
-		// var note_alias = {};  // for flats!
+		// var note_alias = {'c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'a', 'bb', 'b'};  // for flats!
 		var note_hertz = {
+			0: ['16.4', '17.3', '18.4', '19.4', '20.6', '21.8', '23.1', '24.5', '26.0', '27.5', '29.1', '30.9'],
+			1: ['32.7', '34.6', '36.7', '38.9', '41.2', '43.7', '46.2', '49.0', '51.9', '55.0', '58.3', '61.7'],
+			2: ['65.4', '69.3', '73.4', '77.8', '82.4', '87.3', '92.5', '98.0', '103.8', '110.0', '116.5', '123.5'],
 			3: ['130.8', '138.6', '146.8', '155.6', '164.8', '174.6', '185.0', '196.0', '207.7', '220.0', '233.1', '246.9'],
-			4: ['261.6', '277.2', '293.7', '311.1', '329.6', '349.2', '370.0', '392.0', '415.3', '440.0', '466.2', '493.9']
+			4: ['261.6', '277.2', '293.7', '311.1', '329.6', '349.2', '370.0', '392.0', '415.3', '440.0', '466.2', '493.9'],
+			5: ['523.3', '554.4', '587.3', '622.3', '659.3', '698.5', '740.0', '784.0', '830.6', '880.0', '932.3', '987.8'],
+			6: ['1046.5', '1108.7', '1174.7', '1244.5', '1318.5', '1396.9', '1480.0', '1568.0', '1661.2', '1760.0', '1864.7', '1975.5'],
+			7: ['2093.0', '2217.5', '2349.3', '2489.0', '2637.0', '2793.8', '2960.0', '3136.0', '3322.4', '3520.0', '3729.3', '3951.1']
 		};
 		var timbres = ['pluck', 'square', 'triangle', 'sawtooth', 'sin'];
 		var timbre = timbres[0]
@@ -283,6 +289,7 @@ module.exports = {
 			if (note_names.indexOf(possible_note) !== -1) {
 				note_val = note_names.indexOf(possible_note);
 			}
+			console.log(note_val);
 			var possible_octave = parseInt(word.substr(-1), 10);
 			if (Array.isArray(note_hertz[possible_octave])) {
 				notes.push(note_hertz[possible_octave][note_val]);
