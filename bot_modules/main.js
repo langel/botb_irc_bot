@@ -21,7 +21,8 @@ module.exports = {
 		ohc: 'battle',
 		ohb: 'battle',
 		compo: 'battle',
-		up: 'uptime'
+		up: 'uptime',
+		pic: 'pix'
 	},
 
 
