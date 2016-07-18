@@ -133,7 +133,7 @@ module.exports = {
 		} else if (words[1] === "levelup" || words[1] === "h") {
 			bot.say(info.args[0], "Usage: !levelup <botbr> | Returns BotBr's current level, current points, calculated points per year, estimated time to level up, estimated time to reach GRAND WIZARD STATUS of level 33, current boons, and calculated boons per year.");
 		} else if (words[1] === "ultrachord" || words[1] === "uc" || words[1] === "chord") {
-			bot.say(info.args[0], "Usage: !ultrachord <notes> [timbre] | Aliases: !uc, !chord | Returns a URL to a .wav file of the notes and timbre provided, in a format such as 'C4 E4 G4 sawtooth'. Available notes range from C0 to B7. If number is omitted it will pick octave 2. Default timbre is sin. Available timbres are sin, sawtooth, square, triangle, and pluck.");
+			bot.say(info.args[0], "Usage: !ultrachord <notes> [timbre] | Aliases: !uc, !chord | Returns a URL to a .wav file of the notes and timbre provided, in a format such as 'C4 E4 G4 sawtooth'. Available notes range from C0 to B7. If number is omitted it will pick octave 2. Default timbre is sine. Available timbres are sine, sawtooth, square, triangle, and pluck.");
 		} else if (words[1] === "google" || words[1] === "g") {
 			bot.say(info.args[0], "Usage: !google <query> | Aliases: !g | Returns a URL of the Google search of your query.");
 		} else if (words[1] === "imdb" || words[1] === "i") {
@@ -273,7 +273,7 @@ module.exports = {
 			6: ['2093.0', '2217.5', '2349.3', '2489.0', '2637.0', '2793.8', '2960.0', '3136.0', '3322.4', '3520.0', '3729.3', '3951.1'],
 			7: ['4186.0', '4434.5', '4698.6', '4978.0', '5274.0', '5587.7', '5919.9', '6271.9', '6644.9', '7040.0', '7458.6', '7902.1']
 		};
-		var timbres = ['pluck', 'square', 'triangle', 'sawtooth', 'sin'];
+		var timbres = ['pluck', 'square', 'triangle', 'sawtooth', 'sine'];
 		var timbre = timbres[4]
 
 		var notes = [];
