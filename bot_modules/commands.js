@@ -310,7 +310,6 @@ module.exports = {
 		console.log(link);
 		
 		del = execSync('rm ' + id + '.wav');
-		bot.say(info.channel, "toen work!")
 	},
 
 
