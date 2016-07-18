@@ -4,5 +4,5 @@ All that instant relay chat magic.
 # getting started
 Runs on node, for dev you'll need to change the bot's IRC nick.
 
-requires a few modules
+To install the prerequisites:
 ``npm install irc curl``
