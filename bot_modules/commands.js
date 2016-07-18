@@ -218,162 +218,64 @@ module.exports = {
 		bot.say(info.channel, "https://www.youtube.com/results?search_query=" + words.slice(1).join('%20'))
 	},
 
+
 	ultrachord: function(bot, info, words) { // TODO
 		const execSync = require('child_process').execSync;
-		var timbre = "sin"
-		var note = []
 
 		function makeid() {
-    		var text = "";
-    		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-   			for(var i = 0; i < 16; i++)
-    		    text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    		return text;
+			var text = "";
+			var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			for(var i = 0; i < 16; i++) {
+				text += possible.charAt(Math.floor(Math.random() * possible.length));
+			}
+			return text;
 		}
 
-		var i = 0;
-		var id = makeid();
+		var note_names = [
+			'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b',
+		];
+		// var note_alias = {};  // for flats!
+		var note_hertz = {
+			3: ['130.8', '138.6', '146.8', '155.6', '164.8', '174.6', '185.0', '196.0', '207.7', '220.0', '233.1', '246.9'],
+			4: ['261.6', '277.2', '293.7', '311.1', '329.6', '349.2', '370.0', '392.0', '415.3', '440.0', '466.2', '493.9']
+		};
+		var timbres = ['pluck', 'square', 'triangle', 'sawtooth', 'sin'];
+		var timbre = timbres[0]
 
-		words.forEach(function() {
-			switch(words[i]) {
-				case "C3":
-					note[i-1] = "130.8";
-					break;
-				case "C#3":
-					note[i-1] = "138.6";
-					break;
-				case "Db3":
-					note[i-1] = "138.6";
-					break;
-				case "D3":
-					note[i-1] = "146.8";
-					break;
-				case "D#3":
-					note[i-1] = "155.6";
-					break;
-				case "Eb3":
-					note[i-1] = "155.6";
-					break;
-				case "E3":
-					note[i-1] = "164.8";
-					break;
-				case "F3":
-					note[i-1] = "174.6";
-					break;
-				case "F#3":
-					note[i-1] = "185.0";
-					break;
-				case "Gb3":
-					note[i-1] = "185.0";
-					break;
-				case "G3":
-					note[i-1] = "196.0";
-					break;
-				case "G#3":
-					note[i-1] = "207.7";
-					break;
-				case "Ab3":
-					note[i-1] = "207.7";
-					break;
-				case "A3":
-					note[i-1] = "220.0";
-					break;
-				case "A#3":
-					note[i-1] = "233.1";
-					break;
-				case "Bb3":
-					note[i-1] = "233.1";
-					break;
-				case "B3":
-					note[i-1] = "246.9";
-					break;
-				case "C4":
-					note[i-1] = "261.6";
-					break;
-				case "C#4":
-					note[i-1] = "277.2";
-					break;
-				case "Db4":
-					note[i-1] = "277.2";
-					break;
-				case "D4":
-					note[i-1] = "293.7";
-					break;
-				case "D#4":
-					note[i-1] = "311.1";
-					break;
-				case "Eb4":
-					note[i-1] = "311.1";
-					break;
-				case "E4":
-					note[i-1] = "329.6";
-					break;
-				case "F4":
-					note[i-1] = "349.2";
-					break;
-				case "F#4":
-					note[i-1] = "370.0";
-					break;
-				case "Gb4":
-					note[i-1] = "370.0";
-					break;
-				case "G4":
-					note[i-1] = "392.0";
-					break;
-				case "G#4":
-					note[i-1] = "415.3";
-					break;
-				case "Ab4":
-					note[i-1] = "415.3";
-					break;
-				case "A4":
-					note[i-1] = "440";
-					break;
-				case "A#4":
-					note[i-1] = "466.2";
-					break;
-				case "Bb4":
-					note[i-1] = "466.2";
-					break;
-				case "B4": // B4 what?
-					note[i-1] = "493.9";
-					break;
-				case "pluck":
-					timbre = "pluck";
-					break;
-				case "square":
-					timbre = "square";
-					break;
-				case "triangle":
-					timbre = "triangle";
-					break;
-				case "sawtooth":
-					timbre = "sawtooth";
-					break;
-				case "sin":
-					timbre = "sin";
-					break;
+		var notes = [];
+		words.forEach(function(word, i) {
+			var param = word.toLowerCase();
+			if (timbres.indexOf(param) !== -1) {
+				timbre = param;
+			}
+			var possible_note = word.substr(0, word.length-1);
+			var note_val;
+			if (note_names.indexOf(possible_note) !== -1) {
+				note_val = note_names.indexOf(possible_note);
+			}
+			var possible_octave = parseInt(word.substr(-1), 10);
+			if (Array.isArray(note_hertz[possible_octave])) {
+				notes.push(note_hertz[possible_octave][note_val]);
 			};
-			i++;
 		});
 
 		// you probably shouldn't look at this code
-		console.log(note);
+		console.log(notes);
 		console.log(words);
 
-		code = execSync('sox -n ' + id + '.wav synth 5 ' + timbre + " " + note.join(" " + timbre + " "));
+		var id = makeid();
+		code = execSync('sox -n ' + id + '.wav synth 5 ' + timbre + " " + notes.join(" " + timbre + " "));
 		upload = execSync('curl -i -F file=@' + id + '.wav https://uguu.se/api.php?d=upload-tool')
 
 		var link = upload.toString().split(/\r?\n/);
-		bot.say(info.args[0], link[link.length - 1]);
+		bot.say(info.channel, link[link.length - 1]);
 
 		console.log(link);
 		
 		del = execSync('rm ' + id + '.wav');
-		bot.say(info.args[0], "toen work!")
+		bot.say(info.channel, "toen work!")
 	},
+
 
 	levelup: function(bot, info, words) { // TODO
 
