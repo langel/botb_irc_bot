@@ -110,10 +110,53 @@ module.exports = {
 		});
 	},
 
+
+	top: function(bot, info, words) {
+		var filter = words.slice(1).join(' ');
+		var p;
+		if (typeof filter === 'undefined' || filter.length < 2) {
+			p = botb_api.request('botbr/list/0/5?sort=points&desc=true');
+		}
+		else {
+			p = botb_api.request('botbr/list/0/5?filters=class~' + filter + '&sort=points&desc=true');
+		}
+		var none_found = function() {
+			bot.say(info.args[0], "Couldn't find anything! Did you spell the class right?");
+		}
+		p.then(function(data) {
+			if (data.length == 0) {
+				none_found();
+				return;
+			}
+			var response = '';
+			var botbrs = [];
+			data.forEach(function(botbr_object) {
+				if (response !== '') {
+					response += ', ';
+				}
+				response += botbr_object.name;
+				response += ' :: ';
+				response += 'Lvl ' + botbr_object.level;
+				if (typeof filter === 'undefined' || filter.length < 2) {
+					response += ' ' + botbr_object.class;
+				}
+			});
+			if (response === '') {
+				none_found();
+			}
+			else {
+				bot.say(info.args[0], response);
+			}
+		}).catch(function(error) {
+			none_found();
+		});
+	},
+
+
 	uptime: function(bot, info, words) {
 		String.prototype.toHHMMSS = function () {
-    		var sec_num = parseInt(this, 10); // don't forget the second param
-		    var hours   = Math.floor(sec_num / 3600);
+			var sec_num = parseInt(this, 10); // don't forget the second param
+			var hours   = Math.floor(sec_num / 3600);
 		    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
 		    var seconds = sec_num - (hours * 3600) - (minutes * 60);
 
@@ -128,7 +171,7 @@ module.exports = {
 		var uptime = (time + "").toHHMMSS();
 
 		bot.say(info.args[0], "BotB has been running for " + uptime);
-
 	}
+
 
 };
