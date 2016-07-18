@@ -17,6 +17,11 @@ module.exports = {
 		wiki: 'wikipedia',
 		y: 'youtube',
 		yt: 'youtube',
+		b: 'battle',
+		ohc: 'battle',
+		ohb: 'battle',
+		compo: 'battle',
+		up: 'uptime'
 	},
 
 
@@ -85,12 +90,6 @@ module.exports = {
 			none_found();
 		});
 	},
-
-
-	compo: function(bot, info, words) {
-		this.battle(bot, info, words);
-	},
-
 
 	entry: function(bot, info, words) {
 		var title = words.slice(1).join(' ');
