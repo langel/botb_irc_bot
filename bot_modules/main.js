@@ -1,9 +1,6 @@
 var botb_api = require('./botb_api.js');
 
-
-
 module.exports = {
-
 
 	aliases: {
 		chord: 'ultrachord',
@@ -211,7 +208,160 @@ module.exports = {
 	},
 
 	ultrachord: function(bot, info, words) { // TODO
+		const execSync = require('child_process').execSync;
+		var timbre = "sin"
+		var note = []
 
+		function makeid() {
+    		var text = "";
+    		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+   			for(var i = 0; i < 16; i++)
+    		    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    		return text;
+		}
+
+		var i = 0;
+		var id = makeid();
+
+		words.forEach(function() {
+			switch(words[i]) {
+				case "C3":
+					note[i-1] = "130.8";
+					break;
+				case "C#3":
+					note[i-1] = "138.6";
+					break;
+				case "Db3":
+					note[i-1] = "138.6";
+					break;
+				case "D3":
+					note[i-1] = "146.8";
+					break;
+				case "D#3":
+					note[i-1] = "155.6";
+					break;
+				case "Eb3":
+					note[i-1] = "155.6";
+					break;
+				case "E3":
+					note[i-1] = "164.8";
+					break;
+				case "F3":
+					note[i-1] = "174.6";
+					break;
+				case "F#3":
+					note[i-1] = "185.0";
+					break;
+				case "Gb3":
+					note[i-1] = "185.0";
+					break;
+				case "G3":
+					note[i-1] = "196.0";
+					break;
+				case "G#3":
+					note[i-1] = "207.7";
+					break;
+				case "Ab3":
+					note[i-1] = "207.7";
+					break;
+				case "A3":
+					note[i-1] = "220.0";
+					break;
+				case "A#3":
+					note[i-1] = "233.1";
+					break;
+				case "Bb3":
+					note[i-1] = "233.1";
+					break;
+				case "B3":
+					note[i-1] = "246.9";
+					break;
+				case "C4":
+					note[i-1] = "261.6";
+					break;
+				case "C#4":
+					note[i-1] = "277.2";
+					break;
+				case "Db4":
+					note[i-1] = "277.2";
+					break;
+				case "D4":
+					note[i-1] = "293.7";
+					break;
+				case "D#4":
+					note[i-1] = "311.1";
+					break;
+				case "Eb4":
+					note[i-1] = "311.1";
+					break;
+				case "E4":
+					note[i-1] = "329.6";
+					break;
+				case "F4":
+					note[i-1] = "349.2";
+					break;
+				case "F#4":
+					note[i-1] = "370.0";
+					break;
+				case "Gb4":
+					note[i-1] = "370.0";
+					break;
+				case "G4":
+					note[i-1] = "392.0";
+					break;
+				case "G#4":
+					note[i-1] = "415.3";
+					break;
+				case "Ab4":
+					note[i-1] = "415.3";
+					break;
+				case "A4":
+					note[i-1] = "440";
+					break;
+				case "A#4":
+					note[i-1] = "466.2";
+					break;
+				case "Bb4":
+					note[i-1] = "466.2";
+					break;
+				case "B4": // B4 what?
+					note[i-1] = "493.9";
+					break;
+				case "pluck":
+					timbre = "pluck";
+					break;
+				case "square":
+					timbre = "square";
+					break;
+				case "triangle":
+					timbre = "triangle";
+					break;
+				case "sawtooth":
+					timbre = "sawtooth";
+					break;
+				case "sin":
+					timbre = "sin";
+					break;
+			};
+			i++;
+		});
+
+		// you probably shouldn't look at this code
+		console.log(note);
+		console.log(words);
+
+		code = execSync('sox -n ' + id + '.wav synth 5 ' + timbre + " " + note.join(" " + timbre + " "));
+		upload = execSync('curl -i -F file=@' + id + '.wav https://uguu.se/api.php?d=upload-tool')
+
+		var link = upload.toString().split(/\r?\n/);
+		bot.say(info.args[0], link[link.length - 1]);
+
+		console.log(link);
+		
+		del = execSync('rm ' + id + '.wav');
+		bot.say(info.args[0], "toen work!")
 	},
 
 	help: function(bot, info, words) { // TODO
