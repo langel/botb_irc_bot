@@ -261,10 +261,8 @@ module.exports = {
 			return text;
 		}
 
-		var note_names = [
-			'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b',
-		];
-		// var note_alias = {'c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'a', 'bb', 'b'};  // for flats!
+		var note_names = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'];
+		// var note_alias = ['c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'a', 'bb', 'b'];  // for flats!
 		var note_hertz = {
 			0: ['16.4', '17.3', '18.4', '19.4', '20.6', '21.8', '23.1', '24.5', '26.0', '27.5', '29.1', '30.9'],
 			1: ['32.7', '34.6', '36.7', '38.9', '41.2', '43.7', '46.2', '49.0', '51.9', '55.0', '58.3', '61.7'],
@@ -279,7 +277,7 @@ module.exports = {
 		var timbre = timbres[0]
 
 		var notes = [];
-		words.forEach(function(word, i) {
+		words.slice(1).forEach(function(word, i) {
 			var param = word.toLowerCase();
 			if (timbres.indexOf(param) !== -1) {
 				timbre = param;
@@ -287,18 +285,20 @@ module.exports = {
 			var possible_note = word.substr(0, word.length-1);
 			var note_val;
 			if (note_names.indexOf(possible_note) !== -1) {
-				note_val = note_names.indexOf(possible_note);
+				note_val = note_names.indexOf(possible_note.toLowerCase());
 			}
-			console.log(note_val);
 			var possible_octave = parseInt(word.substr(-1), 10);
-			if (Array.isArray(note_hertz[possible_octave])) {
+
+			console.log(note_val);
+			console.log(note_hertz[possible_octave])
+			if (note_hertz[possible_octave] !== null) {
 				notes.push(note_hertz[possible_octave][note_val]);
 			};
 		});
 
 		// you probably shouldn't look at this code
 		console.log(notes);
-		console.log(words);
+		// console.log(words);
 
 		var id = makeid();
 		code = execSync('sox -n ' + id + '.wav synth 5 ' + timbre + " " + notes.join(" " + timbre + " "));
@@ -307,7 +307,7 @@ module.exports = {
 		var link = upload.toString().split(/\r?\n/);
 		bot.say(info.channel, link[link.length - 1]);
 
-		console.log(link);
+		// console.log(link);
 		
 		del = execSync('rm ' + id + '.wav');
 	},
