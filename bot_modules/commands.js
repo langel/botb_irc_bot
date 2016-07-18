@@ -286,15 +286,15 @@ module.exports = {
 			var possible_note = word.substr(0, word.length-1);
 			var note_val;
 
-			if (note_names.indexOf(possible_note.toLowerCase()) !== -1) {
+			if (note_names.indexOf(possible_note.toLowerCase()) !== null) {
 				note_val = note_names.indexOf(possible_note.toLowerCase());
 			}
 
 			var possible_octave = parseInt(word.substr(-1), 10);
 
-			console.log(note_val);
-			console.log(possible_note.toLowerCase())
-			console.log(timbre)
+			// console.log(note_val);
+			// console.log(possible_note.toLowerCase())
+			// console.log(timbre)
 
 
 			if (note_hertz[possible_octave] !== null) {
