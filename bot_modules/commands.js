@@ -36,10 +36,10 @@ module.exports = {
 				response += ' :: final results ' + battle.end_date;
 				response += ' ' + battle.end_time_left;
 				response += ' :: ' + battle.profile_url;
-				bot.say(info.args[0], response);
+				bot.say(info.channel, response);
 			});
 		}).catch(function(error) {
-			bot.say(info.args[0], 'No current Battles teh running! =0');
+			bot.say(info.channel, 'No current Battles teh running! =0');
 		});
 	},
 
@@ -47,12 +47,12 @@ module.exports = {
 	botbr: function(bot, info, words) {
 		var name = words.slice(1).join(' ');
 		if (typeof name === 'undefined' || name.length < 2) {
-			bot.say(info.args[0], 'Moar characters!! =X');
+			bot.say(info.channel, 'Moar characters!! =X');
 			return;
 		}
 		var p = botb_api.request('botbr/search/' + name);
 		var none_found = function() {
-			bot.say(info.args[0], 'BotBr no found! =0');
+			bot.say(info.channel, 'BotBr no found! =0');
 		}
 		p.then(function(data) {
 			if (data.length == 0) {
@@ -72,7 +72,7 @@ module.exports = {
 				if (typeof botbr === 'undefined') {
 					response = 'Possible matches :: ';
 					response += botbrs.join(', ');
-					bot.say(info.args[0], response);
+					bot.say(info.channel, response);
 					return;
 				}
 			}
@@ -83,7 +83,7 @@ module.exports = {
 			response += ' :: Lvl ' + botbr.level;
 			response += ' ' + botbr.class;
 			response += ' :: ' + botbr.profile_url;
-			bot.say(info.args[0], response);
+			bot.say(info.channel, response);
 		}).catch(function(error) {
 			none_found();
 		});
@@ -99,7 +99,7 @@ module.exports = {
 			p = botb_api.request('entry/search/' + title);
 		}
 		var none_found = function() {
-			bot.say(info.args[0], 'String "' + title + '" does not match entry %title%;');
+			bot.say(info.channel, 'String "' + title + '" does not match entry %title%;');
 		}
 		p.then(function(data) {
 			if (data.length == 0) {
@@ -116,10 +116,15 @@ module.exports = {
 			var response = entry.botbr.name;
 			response += ' - ' + entry.title;
 			response += ' :: ' + entry.profile_url;
-			bot.say(info.args[0], response);
+			bot.say(info.channel, response);
 		}).catch(function(error) {	
 			none_found();
 		});
+	},
+
+	
+	help: function(bot, info, words) {
+		bot.say(info.channel, info.from + ', you have found the help');
 	},
 
 
@@ -133,7 +138,7 @@ module.exports = {
 			p = botb_api.request('botbr/list/0/5?filters=class~' + filter + '&sort=points&desc=true');
 		}
 		var none_found = function() {
-			bot.say(info.args[0], "Couldn't find anything! Did you spell the class right?");
+			bot.say(info.channel, "Couldn't find anything! Did you spell the class right?");
 		}
 		p.then(function(data) {
 			if (data.length == 0) {
@@ -157,7 +162,7 @@ module.exports = {
 				none_found();
 			}
 			else {
-				bot.say(info.args[0], response);
+				bot.say(info.channel, response);
 			}
 		}).catch(function(error) {
 			none_found();
@@ -182,29 +187,35 @@ module.exports = {
 		var time = process.uptime();
 		var uptime = (time + "").toHHMMSS();
 
-		bot.say(info.args[0], "BotB has been running for " + uptime);
+		bot.say(info.channel, "BotB has been running for " + uptime);
+	},
+
+
+	unknown: function(bot, info, words) {
+		console.log(info.from + ' unknown command');
+		bot.say(info.channel, 'you are in need of ' + info.command_prefix + 'help');
 	},
 
 	/// web commands
 
 	google: function(bot, info, words) {
-		bot.say(info.args[0], "https://encrypted.google.com/search?q=" + words.slice(1).join('%20'));
+		bot.say(info.channel, "https://encrypted.google.com/search?q=" + words.slice(1).join('%20'));
 	},
 
 	image: function(bot, info, words) {
-		bot.say(info.args[0], "https://www.google.com/search?tbm=isch&q=" + words.slice(1).join('%20'));
+		bot.say(info.channel, "https://www.google.com/search?tbm=isch&q=" + words.slice(1).join('%20'));
 	},
 
 	wikipedia: function(bot, info, words) {
-		bot.say(info.args[0], "https://en.wikipedia.org/w/index.php?search=" + words.slice(1).join('%20'));
+		bot.say(info.channel, "https://en.wikipedia.org/w/index.php?search=" + words.slice(1).join('%20'));
 	},
 
 	imdb: function(bot, info, words) {
-		bot.say(info.args[0], "http://www.imdb.com/find?s=all&q=" + words.slice(1).join('%20'));
+		bot.say(info.channel, "http://www.imdb.com/find?s=all&q=" + words.slice(1).join('%20'));
 	},
 
 	youtube: function(bot, info, words) {
-		bot.say(info.args[0], "https://www.youtube.com/results?search_query=" + words.slice(1).join('%20'))
+		bot.say(info.channel, "https://www.youtube.com/results?search_query=" + words.slice(1).join('%20'))
 	},
 
 	ultrachord: function(bot, info, words) { // TODO
@@ -362,10 +373,6 @@ module.exports = {
 		
 		del = execSync('rm ' + id + '.wav');
 		bot.say(info.args[0], "toen work!")
-	},
-
-	help: function(bot, info, words) { // TODO
-
 	},
 
 	levelup: function(bot, info, words) { // TODO
