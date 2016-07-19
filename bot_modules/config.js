@@ -1,6 +1,6 @@
 module.exports = {
 
-	bot_name: 'BotB_uc_formulating',
+	bot_name: 'BotB2',
 
 	command_prefix: ';',
 
