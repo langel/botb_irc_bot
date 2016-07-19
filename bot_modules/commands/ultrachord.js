@@ -9,6 +9,7 @@ module.exports = {
 			for (var i = 0; i < 16; i++) {
 				text += possible.charAt(Math.floor(Math.random() * possible.length));
 			}
+			
 			return text;
 		}
 
@@ -45,7 +46,7 @@ module.exports = {
 
 		var id = makeid();
 
-		var timbres = ['pluck', 'square', 'triangle', 'sawtooth', 'sine'];
+		var timbres = ['pluck', 'square', 'triangle', 'sawtooth', 'sine', 'sin', 'saw', 'tri'];
 		var timbre = timbres[2]; // square wave because chiptune dumbo
 		var notes = [];
 
