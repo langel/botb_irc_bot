@@ -2,7 +2,7 @@
 All that instant relay chat magic.
 
 # getting started
-Runs on node and Linux/Mac (or Windows w/ Cygwin) due to execSync usage For dev you'll need to change the bot's IRC nick.
+Runs on node and Linux/Mac (or Windows w/ Cygwin due to execSync usage). For dev you'll need to change the bot's IRC nick.
 
 To install the prerequisites:
 
