@@ -6,9 +6,12 @@ module.exports = {
 		chord: 'ultrachord',
 		g: 'google',
 		gi: 'image',
+		gif: 'giphy',
 		h: 'help',
 		i: 'imdb',
 		images: 'image',
+		img: 'imgur',
+		imgr: 'imgur',
 		uc: 'ultrachord',
 		w: 'wikipedia',
 		wiki: 'wikipedia',
@@ -224,12 +227,20 @@ module.exports = {
 
 	/// web commands
 
+	giphy: function(bot, info, words) {
+		bot.say(info.channel, "http://giphy.com/search/" + words.slice(1).join('%20'));
+	},
+
 	google: function(bot, info, words) {
 		bot.say(info.channel, "https://encrypted.google.com/search?q=" + words.slice(1).join('%20'));
 	},
 
 	image: function(bot, info, words) {
 		bot.say(info.channel, "https://www.google.com/search?tbm=isch&q=" + words.slice(1).join('%20'));
+	},
+
+	imgur: function(bot, info, words) {
+		bot.say(info.channel, "http://imgur.com/search?q=" + words.slice(1).join('%20'));
 	},
 
 	wikipedia: function(bot, info, words) {
