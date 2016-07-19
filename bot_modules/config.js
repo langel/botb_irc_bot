@@ -2,7 +2,7 @@ module.exports = {
 
 	bot_name: 'BotB2',
 
-	command_prefix: ';',
+	command_prefix: '!',
 
 	irc: {
 		channels: ['#botb_bot_test'],

@@ -1,5 +1,4 @@
 module.exports = {
-
 	// returns a link to an ultrachord
 	ultrachord: function(words) {
 		const execSync = require('child_process').execSync;
@@ -7,7 +6,7 @@ module.exports = {
 		function makeid() {
 			var text = "";
 			var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-			for(var i = 0; i < 16; i++) {
+			for (var i = 0; i < 16; i++) {
 				text += possible.charAt(Math.floor(Math.random() * possible.length));
 			}
 			return text;
@@ -91,7 +90,6 @@ module.exports = {
 		if (notes.length == 0) return;
 
 		// create the synth, convert to mp3, upload to uguu.se
-		// (LINUX ONLY!! O: eat it windows nerds)
 		execSync('sox -n ' + id + '.wav synth 5 '
 				+ timbre + ' ' + notes.join(" " + timbre + " ")
 				+ " remix 1-");
@@ -102,5 +100,4 @@ module.exports = {
 		var link = upload.toString().split(/\r?\n/);
 		return link[link.length - 1];
 	}
-
 };
