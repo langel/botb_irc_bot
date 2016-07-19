@@ -3,7 +3,9 @@ var botb_api = require('./botb_api.js');
 module.exports = {
 
 	aliases: {
+		b: 'battle',
 		chord: 'ultrachord',
+		compo: 'battle',
 		g: 'google',
 		gi: 'image',
 		gif: 'giphy',
@@ -12,17 +14,55 @@ module.exports = {
 		images: 'image',
 		img: 'imgur',
 		imgr: 'imgur',
+		ohb: 'battle',
+		ohc: 'battle',
+		pic: 'pix',
 		uc: 'ultrachord',
+		up: 'uptime',
 		w: 'wikipedia',
 		wiki: 'wikipedia',
 		y: 'youtube',
 		yt: 'youtube',
-		b: 'battle',
-		ohc: 'battle',
-		ohb: 'battle',
-		compo: 'battle',
-		up: 'uptime',
-		pic: 'pix'
+	},
+	
+	/// web shortcut commands
+
+	giphy: function(bot, info, words) {
+		bot.say(info.channel, "http://giphy.com/search/" + words.slice(1).join('%20'));
+	},
+
+	google: function(bot, info, words) {
+		bot.say(info.channel, "https://encrypted.google.com/search?q=" + words.slice(1).join('%20'));
+	},
+
+	image: function(bot, info, words) {
+		bot.say(info.channel, "https://www.google.com/search?tbm=isch&q=" + words.slice(1).join('%20'));
+	},
+
+	imgur: function(bot, info, words) {
+		bot.say(info.channel, "http://imgur.com/search?q=" + words.slice(1).join('%20'));
+	},
+
+	wikipedia: function(bot, info, words) {
+		bot.say(info.channel, "https://en.wikipedia.org/w/index.php?search=" + words.slice(1).join('%20'));
+	},
+
+	imdb: function(bot, info, words) {
+		bot.say(info.channel, "http://www.imdb.com/find?s=all&q=" + words.slice(1).join('%20'));
+	},
+
+	youtube: function(bot, info, words) {
+		bot.say(info.channel, "https://www.youtube.com/results?search_query=" + words.slice(1).join('%20'))
+	},
+
+	/// bot commands
+	
+	levelup: function(bot, info, words) { // TODO
+
+	},
+
+	pix: function(bot, info, words) { // TODO
+
 	},
 
 	battle: function(bot, info, words) {
@@ -200,6 +240,17 @@ module.exports = {
 		});
 	},
 
+	ultrachord: function(bot, info, words) {
+		var ultrachord = require('./commands/ultrachord.js');
+		var chat_text = ultrachord.ultrachord(words);
+		if (chat_text != null) bot.say(info.channel, info.nick + ": " + chat_text);
+	},
+
+	unknown: function(bot, info, words) {
+		console.log(info.from + ' unknown command');
+		bot.say(info.channel, 'you are in need of ' + info.command_prefix + 'help');
+	},
+
 	uptime: function(bot, info, words) {
 		String.prototype.toHHMMSS = function() {
 			var sec_num = parseInt(this, 10); // don't forget the second param
@@ -220,52 +271,4 @@ module.exports = {
 		bot.say(info.channel, "BotB has been running for " + uptime);
 	},
 
-	unknown: function(bot, info, words) {
-		console.log(info.from + ' unknown command');
-		bot.say(info.channel, 'you are in need of ' + info.command_prefix + 'help');
-	},
-
-	/// web commands
-
-	giphy: function(bot, info, words) {
-		bot.say(info.channel, "http://giphy.com/search/" + words.slice(1).join('%20'));
-	},
-
-	google: function(bot, info, words) {
-		bot.say(info.channel, "https://encrypted.google.com/search?q=" + words.slice(1).join('%20'));
-	},
-
-	image: function(bot, info, words) {
-		bot.say(info.channel, "https://www.google.com/search?tbm=isch&q=" + words.slice(1).join('%20'));
-	},
-
-	imgur: function(bot, info, words) {
-		bot.say(info.channel, "http://imgur.com/search?q=" + words.slice(1).join('%20'));
-	},
-
-	wikipedia: function(bot, info, words) {
-		bot.say(info.channel, "https://en.wikipedia.org/w/index.php?search=" + words.slice(1).join('%20'));
-	},
-
-	imdb: function(bot, info, words) {
-		bot.say(info.channel, "http://www.imdb.com/find?s=all&q=" + words.slice(1).join('%20'));
-	},
-
-	youtube: function(bot, info, words) {
-		bot.say(info.channel, "https://www.youtube.com/results?search_query=" + words.slice(1).join('%20'))
-	},
-
-	ultrachord: function(bot, info, words) {
-		var ultrachord = require('./commands/ultrachord.js');
-		var chat_text = ultrachord.ultrachord(words);
-		if (chat_text != null) bot.say(info.channel, info.nick + ": " + chat_text);
-	},
-
-	levelup: function(bot, info, words) { // TODO
-
-	},
-
-	pix: function(bot, info, words) { // TODO
-
-	}
 };
