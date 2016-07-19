@@ -123,37 +123,43 @@ module.exports = {
 	},
 
 
-	help: function(bot, info, words) { // TODO
-		if (words[1] === "uptime" || words[1] === "up") {
-			bot.say(info.args[0], "Usage: !uptime | Aliases: !up | Displays how long the bot has been running.");
-		} else if (words[1] === "pix" || words[1] === "pic") {
-			bot.say(info.args[0], "Usage: !pix <botbr> | Aliases: !pic | Returns a URL of a picture of the BotBr in the flesh, if one has been submitted.");
-		} else if (words[1] === "help" || words[1] === "h") {
-			bot.say(info.args[0], "Usage: !help [command] | Aliases: !h | Returns a list of commands, or specific help with a command.");
-		} else if (words[1] === "levelup" || words[1] === "h") {
-			bot.say(info.args[0], "Usage: !levelup <botbr> | Returns BotBr's current level, current points, calculated points per year, estimated time to level up, estimated time to reach GRAND WIZARD STATUS of level 33, current boons, and calculated boons per year.");
-		} else if (words[1] === "ultrachord" || words[1] === "uc" || words[1] === "chord") {
-			bot.say(info.args[0], "Usage: !ultrachord <notes> [timbre] | Aliases: !uc, !chord | Returns a URL to a .wav file of the notes and timbre provided, in a format such as 'C4 E4 G4 sawtooth'. Available notes range from C0 to B7. If number is omitted it will pick octave 2. Default timbre is sine. Available timbres are sine, sawtooth, square, triangle, and pluck.");
-		} else if (words[1] === "google" || words[1] === "g") {
-			bot.say(info.args[0], "Usage: !google <query> | Aliases: !g | Returns a URL of the Google search of your query.");
-		} else if (words[1] === "imdb" || words[1] === "i") {
-			bot.say(info.args[0], "Usage: !imdb <query> | Aliases: !i | Returns a URL of the IMDB search of your query.");
-		} else if (words[1] === "image" || words[1] === "images" || words[1] === "gi") {
-			bot.say(info.args[0], "Usage: !image <query> | Aliases: !gi, !images | Returns a URL of the Google Images search of your query.");
-		} else if (words[1] === "youtube" || words[1] === "yt" || words[1] === "y") {
-			bot.say(info.args[0], "Usage: !youtube <query> | Aliases: !yt, !y | Returns a URL of the YouTube search of your query.");
-		} else if (words[1] === "wikipedia" || words[1] === "wiki" || words[1] === "w") {
-			bot.say(info.args[0], "Usage: !wikipedia <query> | Aliases: !wiki, !w | Returns a URL of the Wikipedia search of your query.");
-		} else if (words[1] === "battle" || words[1] === "compo" || words[1] === "b") {
-			bot.say(info.args[0], "Usage: !battle | Aliases: !compo, !b | Returns a list of the current battles taking place.");
-		} else if (words[1] === "botbr") {
-			bot.say(info.args[0], "Usage: !botbr <botbr> | Returns information about BotBrs whose name matched the query.");
-		} else if (words[1] === "entry") {
-			bot.say(info.args[0], "Usage: !entry <name> | Returns information about a specific entry.");
-		} else if (words[1] == null) { // general help
-			bot.say(info.args[0], "Available commands are: battle, levelup, pix, google, youtube, wiki, image, imdb, botbr, entry, ultrachord, uptime, help");
-		} else {
-			bot.say(info.args[0], "Unknown command!");
+	help: function(bot, info, words) { 
+		// setup requested command helper
+		var command_help = words[1];
+		if (typeof this.aliases[command_help] !== 'undefined') {
+			command_help = this.aliases[command_help];
+		}
+		// default message with no command helper defined
+		if (command_help == null) { // general help
+			// XXX this could dynamically list commands available in channel
+			bot.say(info.channel, "Available commands are: battle, levelup, pix, google, youtube, wiki, image, imdb, botbr, entry, ultrachord, uptime, help");
+			return;
+		}
+		// define command helper texts
+		var prefix = info.command_prefix;
+		var command_help_text = {
+			battle: "Usage:" + prefix + "battle | Aliases:" + prefix + "compo," + prefix + "b | Returns a list of the current battles taking place.",
+			botbr: "Usage:" + prefix + "botbr <botbr> | Returns information about BotBrs whose name matched the query.",
+			entry: "Usage:" + prefix + "entry <name> | Returns information about a specific entry.",
+			google: "Usage: " + prefix + "google <query> | Aliases: !g | Returns a URL of the Google search of your query.",
+			help: "Usage: " + prefix + "help [command] | Aliases: !h | Returns a list of commands, or specific help with a command.",
+			image: "Usage:" + prefix + "image <query> | Aliases:" + prefix + "gi," + prefix + "images | Returns a URL of the Google Images search of your query.",
+			imdb: "Usage: " + prefix + "imdb <query> | Aliases: !i | Returns a URL of the IMDB search of your query.",
+			levelup: "Usage: " + prefix + "levelup <botbr> | Returns BotBr's current level, current points, calculated points per year, estimated time to level up, estimated time to reach GRAND WIZARD STATUS of level 33, current boons, and calculated boons per year.",
+			pix: "Usage: " + prefix + "pix <botbr> | Aliases: !pic | Returns a URL of a picture of the BotBr in the flesh, if one has been submitted.",
+			ultrachord: "Usage: " + prefix + "ultrachord <notes> [timbre] | Aliases:" + prefix + "uc," + prefix + "chord | Returns a URL to a .wav file of the notes and timbre provided, in a format such as 'C4 E4 G4 sawtooth'. Available notes range from C0 to B7. If number is omitted it will pick octave 2. Default timbre is sine. Available timbres are sine, sawtooth, square, triangle, and pluck.",
+			uptime: "Usage: " + prefix + "uptime | Aliases: !up | Displays how long the bot has been running.",
+			wikipedia: "Usage:" + prefix + "wikipedia <query> | Aliases:" + prefix + "wiki," + prefix + "w | Returns a URL of the Wikipedia search of your query.",
+			youtube: "Usage:" + prefix + "youtube <query> | Aliases:" + prefix + "yt," + prefix + "y | Returns a URL of the YouTube search of your query.",
+		};
+		// return command helper text
+		if (typeof command_help_text[command_help] !== 'undefined') {
+			// XXX this could dynamically list and append aliases of a command
+			bot.say(info.channel, command_help_text[command_help]);
+		}
+		// unknown commands!! D:
+		else {
+			bot.say(info.channel, "Unknown command!");
 		}
 	},
 

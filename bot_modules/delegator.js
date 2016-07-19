@@ -27,6 +27,7 @@ module.exports = {
 		// supplement info
 		info.from = from;
 		info.command_prefix = config.command_prefix;
+		info.prefix = config.command_prefix;
 		info.words = words;
 
 		// check for command prefix
