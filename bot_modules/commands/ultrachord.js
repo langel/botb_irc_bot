@@ -49,7 +49,7 @@ module.exports = {
 		var timbre = timbres[2]; // square wave because chiptune dumbo
 		var notes = [];
 
-		words.slice(1).forEach(function(word, i) {
+		words.slice(1).forEach(function(word) {
 			// toLowerCase to make life easier!
 			var param = word.toLowerCase();
 			if (timbres.indexOf(param) !== -1) timbre = param;
@@ -57,7 +57,7 @@ module.exports = {
 			// the max length of a note is X[#/b][0-9] == 3
 			// anything more is garbage (because we already handled
 			// timbres above)
-			if (param.length > 3) return;
+			else if (param.length > 3) return;
 
 			// note to number function call happens
 			var note_val = noteToNumber(param.charAt(0));
@@ -84,14 +84,21 @@ module.exports = {
 			}
 
 			// push the final note via a get frequency function
-			notes.push(getFrequency(octave_val, note_val));
+			notes.push({
+				timbre: timbre,
+				freq: getFrequency(octave_val, note_val)
+			});
 		});
 		console.log(notes);
 		if (notes.length == 0) return;
 
 		// create the synth, convert to mp3, upload to uguu.se
+		var exec_notes = '';
+		notes.forEach(function(note_data) {
+			exec_notes += note_data.timbre + ' ' + note_data.freq + ' ';
+		});
 		execSync('sox -n ' + id + '.wav synth 5 ' +
-			timbre + ' ' + notes.join(" " + timbre + " ") +
+			exec_notes + 
 			" remix 1-");
 		execSync('lame -V2 ' + id + '.wav ' + id + '.mp3');
 		var upload = execSync('curl -i -F file=@' + id + '.mp3 https://uguu.se/api.php?d=upload-tool');
