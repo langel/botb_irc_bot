@@ -157,7 +157,7 @@ module.exports = {
 				return;
 			}
 
-			var response = '';
+			var response = '';
 			var botbrs = [];
 
 			var i = 1;
