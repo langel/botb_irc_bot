@@ -36,4 +36,10 @@
 ehthumbs.db
 Thumbs.db
 
+# Added by Savestate #
+######################
+*.js.swp
+./*.wav
+./*.mp3
+
 node_modules/*
