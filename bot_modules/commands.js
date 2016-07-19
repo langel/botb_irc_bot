@@ -140,6 +140,7 @@ module.exports = {
 	top: function(bot, info, words) {
 		var filter = words.slice(1).join(' ');
 		var p;
+
 		if (typeof filter === 'undefined' || filter.length < 2) {
 			p = botb_api.request('botbr/list/0/5?sort=points&desc=true');
 		} else {
@@ -158,9 +159,21 @@ module.exports = {
 
 			var response = '';
 			var botbrs = [];
+
+			var i = 1;
 			data.forEach(function(botbr_object) {
 				if (response !== '') {
 					response += ', ';
+				}
+
+				if (i === 1) {
+					response += "08"
+				} else if (i === 2) {
+					response += "15"
+				} else if (i === 3) {
+					response += "05"
+				} else {
+					response += ""
 				}
 
 				response += botbr_object.name;
@@ -169,6 +182,8 @@ module.exports = {
 				if (typeof filter === 'undefined' || filter.length < 2) {
 					response += ' ' + botbr_object.class;
 				}
+				i++;
+				response += ""
 			});
 
 			if (response === '') {
