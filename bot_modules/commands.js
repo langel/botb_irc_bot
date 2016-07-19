@@ -258,7 +258,7 @@ module.exports = {
 	ultrachord: function(bot, info, words) {
 		var ultrachord = require('./ultrachord.js');
 		var chat_text = ultrachord.ultrachord(words);
-		if (chat_text.length > 0) bot.say(info.channel, info.nick + ": " + chat_text);
+		if (chat_text != null) bot.say(info.channel, info.nick + ": " + chat_text);
 	},
 
 

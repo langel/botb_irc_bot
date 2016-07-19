@@ -58,11 +58,11 @@ module.exports = {
 			// the max length of a note is X[#/b][0-9] == 3
 			// anything more is garbage (because we already handled
 			// timbres above)
-			if (param.length > 3) return "";
+			if (param.length > 3) return;
 
 			// note to number function call happens
 			var note_val = noteToNumber(param.charAt(0));
-			if (note_val == -1) return ""; // if not a note (A-G)
+			if (note_val == -1) return; // if not a note (A-G)
 
 			// sharps and flats handling
 			switch(param.charAt(1)) {
@@ -75,12 +75,12 @@ module.exports = {
 
 			// if there's 3 characters and the middle is a number,
 			// discard the ultrachord!
-			if (param.length == 3 && (Number.isInteger(parseInt(param.charAt(1), 10)))) return "";
+			if (param.length == 3 && (Number.isInteger(parseInt(param.charAt(1), 10)))) return;
 
 			// octave handling
 			var octave_val = parseInt(param.charAt(param.length-1), 10);
 			if (!Number.isInteger(octave_val)) {
-				if (param.length > 2) return "";
+				if (param.length > 2) return;
 				octave_val = 4;
 			}
 
@@ -88,7 +88,7 @@ module.exports = {
 			notes.push(getFrequency(octave_val, note_val));
 		});
 		console.log(notes);
-		if (notes.length == 0) return "";
+		if (notes.length == 0) return;
 
 		// create the synth, convert to mp3, upload to uguu.se
 		// (LINUX ONLY!! O: eat it windows nerds)
