@@ -271,13 +271,29 @@ module.exports = {
 			return frequency.toFixed(4);
 		}
 
+		function noteToNumber(letter) {
+			switch(letter) {
+			    case 'a':
+				return 9;
+			    case 'b':
+				return 11;
+			    case 'c':
+				return 0;
+			    case 'd':
+				return 2;
+			    case 'e':
+				return 4;
+			    case 'f':
+				return 5;
+			    case 'g':
+				return 7;
+			    default:
+				return -1;
+			}
+		}
+
 		var id = makeid();
 
-		// extra flats and sharps for the musical butts out there
-		var note_names = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'
-				,'c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab', 'a', 'bb', 'b'
-				,'b#', 'c#', 'd', 'd#', 'e', 'e#', 'f#', 'g', 'g#', 'a', 'a#', 'b'
-				,'c', 'db', 'd', 'eb', 'fb', 'f', 'gb', 'g', 'ab', 'a', 'bb', 'cb' ];
 		var timbres = ['pluck', 'square', 'triangle', 'sawtooth', 'sine'];
 		var timbre = timbres[2]; // square wave because chiptune dumbo
 		var notes = [];
@@ -285,34 +301,38 @@ module.exports = {
 		words.slice(1).forEach(function(word, i) {
 			// toLowerCase to make life easier!
 			var param = word.toLowerCase();
-			if (timbres.indexOf(param) !== -1) {
-				timbre = param;
+			if (timbres.indexOf(param) !== -1) timbre = param;
+
+			// the max length of a note is X[#/b][0-9] == 3
+			// anything more is garbage (because we already handled
+			// timbres above)
+			if (param.length > 3) return;
+
+			// note to number function call happens
+			var note_val = noteToNumber(param.charAt(0));
+			if (note_val == -1) return; // if not a note (A-G)
+
+			// sharps and flats handling
+			switch(param.charAt(1)) {
+			    case '#':
+				note_val++;
+				break;
+			    case 'b':
+				note_val--;
 			}
 
-			// If the last character is an integer, that means it's an octave
-			// paramater, and will need to be seperated from the full note notation. 
-			var possible_note;
-			var possible_octave;
-			if (Number.isInteger(parseInt(word.charAt(word.length-1), 10))) {
-				possible_note = word.substr(0, word.length-1);
-				possible_octave = parseInt(word.charAt(word.length-1), 10);
-			} else {
-				possible_note = word;
-				possible_octave = 4;
+			// octave handling
+			var octave_val = parseInt(param.charAt(param.length-1), 10);
+			if (!Number.isInteger(octave_val)) {
+				if (param.length > 2) return;
+				octave_val = 4;
 			}
 
-			// check if the possible note is located in the array. If so, then we use its
-			// offset in the array to calculate it's note value (0-11)
-			if (note_names.indexOf(possible_note) !== -1) {
-				// MOD 12 for easy math. Array abuse ftw \o/
-				var note_val = note_names.indexOf(possible_note)%12;
-				console.log("OCTAVE: " + possible_octave + " | NOTE: " + note_val);
-				// uses the helper function getFrequency that uses math to calculate
-				// the frequency of the note given it's octave and value
-				notes.push(getFrequency(possible_octave, note_val));
-			}
+			// push the final note via a get frequency function
+			notes.push(getFrequency(octave_val, note_val));
 		});
 		console.log(notes);
+		if (notes.length == 0) return;
 
 		// create the synth, convert to mp3, upload to uguu.se
 		// (LINUX ONLY!! O: eat it windows nerds)
