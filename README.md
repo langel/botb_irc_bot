@@ -8,4 +8,6 @@ To install the prerequisites:
 
 ``npm install irc curl``
 
+You also need the LAME, SoX, and curl packages. On Ubuntu/Debian, you can use the following command:
+
 ``apt-get install lame sox curl``
