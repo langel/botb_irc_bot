@@ -117,12 +117,12 @@ module.exports = {
 			response += ' - ' + entry.title;
 			response += ' :: ' + entry.profile_url;
 			bot.say(info.channel, response);
-		}).catch(function(error) {	
+		}).catch(function(error) {
 			none_found();
 		});
 	},
 
-	
+
 	help: function(bot, info, words) { // TODO
 		if (words[1] === "uptime" || words[1] === "up") {
 			bot.say(info.args[0], "Usage: !uptime | Aliases: !up | Displays how long the bot has been running.");
@@ -271,11 +271,11 @@ module.exports = {
 			return frequency.toFixed(4);
 		}
 
-		var note_names = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'];
-		// var note_alias = ['c', 'db', 'd', 'eb', 'e', 'f', 'g', 'gb', 'a', 'ab', 'bb', 'b'];  // for flats!
-		
+		var note_names = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'
+				,'c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab', 'a', 'bb', 'b'];
+
 		var timbres = ['pluck', 'square', 'triangle', 'sawtooth', 'sine'];
-		var timbre = timbres[4]
+		var timbre = timbres[4];
 
 		var notes = [];
 		words.slice(1).forEach(function(word, i) {
@@ -287,8 +287,9 @@ module.exports = {
 			var possible_note = word.substr(0, word.length-1);
 			var note_val;
 
-			if (note_names.indexOf(possible_note.toLowerCase()) !== -1 ) {
-				note_val = note_names.indexOf(possible_note.toLowerCase());
+			if (note_names.indexOf(possible_note.toLowerCase()) !== -1) {
+
+				note_val = note_names.indexOf(possible_note.toLowerCase())%12;
 				var possible_octave = parseInt(word.substr(-1), 10);
 
 			 	console.log(note_val);
@@ -296,7 +297,6 @@ module.exports = {
 			 	console.log(timbre);
 
 				notes.push(getFrequency(possible_octave, note_val));
-
 			} else {
 				console.log(note_val);
 			}
@@ -308,20 +308,17 @@ module.exports = {
 
 		// create the synth, convert to mp3, upload to uguu.se
 		// (LINUX ONLY!! O: eat it windows nerds)
-		code = execSync('sox -n ' + id + '.wav synth 5 ' 
-				+ timbre + ' ' + notes.join(" " + timbre + " ") 
+		execSync('sox -n ' + id + '.wav synth 5 '
+				+ timbre + ' ' + notes.join(" " + timbre + " ")
 				+ " remix 1-");
-		mp3 = execSync('lame -V2 ' + id + '.wav ' + id + '.mp3' ); 
-		upload = execSync('curl -i -F file=@' + id + '.mp3 https://uguu.se/api.php?d=upload-tool');
-		
-		// delete the created files
-		var fs = require('fs');
-		fs.unlinkSync('./' + id + '.mp3');
-		fs.unlinkSync('./' + id + '.wav');
-		fs.close(0);
+		execSync('lame -V2 ' + id + '.wav ' + id + '.mp3' );
+		var upload = execSync('curl -i -F file=@' + id + '.mp3 https://uguu.se/api.php?d=upload-tool');
+		execSync('rm ' + id + '.mp3 ' + id + '.wav'); 
 
 		var link = upload.toString().split(/\r?\n/);
-		bot.say(info.channel, link[link.length - 1]);
+		bot.say(info.channel, info.nick + ': ' + link[link.length - 1]);
+
+		console.log(info);
 
 	},
 
