@@ -249,7 +249,7 @@ module.exports = {
 	},
 
 
-	ultrachord: function(bot, info, words) { // TODO
+	ultrachord: function(bot, info, words) {
 		const execSync = require('child_process').execSync;
 
 		function makeid() {
@@ -261,18 +261,19 @@ module.exports = {
 			return text;
 		}
 
+		function getFrequency(octave, note) {
+			// 1.059463094359 == 2^12, used for note frequency calculation!
+			var base_note = 10;  // A
+			var base_octave = 4; // 4
+			var note_distance = ((octave * 12) + note) - ((base_octave * 12) + base_note);
+			// 440hz == A4
+			var frequency = 440 * Math.pow(1.059463094359, note_distance);
+			return frequency.toFixed(4);
+		}
+
 		var note_names = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'];
-		// var note_alias = ['c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'a', 'bb', 'b'];  // for flats!
-		var note_hertz = {
-			0: ['32.7', '34.6', '36.7', '38.9', '41.2', '43.7', '46.2', '49.0', '51.9', '55.0', '58.3', '61.7'],
-			1: ['65.4', '69.3', '73.4', '77.8', '82.4', '87.3', '92.5', '98.0', '103.8', '110.0', '116.5', '123.5'],
-			2: ['130.8', '138.6', '146.8', '155.6', '164.8', '174.6', '185.0', '196.0', '207.7', '220.0', '233.1', '246.9'],
-			3: ['261.6', '277.2', '293.7', '311.1', '329.6', '349.2', '370.0', '392.0', '415.3', '440.0', '466.2', '493.9'],
-			4: ['523.3', '554.4', '587.3', '622.3', '659.3', '698.5', '740.0', '784.0', '830.6', '880.0', '932.3', '987.8'],
-			5: ['1046.5', '1108.7', '1174.7', '1244.5', '1318.5', '1396.9', '1480.0', '1568.0', '1661.2', '1760.0', '1864.7', '1975.5'],
-			6: ['2093.0', '2217.5', '2349.3', '2489.0', '2637.0', '2793.8', '2960.0', '3136.0', '3322.4', '3520.0', '3729.3', '3951.1'],
-			7: ['4186.0', '4434.5', '4698.6', '4978.0', '5274.0', '5587.7', '5919.9', '6271.9', '6644.9', '7040.0', '7458.6', '7902.1']
-		};
+		// var note_alias = ['c', 'db', 'd', 'eb', 'e', 'f', 'g', 'gb', 'a', 'ab', 'bb', 'b'];  // for flats!
+		
 		var timbres = ['pluck', 'square', 'triangle', 'sawtooth', 'sine'];
 		var timbre = timbres[4]
 
@@ -291,13 +292,10 @@ module.exports = {
 				var possible_octave = parseInt(word.substr(-1), 10);
 
 			 	console.log(note_val);
-			 	console.log(possible_note.toLowerCase())
-			 	console.log(timbre)
+			 	console.log(possible_note.toLowerCase());
+			 	console.log(timbre);
 
-
-				if (note_hertz[possible_octave] !== null) {
-					notes.push(note_hertz[possible_octave][note_val]);
-				};
+				notes.push(getFrequency(possible_octave, note_val));
 
 			} else {
 				console.log(note_val);
@@ -307,15 +305,24 @@ module.exports = {
 		// you probably shouldn't look at this code
 
 		var id = makeid();
-		code = execSync('sox -n ' + id + '.wav synth 5 ' + timbre + " " + notes.join(" " + timbre + " "));
-		upload = execSync('curl -i -F file=@' + id + '.wav https://uguu.se/api.php?d=upload-tool')
+
+		// create the synth, convert to mp3, upload to uguu.se
+		// (LINUX ONLY!! O: eat it windows nerds)
+		code = execSync('sox -n ' + id + '.wav synth 5 ' 
+				+ timbre + ' ' + notes.join(" " + timbre + " ") 
+				+ " remix 1-");
+		mp3 = execSync('lame -V2 ' + id + '.wav ' + id + '.mp3' ); 
+		upload = execSync('curl -i -F file=@' + id + '.mp3 https://uguu.se/api.php?d=upload-tool');
+		
+		// delete the created files
+		var fs = require('fs');
+		fs.unlinkSync('./' + id + '.mp3');
+		fs.unlinkSync('./' + id + '.wav');
+		fs.close(0);
 
 		var link = upload.toString().split(/\r?\n/);
 		bot.say(info.channel, link[link.length - 1]);
 
-		// console.log(link);
-		
-		del = execSync('rm ' + id + '.wav');
 	},
 
 
