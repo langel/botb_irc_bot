@@ -157,23 +157,23 @@ module.exports = {
 				return;
 			}
 
-			var response = '';
+			var response = '';
 			var botbrs = [];
 
 			var i = 1;
 			data.forEach(function(botbr_object) {
-				if (response !== '') {
+				if (response !== '') {
 					response += ', ';
 				}
 
 				if (i === 1) {
-					response += "08"
+					response += "08,01"
 				} else if (i === 2) {
-					response += "15"
+					response += "15,01"
 				} else if (i === 3) {
-					response += "05"
+					response += "07,01"
 				} else {
-					response += ""
+					response += "04,01"
 				}
 
 				response += botbr_object.name;
@@ -183,7 +183,6 @@ module.exports = {
 					response += ' ' + botbr_object.class;
 				}
 				i++;
-				response += ""
 			});
 
 			if (response === '') {
