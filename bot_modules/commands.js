@@ -161,19 +161,21 @@ module.exports = {
 			var botbrs = [];
 
 			var i = 1;
+			var esc = '\x03';
 			data.forEach(function(botbr_object) {
 				if (response !== '') {
 					response += ', ';
 				}
 
+				response += esc;
 				if (i === 1) {
-					response += "08,01"
+					response += "08,01"
 				} else if (i === 2) {
-					response += "15,01"
+					response += "15,01"
 				} else if (i === 3) {
-					response += "07,01"
+					response += "07,01"
 				} else {
-					response += "04,01"
+					response += "04,01"
 				}
 
 				response += botbr_object.name;
