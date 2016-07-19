@@ -1,6 +1,6 @@
 module.exports = {
 
-	bot_name: 'BotB2',
+	bot_name: 'BotB2_savestate',
 
 	command_prefix: ';',
 
