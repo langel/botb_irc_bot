@@ -162,7 +162,7 @@ module.exports = {
 
 			var i = 1;
 			data.forEach(function(botbr_object) {
-				if (response !== '') {
+				if (response !== '') {
 					response += ', ';
 				}
 
