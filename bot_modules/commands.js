@@ -37,6 +37,7 @@ module.exports = {
 				response += ' :: ' + battle.profile_url;
 				bot.say(info.channel, response);
 			});
+
 		}).catch(function(error) {
 			bot.say(info.channel, 'No current Battles teh running! =0');
 		});
@@ -48,15 +49,18 @@ module.exports = {
 			bot.say(info.channel, 'Moar characters!! =X');
 			return;
 		}
+
 		var p = botb_api.request('botbr/search/' + name);
 		var none_found = function() {
 			bot.say(info.channel, 'BotBr no found! =0');
 		}
+
 		p.then(function(data) {
 			if (data.length == 0) {
 				none_found();
 				return;
 			}
+
 			var botbr;
 			if (data.length > 1) {
 				var response;
@@ -67,6 +71,7 @@ module.exports = {
 						botbr = botbr_object;
 					}
 				});
+
 				if (typeof botbr === 'undefined') {
 					response = 'Possible matches :: ';
 					response += botbrs.join(', ');
@@ -74,9 +79,11 @@ module.exports = {
 					return;
 				}
 			}
+
 			if (data.length == 1) {
 				botbr = data[0];
 			}
+
 			var response = botbr.name;
 			response += ' :: Lvl ' + botbr.level;
 			response += ' ' + botbr.class;
@@ -95,21 +102,26 @@ module.exports = {
 		} else {
 			p = botb_api.request('entry/search/' + title);
 		}
+
 		var none_found = function() {
 			bot.say(info.channel, 'String "' + title + '" does not match entry %title%;');
 		}
+
 		p.then(function(data) {
 			if (data.length == 0) {
 				none_found();
 				return;
 			}
+
 			var entry;
 			if (data.length == 1) {
 				entry = data[0];
 			}
+
 			if (data.length > 1) {
 				entry = data[Math.floor(Math.random() * data.length)];
 			}
+
 			var response = entry.botbr.name;
 			response += ' - ' + entry.title;
 			response += ' :: ' + entry.profile_url;
@@ -133,20 +145,24 @@ module.exports = {
 		} else {
 			p = botb_api.request('botbr/list/0/5?filters=class~' + filter + '&sort=points&desc=true');
 		}
+
 		var none_found = function() {
 			bot.say(info.channel, "Couldn't find anything! Did you spell the class right?");
 		}
+
 		p.then(function(data) {
 			if (data.length == 0) {
 				none_found();
 				return;
 			}
+
 			var response = '';
 			var botbrs = [];
 			data.forEach(function(botbr_object) {
 				if (response !== '') {
 					response += ', ';
 				}
+
 				response += botbr_object.name;
 				response += ' :: ';
 				response += 'Lvl ' + botbr_object.level;
@@ -154,6 +170,7 @@ module.exports = {
 					response += ' ' + botbr_object.class;
 				}
 			});
+
 			if (response === '') {
 				none_found();
 			} else {
@@ -165,16 +182,16 @@ module.exports = {
 	},
 
 	uptime: function(bot, info, words) {
-		String.prototype.toHHMMSS = function () {
+		String.prototype.toHHMMSS = function() {
 			var sec_num = parseInt(this, 10); // don't forget the second param
-			var hours   = Math.floor(sec_num / 3600);
+			var hours = Math.floor(sec_num / 3600);
 			var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
 			var seconds = sec_num - (hours * 3600) - (minutes * 60);
 
 			// if (hours   < 10) {hours   = "0" + hours;}
 			// if (minutes < 10) {minutes = "0" + minutes;}
 			// if (seconds < 10) {seconds = "0" + seconds;}
-			var time    = hours + ' hours, ' + minutes + ' minutes, and ' + seconds + " seconds.";
+			var time = hours + ' hours, ' + minutes + ' minutes, and ' + seconds + " seconds.";
 			return time;
 		}
 
