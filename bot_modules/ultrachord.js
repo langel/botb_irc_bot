@@ -14,7 +14,7 @@ module.exports = {
 
 		function getFrequency(octave, note) {
 			// 1.059463094359 == 2^12, used for note frequency calculation!
-			var base_note = 10;  // A
+			var base_note = 10; // A
 			var base_octave = 4; // 4
 			var note_distance = ((octave * 12) + note) - ((base_octave * 12) + base_note);
 			// 440hz == A4
@@ -23,23 +23,23 @@ module.exports = {
 		}
 
 		function noteToNumber(letter) {
-			switch(letter) {
-			    case 'a':
-				return 9;
-			    case 'b':
-				return 11;
-			    case 'c':
-				return 0;
-			    case 'd':
-				return 2;
-			    case 'e':
-				return 4;
-			    case 'f':
-				return 5;
-			    case 'g':
-				return 7;
-			    default:
-				return -1;
+			switch (letter) {
+				case 'a':
+					return 9;
+				case 'b':
+					return 11;
+				case 'c':
+					return 0;
+				case 'd':
+					return 2;
+				case 'e':
+					return 4;
+				case 'f':
+					return 5;
+				case 'g':
+					return 7;
+				default:
+					return -1;
 			}
 		}
 
@@ -64,12 +64,12 @@ module.exports = {
 			if (note_val == -1) return; // if not a note (A-G)
 
 			// sharps and flats handling
-			switch(param.charAt(1)) {
-			    case '#':
-				note_val++;
-				break;
-			    case 'b':
-				note_val--;
+			switch (param.charAt(1)) {
+				case '#':
+					note_val++;
+					break;
+				case 'b':
+					note_val--;
 			}
 
 			// if there's 3 characters and the middle is a number,
@@ -77,7 +77,7 @@ module.exports = {
 			if (param.length == 3 && (Number.isInteger(parseInt(param.charAt(1), 10)))) return;
 
 			// octave handling
-			var octave_val = parseInt(param.charAt(param.length-1), 10);
+			var octave_val = parseInt(param.charAt(param.length - 1), 10);
 			if (!Number.isInteger(octave_val)) {
 				if (param.length > 2) return;
 				octave_val = 4;
@@ -90,12 +90,12 @@ module.exports = {
 		if (notes.length == 0) return;
 
 		// create the synth, convert to mp3, upload to uguu.se
-		execSync('sox -n ' + id + '.wav synth 5 '
-				+ timbre + ' ' + notes.join(" " + timbre + " ")
-				+ " remix 1-");
-		execSync('lame -V2 ' + id + '.wav ' + id + '.mp3' );
+		execSync('sox -n ' + id + '.wav synth 5 ' +
+			timbre + ' ' + notes.join(" " + timbre + " ") +
+			" remix 1-");
+		execSync('lame -V2 ' + id + '.wav ' + id + '.mp3');
 		var upload = execSync('curl -i -F file=@' + id + '.mp3 https://uguu.se/api.php?d=upload-tool');
-		execSync('rm ' + id + '.mp3 ' + id + '.wav'); 
+		execSync('rm ' + id + '.mp3 ' + id + '.wav');
 
 		var link = upload.toString().split(/\r?\n/);
 		return link[link.length - 1];
