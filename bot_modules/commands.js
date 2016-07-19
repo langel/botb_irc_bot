@@ -277,39 +277,48 @@ module.exports = {
 			return frequency.toFixed(4);
 		}
 
+		var id = makeid();
+
+		// extra flats and sharps for the musical butts out there
 		var note_names = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'
-				,'c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab', 'a', 'bb', 'b'];
-
+				,'c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab', 'a', 'bb', 'b'
+				,'b#', 'c#', 'd', 'd#', 'e', 'e#', 'f#', 'g', 'g#', 'a', 'a#', 'b'
+				,'c', 'db', 'd', 'eb', 'fb', 'f', 'gb', 'g', 'ab', 'a', 'bb', 'cb' ];
 		var timbres = ['pluck', 'square', 'triangle', 'sawtooth', 'sine'];
-		var timbre = timbres[4];
-
+		var timbre = timbres[2]; // square wave because chiptune dumbo
 		var notes = [];
+
 		words.slice(1).forEach(function(word, i) {
+			// toLowerCase to make life easier!
 			var param = word.toLowerCase();
 			if (timbres.indexOf(param) !== -1) {
 				timbre = param;
 			}
 
-			var possible_note = word.substr(0, word.length-1);
-			var note_val;
-
-			if (note_names.indexOf(possible_note.toLowerCase()) !== -1) {
-				note_val = note_names.indexOf(possible_note.toLowerCase())%12;
-				var possible_octave = parseInt(word.substr(-1), 10);
-
-			 	console.log(note_val);
-			 	console.log(possible_note.toLowerCase());
-			 	console.log(timbre);
-
-				notes.push(getFrequency(possible_octave, note_val));
+			// If the last character is an integer, that means it's an octave
+			// paramater, and will need to be seperated from the full note notation. 
+			var possible_note;
+			var possible_octave;
+			if (Number.isInteger(parseInt(word.charAt(word.length-1), 10))) {
+				possible_note = word.substr(0, word.length-1);
+				possible_octave = parseInt(word.charAt(word.length-1), 10);
 			} else {
-				console.log(note_val);
+				possible_note = word;
+				possible_octave = 4;
+			}
+
+			// check if the possible note is located in the array. If so, then we use its
+			// offset in the array to calculate it's note value (0-11)
+			if (note_names.indexOf(possible_note) !== -1) {
+				// MOD 12 for easy math. Array abuse ftw \o/
+				var note_val = note_names.indexOf(possible_note)%12;
+				console.log("OCTAVE: " + possible_octave + " | NOTE: " + note_val);
+				// uses the helper function getFrequency that uses math to calculate
+				// the frequency of the note given it's octave and value
+				notes.push(getFrequency(possible_octave, note_val));
 			}
 		});
-		console.log(notes)
-		// you probably shouldn't look at this code
-
-		var id = makeid();
+		console.log(notes);
 
 		// create the synth, convert to mp3, upload to uguu.se
 		// (LINUX ONLY!! O: eat it windows nerds)
@@ -322,7 +331,6 @@ module.exports = {
 
 		var link = upload.toString().split(/\r?\n/);
 		bot.say(info.channel, info.nick + ': ' + link[link.length - 1]);
-
 	},
 
 
