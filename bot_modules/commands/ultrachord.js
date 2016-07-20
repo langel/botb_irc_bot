@@ -45,6 +45,7 @@ module.exports = {
 		}
 
 		var id = makeid();
+		var filename = '';
 
 		var timbres = ['pluck', 'square', 'triangle', 'sawtooth', 'sine', 'sin', 'saw', 'tri'];
 		var timbre = timbres[2]; // square wave because chiptune dumbo
@@ -53,29 +54,39 @@ module.exports = {
 		words.slice(1).forEach(function(word) {
 			// toLowerCase to make life easier!
 			var param = word.toLowerCase();
-			if (timbres.indexOf(param) !== -1) timbre = param;
+
+			// check if it's a timbre
+			if (timbres.indexOf(param) !== -1) {
+				filename += timbre = param;
+				filename += '_';
+				return;
+			}
 
 			// the max length of a note is X[#/b][0-9] == 3
 			// anything more is garbage (because we already handled
 			// timbres above)
-			else if (param.length > 3) return;
+			if (param.length > 3) return;
 
+			// if there's 3 characters and the middle is a number,
+			// discard the ultrachord!
+			if (param.length == 3 && (Number.isInteger(parseInt(param.charAt(1), 10)))) return;
+			
 			// note to number function call happens
 			var note_val = noteToNumber(param.charAt(0));
-			if (note_val == -1) return; // if not a note (A-G)
+			// if not a note (A-G)
+			if (note_val == -1) return;
+			filename += param.charAt(0);
 
 			// sharps and flats handling
 			switch (param.charAt(1)) {
 				case '#':
 					note_val++;
+					filename += 'S';
 					break;
 				case 'b':
 					note_val--;
+					filename += 'b';
 			}
-
-			// if there's 3 characters and the middle is a number,
-			// discard the ultrachord!
-			if (param.length == 3 && (Number.isInteger(parseInt(param.charAt(1), 10)))) return;
 
 			// octave handling
 			var octave_val = parseInt(param.charAt(param.length - 1), 10);
@@ -83,6 +94,8 @@ module.exports = {
 				if (param.length > 2) return;
 				octave_val = 4;
 			}
+			filename += octave_val;
+			filename += '_';
 
 			// push the final note via a get frequency function
 			notes.push({
@@ -90,14 +103,18 @@ module.exports = {
 				freq: getFrequency(octave_val, note_val)
 			});
 		});
-		console.log(notes);
+
 		if (notes.length == 0) return;
+		console.log(notes);
+		console.log(filename);
 
 		// create the synth, convert to mp3, upload to uguu.se
 		var exec_notes = '';
 		notes.forEach(function(note_data) {
 			exec_notes += note_data.timbre + ' ' + note_data.freq + ' ';
 		});
+		// just testing this concept out  D:
+		id = filename;
 		execSync('sox -n ' + id + '.wav synth 5 ' +
 			exec_notes + 
 			" remix 1-");
