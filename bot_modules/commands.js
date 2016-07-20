@@ -252,12 +252,17 @@ module.exports = {
 	},
 
 	uptime: function(bot, info, words) {
-		String.prototype.toDDHHMMSS = function() {
+		String.prototype.toWWDDHHMMSS = function() {
 			var sec_num = parseInt(this, 10); // don't forget the second param
-			var days = Math.floor(sec_num / 86400);
-			var hours = Math.floor((sec_num - (days * 86400)) / 24);
+			var days = 0;
+			var hours = Math.floor(sec_num / 3600);
 			var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
 			var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+			if (hours >= 24) {
+				days = Math.floor(hours / 24);
+				hours = hours % 24;
+			}
 
 			// if (hours   < 10) {hours   = "0" + hours;}
 			// if (minutes < 10) {minutes = "0" + minutes;}
@@ -267,7 +272,7 @@ module.exports = {
 		}
 
 		var time = process.uptime();
-		var uptime = (time + "").toDDHHMMSS();
+		var uptime = (time + "").toWWDDHHMMSS();
 
 		bot.say(info.channel, "BotB has been running for " + uptime);
 	},
