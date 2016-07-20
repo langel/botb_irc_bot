@@ -11,3 +11,6 @@ To install the prerequisites:
 You also need the LAME, SoX, and curl packages. On Ubuntu/Debian, you can use the following command:
 
 ``apt-get install lame sox curl``
+
+# setup your config
+Copy bot_modules/config_example.js to bot_modules/config.js and edit as you deem necessary.
