@@ -36,6 +36,10 @@
 ehthumbs.db
 Thumbs.db
 
+# BotB IRC bot configs and data #
+#################################
+bot_modules/config.js
+
 # Added by Savestate #
 ######################
 *.js.swp
