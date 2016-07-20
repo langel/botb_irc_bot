@@ -12,5 +12,5 @@ You also need the LAME, SoX, and curl packages. On Ubuntu/Debian, you can use th
 
 ``apt-get install lame sox curl``
 
-# Setup Your Configuration
+# Configuration
 Copy bot_modules/config_example.js to bot_modules/config.js and edit as you deem necessary.
