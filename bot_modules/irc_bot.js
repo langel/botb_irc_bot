@@ -17,9 +17,9 @@ var channel_filters = {
 	}
 };
 
-module.exports = {
+var color = '\x0304,01';
 
-	color: '\x0304,01',
+module.exports = {
 
 	initialize: function() { 
 		bot = new irc.Client(config.irc.server, config.bot_name, {
@@ -43,12 +43,23 @@ module.exports = {
 		});
 	},
 
-	say: function(channel, text) {
-		text = this.color + ' ' + text + ' ';
+};
+	
+say = function(channel, text) {
+	console.log('text : ' + text);
+	function irc_push(channel, text) {
+		text = color + ' ' + text + color + ' ';
 		bot.say(channel, text);
 	}
+	if (Array.isArray(text)) {
+		text.forEach(function(line) {
+			irc_push(channel, line);
+		});
+		return;
+	}
+	irc_push(channel, text);
+}
 
-};
 
 command_parser = function(from, to, text, info) {
 	// break text into words
@@ -97,10 +108,21 @@ command_parser = function(from, to, text, info) {
 		console.log('command false');
 		return false;
 	}
+	console.log(words);
 
 	// check for command and call
 	if (typeof commands[command] === "function") {
 		// XXX might want to check for string before bot.say
-		bot.say(info.channel, commands[command](info, words));
+		var response = commands[command](info, words);		
+		console.log('has returned string');
+		if (typeof response.then === 'function') {
+			response.then(function(string) {
+				say(info.channel, string);
+			});
+		}
+		else {
+		console.log(response);
+			say(info.channel, response);
+		}
 	}
 };

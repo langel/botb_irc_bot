@@ -161,7 +161,7 @@ module.exports = {
 		for (var i = 1; i < words.length; i++) username = username.concat(words[i] + ' ');
 		// Get a list of botbrs using the API.
 		var botbr_list = botb_api.request('botbr/list?filters=name~' + username);
-		botbr_list.then(function(data) {
+		return botbr_list.then(function(data) {
 			var botbr  = data[0];
 			var level  = parseInt(botbr.level);
 			var points = parseInt(botbr.points);
@@ -179,7 +179,7 @@ module.exports = {
 			var levelup = ymd_distance(days_until_levelup);
 			var level33 = ymd_distance(days_until_level33);
 			return "Points: " + points
-				+ " - Levesl: " + botbr.level
+				+ " - Level: " + botbr.level
 				+ " - Points per year: " + Math.round(points_per_day * 365)
 				+ " - Next level ETA: " + levelup
 				+ " - for Level 33: " + level33
@@ -192,50 +192,57 @@ module.exports = {
 		var picurl;
 
 		if (botbr === "") {
-			bot.say(info.channel, "00,03 Pox of whose???? 04,01");
-			return;
+			return "00,03 Pox of whose???? 04,01";
 		}
 
 		var fs = require('fs');
+		var response;
 
-		fs.readFile("pix.json", "utf-8", function(err, data) {
-			if (err) {
-				return console.log(err);
-				return "00,03 Couldn't read pix JSON! 04,01";
-			} else {
-				console.log("The file was read!");
-				JSON.parse(data, function (k, v) {
-					if (k.toLowerCase() === botbr.toLowerCase()) {
-						picurl = v;
-						botbr  = k;
-					}
-				});
-				if (picurl != null) {
-					return "00,03 Pixies of " + botbr + ": " + picurl + " 04,01";
+		return new Promise(function(resolve, reject) {
+			fs.readFile("pix.json", "utf-8", function(err, data) {
+				if (err) {
+					console.log(err);
+					resolve("00,03 Couldn't read pix JSON! 04,01");
 				} else {
-					return "00,03 BotBr not pixelated! 04,01";
+					console.log("The file was read!");
+					JSON.parse(data, function (k, v) {
+						if (k.toLowerCase() === botbr.toLowerCase()) {
+							picurl = v;
+							botbr  = k;
+						}
+					});
+					if (picurl != null) {
+						resolve("00,03 Pixies of " + botbr + ": " + picurl + " 04,01");
+					} else {
+						resolve("00,03 BotBr not pixelated! 04,01");
+					}
 				}
-			}
-		}); 
+			}); 
+		});
 	},
 
 	battle: function(info, words) {
 		var p = botb_api.request('battle/current');
-		p.then(function(data) {
+		return p.then(function(data) {
+			var response = [];
+			var text = '';
 			data.forEach(function(battle) {
-				var response = battle.title;
+				text += battle.title;
 				// XXX bit period v entry period stuff
-				response += ' :: ' + battle.entry_count + ' entries';
-				response += ' :: ' + battle.period + ' period deadline';
-				response += ' ' + battle.period_end_date;
-				response += ' ' + battle.period_end_time_left;
-				response += ' :: final results ' + battle.end_date;
-				response += ' ' + battle.end_time_left;
-				response += ' :: ' + battle.profile_url;
-				return response;
+				text += ' :: ' + battle.entry_count + ' entries';
+				text += ' :: ' + battle.period + ' period deadline';
+				text += ' ' + battle.period_end_date;
+				text += ' ' + battle.period_end_time_left;
+				text += ' :: final results ' + battle.end_date;
+				text += ' ' + battle.end_time_left;
+				text += ' :: ' + battle.profile_url;
+				response.push(text);
 			});
+			console.log(response);
+			return response;
 
-		}).catch(function(error) {
+		},
+		function(error) {
 			return 'No current Battles teh running! =0';
 		});
 	},
@@ -247,14 +254,11 @@ module.exports = {
 		}
 
 		var p = botb_api.request('botbr/search/' + name);
-		var none_found = function() {
-			return 'BotBr no found! =0';
-		}
+		var none_found = 'BotBr no found! =0';
 
-		p.then(function(data) {
+		return p.then(function(data) {
 			if (data.length == 0) {
-				none_found();
-				return;
+				return none_found();
 			}
 
 			var botbr;
@@ -298,14 +302,11 @@ module.exports = {
 			p = botb_api.request('entry/search/' + title);
 		}
 
-		var none_found = function() {
-			return 'String "' + title + '" does not match entry %title%;';
-		}
+		var none_found = 'String "' + title + '" does not match entry %title%;';
 
-		p.then(function(data) {
+		return p.then(function(data) {
 			if (data.length == 0) {
-				none_found();
-				return;
+				return none_found;
 			}
 
 			var entry;
@@ -322,7 +323,7 @@ module.exports = {
 			response += ' :: ' + entry.profile_url;
 			return response;
 		}).catch(function(error) {
-			none_found();
+			return none_found;
 		});
 	},
 
@@ -335,24 +336,20 @@ module.exports = {
 	top: function(info, words) {
 		var filter = words.slice(1).join(' ');
 		var p;
-
 		if (typeof filter === 'undefined' || filter.length < 2) {
 			p = botb_api.request('botbr/list/0/5?sort=points&desc=true');
 		} else {
 			p = botb_api.request('botbr/list/0/5?filters=class~' + filter + '&sort=points&desc=true');
 		}
 
-		var none_found = function() {
-			return "Couldn't find anything! Did you spell the class right?";
-		}
+		var none_found = "Couldn't find anything! Did you spell the class right?";
+		var response = '';
 
-		p.then(function(data) {
+		return p.then(function(data) {
 			if (data.length == 0) {
-				none_found();
-				return;
+				return none_foun;
 			}
 
-			var response = '';
 			var botbrs = [];
 
 			var i = 1;
@@ -381,14 +378,14 @@ module.exports = {
 				}
 				i++;
 			});
-
 			if (response === '') {
-				none_found();
+				return none_found();
 			} else {
 				return response;
 			}
-		}).catch(function(error) {
-			none_found();
+		},
+		function(error) {
+			return none_found;
 		});
 	},
 
