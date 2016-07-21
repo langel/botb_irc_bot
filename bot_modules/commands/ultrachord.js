@@ -9,7 +9,7 @@ module.exports = {
 			for (var i = 0; i < 16; i++) {
 				text += possible.charAt(Math.floor(Math.random() * possible.length));
 			}
-			
+
 			return text;
 		}
 
@@ -70,7 +70,7 @@ module.exports = {
 			// if there's 3 characters and the middle is a number,
 			// discard the ultrachord!
 			if (param.length == 3 && (Number.isInteger(parseInt(param.charAt(1), 10)))) return;
-			
+
 			// note to number function call happens
 			var note_val = noteToNumber(param.charAt(0));
 			// if not a note (A-G)
@@ -116,7 +116,7 @@ module.exports = {
 		// just testing this concept out  D:
 		id = filename;
 		execSync('sox -n ' + id + '.wav synth 5 ' +
-			exec_notes + 
+			exec_notes +
 			" remix 1-");
 		execSync('lame -V2 ' + id + '.wav ' + id + '.mp3');
 		var upload = execSync('curl -i -F file=@' + id + '.mp3 https://uguu.se/api.php?d=upload-tool');

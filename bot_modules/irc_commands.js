@@ -24,7 +24,7 @@ module.exports = {
 		y: 'youtube',
 		yt: 'youtube',
 	},
-	
+
 	/// web shortcut commands
 
 	giphy: function(info, words) {
@@ -56,7 +56,7 @@ module.exports = {
 	},
 
 	/// bot commands
-	
+
 	levelup: function(info, words) {
 		// point array for levels (indexes) 0-34.
 		var points_array = [
@@ -136,7 +136,7 @@ module.exports = {
 			// Lastly, we check the days. Once again, if we cross a month threshold, we will go into the
 			// negatives. This is made up for though by checking how many days are in the month at hand, 	
 			// and adding that to the negative days. 
-			var days = future_date.getUTCDate() - current_date.getUTCDate();			
+			var days = future_date.getUTCDate() - current_date.getUTCDate();
 			if (days < 0) {
 				// if the days roll over into the next month...
 				months--; // we were lied to earlier a la the years calculation
@@ -162,28 +162,28 @@ module.exports = {
 		// Get a list of botbrs using the API.
 		var botbr_list = botb_api.request('botbr/list?filters=name~' + username);
 		return botbr_list.then(function(data) {
-			var botbr  = data[0];
-			var level  = parseInt(botbr.level);
+			var botbr = data[0];
+			var level = parseInt(botbr.level);
 			var points = parseInt(botbr.points);
-			var boons  = parseFloat(botbr.boons);
+			var boons = parseFloat(botbr.boons);
 			// get the current date and the date of the botbr's creation.
 			var time_current = Date.now();
 			var time_botbr = new Date(botbr.create_date).getTime();
 			var milliseconds_per_day = 24 * 60 * 60 * 1000;
 			//                         hr   mn   sec  milli
-			var botbrs_age = (time_current-time_botbr) / milliseconds_per_day; // in days
+			var botbrs_age = (time_current - time_botbr) / milliseconds_per_day; // in days
 			var points_per_day = points / botbrs_age;
-			var boons_per_day  = boons / botbrs_age;
+			var boons_per_day = boons / botbrs_age;
 			var days_until_levelup = (points_array[level + 1] - points) / points_per_day;
 			var days_until_level33 = (points_array[33] - points) / points_per_day;
 			var levelup = ymd_distance(days_until_levelup);
 			var level33 = ymd_distance(days_until_level33);
-			return "Points: " + points
-				+ " - Level: " + botbr.level
-				+ " - Points per year: " + Math.round(points_per_day * 365)
-				+ " - Next level ETA: " + levelup
-				+ " - for Level 33: " + level33
-				+ " - Boons: " + boons + ", Boons per year: " + Math.round(boons_per_day * 365);
+			return "Points: " + points +
+				" - Level: " + botbr.level +
+				" - Points per year: " + Math.round(points_per_day * 365) +
+				" - Next level ETA: " + levelup +
+				" - for Level 33: " + level33 +
+				" - Boons: " + boons + ", Boons per year: " + Math.round(boons_per_day * 365);
 		});
 	},
 
@@ -205,10 +205,10 @@ module.exports = {
 					resolve("00,03 Couldn't read pix JSON! 04,01");
 				} else {
 					console.log("The file was read!");
-					JSON.parse(data, function (k, v) {
+					JSON.parse(data, function(k, v) {
 						if (k.toLowerCase() === botbr.toLowerCase()) {
 							picurl = v;
-							botbr  = k;
+							botbr = k;
 						}
 					});
 					if (picurl != null) {
@@ -217,34 +217,34 @@ module.exports = {
 						resolve("00,03 BotBr not pixelated! 04,01");
 					}
 				}
-			}); 
+			});
 		});
 	},
 
 	battle: function(info, words) {
 		var p = botb_api.request('battle/current');
 		return p.then(function(data) {
-			var response = [];
-			var text = '';
-			data.forEach(function(battle) {
-				text += battle.title;
-				// XXX bit period v entry period stuff
-				text += ' :: ' + battle.entry_count + ' entries';
-				text += ' :: ' + battle.period + ' period deadline';
-				text += ' ' + battle.period_end_date;
-				text += ' ' + battle.period_end_time_left;
-				text += ' :: final results ' + battle.end_date;
-				text += ' ' + battle.end_time_left;
-				text += ' :: ' + battle.profile_url;
-				response.push(text);
-			});
-			console.log(response);
-			return response;
+				var response = [];
+				var text = '';
+				data.forEach(function(battle) {
+					text += battle.title;
+					// XXX bit period v entry period stuff
+					text += ' :: ' + battle.entry_count + ' entries';
+					text += ' :: ' + battle.period + ' period deadline';
+					text += ' ' + battle.period_end_date;
+					text += ' ' + battle.period_end_time_left;
+					text += ' :: final results ' + battle.end_date;
+					text += ' ' + battle.end_time_left;
+					text += ' :: ' + battle.profile_url;
+					response.push(text);
+				});
+				console.log(response);
+				return response;
 
-		},
-		function(error) {
-			return 'No current Battles teh running! =0';
-		});
+			},
+			function(error) {
+				return 'No current Battles teh running! =0';
+			});
 	},
 
 	botbr: function(info, words) {
@@ -327,7 +327,7 @@ module.exports = {
 		});
 	},
 
-	help: function(info, words) { 
+	help: function(info, words) {
 		var help = require('./commands/help.js');
 		var chat_text = help.help(words, this.aliases, info.command_prefix);
 		if (chat_text != null) return info.nick + ": " + chat_text;
@@ -346,47 +346,47 @@ module.exports = {
 		var response = '';
 
 		return p.then(function(data) {
-			if (data.length == 0) {
-				return none_foun;
-			}
-
-			var botbrs = [];
-
-			var i = 1;
-			var esc = '\x03';
-			data.forEach(function(botbr_object) {
-				if (response !== '') {
-					response += ', ';
+				if (data.length == 0) {
+					return none_foun;
 				}
 
-				response += esc;
-				if (i === 1) {
-					response += "08,01"
-				} else if (i === 2) {
-					response += "15,01"
-				} else if (i === 3) {
-					response += "07,01"
+				var botbrs = [];
+
+				var i = 1;
+				var esc = '\x03';
+				data.forEach(function(botbr_object) {
+					if (response !== '') {
+						response += ', ';
+					}
+
+					response += esc;
+					if (i === 1) {
+						response += "08,01"
+					} else if (i === 2) {
+						response += "15,01"
+					} else if (i === 3) {
+						response += "07,01"
+					} else {
+						response += "04,01"
+					}
+
+					response += botbr_object.name;
+					response += ' :: ';
+					response += 'Lvl ' + botbr_object.level;
+					if (typeof filter === 'undefined' || filter.length < 2) {
+						response += ' ' + botbr_object.class;
+					}
+					i++;
+				});
+				if (response === '') {
+					return none_found();
 				} else {
-					response += "04,01"
+					return response;
 				}
-
-				response += botbr_object.name;
-				response += ' :: ';
-				response += 'Lvl ' + botbr_object.level;
-				if (typeof filter === 'undefined' || filter.length < 2) {
-					response += ' ' + botbr_object.class;
-				}
-				i++;
+			},
+			function(error) {
+				return none_found;
 			});
-			if (response === '') {
-				return none_found();
-			} else {
-				return response;
-			}
-		},
-		function(error) {
-			return none_found;
-		});
 	},
 
 	ultrachord: function(info, words) {

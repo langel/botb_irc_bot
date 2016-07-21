@@ -20,8 +20,7 @@ module.exports = {
 			if (error !== null) {
 				console.log('New RAM created');
 				return;
-			}
-			else {
+			} else {
 				fs.readFile(ram_file, function(error, data) {
 					ram = JSON.parse(data);
 					console.log('RAM loaded from local file');

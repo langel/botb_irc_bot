@@ -21,7 +21,7 @@ var color = '\x0304,01';
 
 module.exports = {
 
-	initialize: function() { 
+	initialize: function() {
 		bot = new irc.Client(config.irc.server, config.bot_name, {
 			channels: config.irc.channels
 		});
@@ -44,9 +44,10 @@ module.exports = {
 	},
 
 };
-	
+
 say = function(channel, text) {
 	console.log('text : ' + text);
+
 	function irc_push(channel, text) {
 		text = color + ' ' + text + color + ' ';
 		bot.say(channel, text);
@@ -113,15 +114,14 @@ command_parser = function(from, to, text, info) {
 	// check for command and call
 	if (typeof commands[command] === "function") {
 		// XXX might want to check for string before bot.say
-		var response = commands[command](info, words);		
+		var response = commands[command](info, words);
 		console.log('has returned string');
 		if (typeof response.then === 'function') {
 			response.then(function(string) {
 				say(info.channel, string);
 			});
-		}
-		else {
-		console.log(response);
+		} else {
+			console.log(response);
 			say(info.channel, response);
 		}
 	}

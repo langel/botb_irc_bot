@@ -5,7 +5,7 @@ var bot = require('./irc_bot.js');
 
 
 var commands = {
-	
+
 	say: function(message) {
 		bot.say(config.irc.channels[0], message);
 		respond(response, 200, 'text/plain', 'the bot speaks!');
@@ -32,7 +32,9 @@ var post_handler = function(request, response) {
 };
 
 var respond = function(response, code, content, message) {
-	response.writeHead(code, {'Content-Type':content});
+	response.writeHead(code, {
+		'Content-Type': content
+	});
 	response.end(message + '\n');
 };
 
@@ -41,7 +43,7 @@ module.exports = {
 
 	initialize: function() {
 
-		http.createServer(function (request, response) {
+		http.createServer(function(request, response) {
 			console.log('SERVER REQUEST :: ' + request.method + ' ' + request.url);
 			if (request.method == 'POST') {
 				var p = post_handler(request, response);
@@ -57,8 +59,7 @@ module.exports = {
 						commands[data.command](data.message);
 					}
 				});
-			}
-			else {
+			} else {
 				respond(response, 500, 'text/plain', 'must post data');
 			}
 		}).listen(config.http.port, config.http.ip);
