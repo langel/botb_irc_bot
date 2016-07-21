@@ -187,7 +187,7 @@ module.exports = {
 		});
 	},
 
-	pix: function(bot, info, words) {
+	pix: function(info, words) {
 		var botbr = words.slice(1).join(" ");
 		var picurl;
 
