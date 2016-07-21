@@ -187,9 +187,14 @@ module.exports = {
 		});
 	},
 
-	pix: function(bot, info, words) { // TODO
+	pix: function(bot, info, words) {
 		var botbr = words.slice(1).join(" ");
 		var picurl;
+
+		if (botbr === "") {
+			bot.say(info.channel, "00,03 Pox of whose???? 04,01");
+			return;
+		}
 
 		var fs = require('fs');
 
@@ -202,6 +207,7 @@ module.exports = {
 				JSON.parse(data, function (k, v) {
 					if (k.toLowerCase() === botbr.toLowerCase()) {
 						picurl = v;
+						botbr  = k;
 					}
 				});
 				if (picurl != null) {
