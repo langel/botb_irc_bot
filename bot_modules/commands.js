@@ -139,6 +139,8 @@ module.exports = {
 			var days  = future_date.getUTCDate() - current_date.getUTCDate();			
 			if (days < 0) {
 				// if the days roll over into the next month...
+				months--; // we were lied to earlier a la the years calculation
+				current_date.setUTCMonth(current_date.getUTCMonth()-1);
 				days += new Date(current_date.getUTCFullYear(), current_date.getUTCMonth()+1, 0).getDate();
 			}
 			// Only display the lowest level of day display that you can. This is to save space!
@@ -177,7 +179,7 @@ module.exports = {
 			var levelup = ymd_distance(days_until_levelup);
 			var level33 = ymd_distance(days_until_level33);
 			bot.say(info.channel, "Points: " + points
-				+ " - Level: " + botbr.level
+				+ " - Levesl: " + botbr.level
 				+ " - Points per year: " + Math.round(points_per_day*365)
 				+ " - Next level ETA: " + levelup
 				+ " - for Level 33: " + level33
