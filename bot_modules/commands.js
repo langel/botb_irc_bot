@@ -1,4 +1,5 @@
 var botb_api = require('./botb_api.js');
+var bot = require('./irc_bot.js');
 
 module.exports = {
 
@@ -27,37 +28,37 @@ module.exports = {
 	
 	/// web shortcut commands
 
-	giphy: function(bot, info, words) {
+	giphy: function(info, words) {
 		bot.say(info.channel, "http://giphy.com/search/" + words.slice(1).join('%20'));
 	},
 
-	google: function(bot, info, words) {
+	google: function(info, words) {
 		bot.say(info.channel, "https://encrypted.google.com/search?q=" + words.slice(1).join('%20'));
 	},
 
-	image: function(bot, info, words) {
+	image: function(info, words) {
 		bot.say(info.channel, "https://www.google.com/search?tbm=isch&q=" + words.slice(1).join('%20'));
 	},
 
-	imgur: function(bot, info, words) {
+	imgur: function(info, words) {
 		bot.say(info.channel, "http://imgur.com/search?q=" + words.slice(1).join('%20'));
 	},
 
-	wikipedia: function(bot, info, words) {
+	wikipedia: function(info, words) {
 		bot.say(info.channel, "https://en.wikipedia.org/w/index.php?search=" + words.slice(1).join('%20'));
 	},
 
-	imdb: function(bot, info, words) {
+	imdb: function(info, words) {
 		bot.say(info.channel, "http://www.imdb.com/find?s=all&q=" + words.slice(1).join('%20'));
 	},
 
-	youtube: function(bot, info, words) {
+	youtube: function(info, words) {
 		bot.say(info.channel, "https://www.youtube.com/results?search_query=" + words.slice(1).join('%20'))
 	},
 
 	/// bot commands
 	
-	levelup: function(bot, info, words) {
+	levelup: function(info, words) {
 		// point array for levels (indexes) 0-34.
 		var points_array = [
 			25,
@@ -187,11 +188,11 @@ module.exports = {
 		});
 	},
 
-	pix: function(bot, info, words) { // TODO
+	pix: function(info, words) { // TODO
 
 	},
 
-	battle: function(bot, info, words) {
+	battle: function(info, words) {
 		var p = botb_api.request('battle/current');
 		p.then(function(data) {
 			data.forEach(function(battle) {
@@ -212,7 +213,7 @@ module.exports = {
 		});
 	},
 
-	botbr: function(bot, info, words) {
+	botbr: function(info, words) {
 		var name = words.slice(1).join(' ');
 		if (typeof name === 'undefined' || name.length < 2) {
 			bot.say(info.channel, 'Moar characters!! =X');
@@ -263,7 +264,7 @@ module.exports = {
 		});
 	},
 
-	entry: function(bot, info, words) {
+	entry: function(info, words) {
 		var title = words.slice(1).join(' ');
 		var p;
 		if (typeof title === 'undefined' || title.length < 2) {
@@ -300,13 +301,13 @@ module.exports = {
 		});
 	},
 
-	help: function(bot, info, words) { 
+	help: function(info, words) { 
 		var help = require('./commands/help.js');
 		var chat_text = help.help(words, this.aliases, info.command_prefix);
 		if (chat_text != null) bot.say(info.channel, info.nick + ": " + chat_text);
 	},
 
-	top: function(bot, info, words) {
+	top: function(info, words) {
 		var filter = words.slice(1).join(' ');
 		var p;
 
@@ -366,18 +367,19 @@ module.exports = {
 		});
 	},
 
-	ultrachord: function(bot, info, words) {
+	ultrachord: function(info, words) {
 		var ultrachord = require('./commands/ultrachord.js');
 		var chat_text = ultrachord.ultrachord(words);
 		if (chat_text != null) bot.say(info.channel, info.nick + ": " + chat_text);
 	},
 
-	unknown: function(bot, info, words) {
+	unknown: function(info, words) {
 		console.log(info.from + ' unknown command');
 		bot.say(info.channel, 'you are in need of ' + info.command_prefix + 'help');
 	},
 
-	uptime: function(bot, info, words) {
+	uptime: function(info, words) {
+		console.log(bot);
 		String.prototype.toWWDDHHMMSS = function() {
 			var sec_num = parseInt(this, 10); // don't forget the second param
 			var days = 0;

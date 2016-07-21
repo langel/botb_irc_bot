@@ -32,7 +32,7 @@ module.exports = {
 				}
 
 				info.channel = from;
-				commands.unknown(bot, info, words);
+				commands.unknown(info, words);
 			}
 
 			return false;
@@ -65,7 +65,7 @@ module.exports = {
 
 		// check for command and call
 		if (typeof commands[command] === "function") {
-			return commands[command](bot, info, words);
+			return commands[command](info, words);
 		}
 	}
 };
