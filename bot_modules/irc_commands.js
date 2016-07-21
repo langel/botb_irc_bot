@@ -1,5 +1,4 @@
 var botb_api = require('./botb_api.js');
-var bot = require('./irc_bot.js');
 
 module.exports = {
 
@@ -29,31 +28,31 @@ module.exports = {
 	/// web shortcut commands
 
 	giphy: function(info, words) {
-		bot.say(info.channel, "http://giphy.com/search/" + words.slice(1).join('%20'));
+		return "http://giphy.com/search/" + words.slice(1).join('%20');
 	},
 
 	google: function(info, words) {
-		bot.say(info.channel, "https://encrypted.google.com/search?q=" + words.slice(1).join('%20'));
+		return "https://encrypted.google.com/search?q=" + words.slice(1).join('%20');
 	},
 
 	image: function(info, words) {
-		bot.say(info.channel, "https://www.google.com/search?tbm=isch&q=" + words.slice(1).join('%20'));
+		return "https://www.google.com/search?tbm=isch&q=" + words.slice(1).join('%20');
 	},
 
 	imgur: function(info, words) {
-		bot.say(info.channel, "http://imgur.com/search?q=" + words.slice(1).join('%20'));
+		return "http://imgur.com/search?q=" + words.slice(1).join('%20');
 	},
 
 	wikipedia: function(info, words) {
-		bot.say(info.channel, "https://en.wikipedia.org/w/index.php?search=" + words.slice(1).join('%20'));
+		return "https://en.wikipedia.org/w/index.php?search=" + words.slice(1).join('%20');
 	},
 
 	imdb: function(info, words) {
-		bot.say(info.channel, "http://www.imdb.com/find?s=all&q=" + words.slice(1).join('%20'));
+		return "http://www.imdb.com/find?s=all&q=" + words.slice(1).join('%20');
 	},
 
 	youtube: function(info, words) {
-		bot.say(info.channel, "https://www.youtube.com/results?search_query=" + words.slice(1).join('%20'))
+		return "https://www.youtube.com/results?search_query=" + words.slice(1).join('%20');
 	},
 
 	/// bot commands
@@ -179,12 +178,12 @@ module.exports = {
 			var days_until_level33 = (points_array[33] - points) / points_per_day;
 			var levelup = ymd_distance(days_until_levelup);
 			var level33 = ymd_distance(days_until_level33);
-			bot.say(info.channel, "Points: " + points
+			return "Points: " + points
 				+ " - Levesl: " + botbr.level
 				+ " - Points per year: " + Math.round(points_per_day * 365)
 				+ " - Next level ETA: " + levelup
 				+ " - for Level 33: " + level33
-				+ " - Boons: " + boons + ", Boons per year: " + Math.round(boons_per_day * 365));
+				+ " - Boons: " + boons + ", Boons per year: " + Math.round(boons_per_day * 365);
 		});
 	},
 
@@ -197,7 +196,7 @@ module.exports = {
 		fs.readFile("pix.json", "utf-8", function(err, data) {
 			if (err) {
 				return console.log(err);
-				bot.say(info.channel, "00,03 Couldn't read pix JSON! 04,01");
+				return "00,03 Couldn't read pix JSON! 04,01";
 			} else {
 				console.log("The file was read!");
 				JSON.parse(data, function (k, v) {
@@ -206,9 +205,9 @@ module.exports = {
 					}
 				});
 				if (picurl != null) {
-					bot.say(info.channel, "00,03 Pixies of " + botbr + ": " + picurl + " 04,01");
+					return "00,03 Pixies of " + botbr + ": " + picurl + " 04,01";
 				} else {
-					bot.say(info.channel, "00,03 BotBr not pixelated! 04,01");
+					return "00,03 BotBr not pixelated! 04,01";
 				}
 			}
 		}); 
@@ -227,24 +226,23 @@ module.exports = {
 				response += ' :: final results ' + battle.end_date;
 				response += ' ' + battle.end_time_left;
 				response += ' :: ' + battle.profile_url;
-				bot.say(info.channel, response);
+				return response;
 			});
 
 		}).catch(function(error) {
-			bot.say(info.channel, 'No current Battles teh running! =0');
+			return 'No current Battles teh running! =0';
 		});
 	},
 
 	botbr: function(info, words) {
 		var name = words.slice(1).join(' ');
 		if (typeof name === 'undefined' || name.length < 2) {
-			bot.say(info.channel, 'Moar characters!! =X');
-			return;
+			return 'Moar characters!! =X';
 		}
 
 		var p = botb_api.request('botbr/search/' + name);
 		var none_found = function() {
-			bot.say(info.channel, 'BotBr no found! =0');
+			return 'BotBr no found! =0';
 		}
 
 		p.then(function(data) {
@@ -267,8 +265,7 @@ module.exports = {
 				if (typeof botbr === 'undefined') {
 					response = 'Possible matches :: ';
 					response += botbrs.join(', ');
-					bot.say(info.channel, response);
-					return;
+					return response;
 				}
 			}
 
@@ -280,7 +277,7 @@ module.exports = {
 			response += ' :: Lvl ' + botbr.level;
 			response += ' ' + botbr.class;
 			response += ' :: ' + botbr.profile_url;
-			bot.say(info.channel, response);
+			return response;
 		}).catch(function(error) {
 			none_found();
 		});
@@ -296,7 +293,7 @@ module.exports = {
 		}
 
 		var none_found = function() {
-			bot.say(info.channel, 'String "' + title + '" does not match entry %title%;');
+			return 'String "' + title + '" does not match entry %title%;';
 		}
 
 		p.then(function(data) {
@@ -317,7 +314,7 @@ module.exports = {
 			var response = entry.botbr.name;
 			response += ' - ' + entry.title;
 			response += ' :: ' + entry.profile_url;
-			bot.say(info.channel, response);
+			return response;
 		}).catch(function(error) {
 			none_found();
 		});
@@ -326,7 +323,7 @@ module.exports = {
 	help: function(info, words) { 
 		var help = require('./commands/help.js');
 		var chat_text = help.help(words, this.aliases, info.command_prefix);
-		if (chat_text != null) bot.say(info.channel, info.nick + ": " + chat_text);
+		if (chat_text != null) return info.nick + ": " + chat_text;
 	},
 
 	top: function(info, words) {
@@ -340,7 +337,7 @@ module.exports = {
 		}
 
 		var none_found = function() {
-			bot.say(info.channel, "Couldn't find anything! Did you spell the class right?");
+			return "Couldn't find anything! Did you spell the class right?";
 		}
 
 		p.then(function(data) {
@@ -382,7 +379,7 @@ module.exports = {
 			if (response === '') {
 				none_found();
 			} else {
-				bot.say(info.channel, response);
+				return response;
 			}
 		}).catch(function(error) {
 			none_found();
@@ -392,16 +389,15 @@ module.exports = {
 	ultrachord: function(info, words) {
 		var ultrachord = require('./commands/ultrachord.js');
 		var chat_text = ultrachord.ultrachord(words);
-		if (chat_text != null) bot.say(info.channel, info.nick + ": " + chat_text);
+		if (chat_text != null) return info.nick + ": " + chat_text;
 	},
 
 	unknown: function(info, words) {
 		console.log(info.from + ' unknown command');
-		bot.say(info.channel, 'you are in need of ' + info.command_prefix + 'help');
+		return 'you are in need of ' + info.command_prefix + 'help';
 	},
 
 	uptime: function(info, words) {
-		console.log(bot);
 		String.prototype.toWWDDHHMMSS = function() {
 			var sec_num = parseInt(this, 10); // don't forget the second param
 			var days = 0;
@@ -448,7 +444,7 @@ module.exports = {
 		var time = process.uptime();
 		var uptime = (time + "").toWWDDHHMMSS();
 
-		bot.say(info.channel, "BotB has been running for " + uptime);
+		return "BotB has been running for " + uptime;
 	},
 
 };
