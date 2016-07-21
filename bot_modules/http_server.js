@@ -1,4 +1,6 @@
 var config = require('./config.js');
+var ram = require('./memory.js');
+ram.initialize();
 var http = require('http');
 
 
