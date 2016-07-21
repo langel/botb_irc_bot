@@ -196,7 +196,7 @@ module.exports = {
 		fs.readFile("pix.json", "utf-8", function(err, data) {
 			if (err) {
 				return console.log(err);
-				bot.say(info.channel, "00,03 Couldn't read pix JSON!04,01");
+				bot.say(info.channel, "00,03 Couldn't read pix JSON! 04,01");
 			} else {
 				console.log("The file was read!");
 				JSON.parse(data, function (k, v) {
