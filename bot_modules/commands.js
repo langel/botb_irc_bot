@@ -58,7 +58,19 @@ module.exports = {
 	/// bot commands
 	
 	levelup: function(bot, info, words) { // TODO
-
+		// == Old Response ==
+		// Points: 55306 - Level: 26 - Points per year: 23139
+		// Next level ETA: 0 years 0 months 11 days.
+		// for Level 33: 43 years 5 months 4 days - Boons: 6265 , Boons per year: 2621
+		// ==================
+		var username = "";
+		for (var i=1; i<words.length; i++) username = username.concat(words[i] + ' ');
+		var botbr_list = botb_api.request('botbr/list?filters=name~' + username);
+		botbr_list.then(function(data) {
+			var botbr = data[0];
+			var signup = botbr.create_date;
+			bot.say(info.channel, "botbr " + botbr.name + " created on " + signup);
+		});
 	},
 
 	pix: function(bot, info, words) { // TODO
