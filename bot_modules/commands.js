@@ -109,7 +109,7 @@ module.exports = {
 			var current_date = new Date(Date.now());
 			var future_date = new Date(Math.round(
 				// (ms / d) * d = ms
-				current_date.getTime() + (milliseconds_per_day*days)
+				current_date.getTime() + (milliseconds_per_day * days)
 			));
 			// Calculate how many years ahead the future date is.
 			// Notice: this can be inaccurate! Example: dec 25th 2015 and 
