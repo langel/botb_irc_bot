@@ -1,12 +1,12 @@
 var config = require('./config.js');
 var ram = require('./memory.js');
-ram.initialize();
 var http = require('http');
+var bot = require('./irc_bot.js');
 
 
 var commands = {
 	
-	say: function(bot, message) {
+	say: function(message) {
 		bot.say(config.irc.channels[0], message);
 		respond(response, 200, 'text/plain', 'the bot speaks!');
 	},
@@ -39,7 +39,7 @@ var respond = function(response, code, content, message) {
 
 module.exports = {
 
-	intialize: function(bot) {
+	initialize: function() {
 
 		http.createServer(function (request, response) {
 			console.log('SERVER REQUEST :: ' + request.method + ' ' + request.url);
@@ -54,7 +54,7 @@ module.exports = {
 					}
 					// check for and run command
 					if (typeof commands[data.command] === 'function') {
-						commands[data.command](bot, data.message);
+						commands[data.command](data.message);
 					}
 				});
 			}

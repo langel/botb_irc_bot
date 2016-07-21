@@ -16,14 +16,15 @@ var ram = {};
 module.exports = {
 
 	initialize: function() {
-		console.log('Initializing RAM');
 		fs.access(ram_file, function(error) {
 			if (error !== null) {
+				console.log('New RAM created');
 				return;
 			}
 			else {
 				fs.readFile(ram_file, function(error, data) {
 					ram = JSON.parse(data);
+					console.log('RAM loaded from local file');
 				});
 			}
 		});
