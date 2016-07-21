@@ -43,6 +43,10 @@ module.exports = {
 		});
 	},
 
+	say: function(channel, text) {
+		say(channel, text);
+	},
+
 };
 	
 say = function(channel, text) {
