@@ -1,5 +1,5 @@
 module.exports = {
-	bot_name: 'BotB2_testes',
+	bot_name: 'BotB2_test',
 	command_prefix: '!',
 	irc: {
 		channels: ['#botb_bot_test'],
@@ -8,7 +8,7 @@ module.exports = {
 		debug: true,
 	},
 	http: {
-		ip: "192.168.1.100",
+		ip: "localhost",
 		port: 1337,
 		key: "supersecretkey"
 	}
