@@ -39,6 +39,7 @@ Thumbs.db
 # BotB IRC bot configs and data #
 #################################
 memory.json
+pix.json
 bot_modules/config.js
 
 # Added by Savestate #
