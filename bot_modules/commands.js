@@ -196,18 +196,18 @@ module.exports = {
 		fs.readFile("pix.json", "utf-8", function(err, data) {
 			if (err) {
 				return console.log(err);
-				bot.say(info.channel, "Couldn't read pix JSON!");
+				bot.say(info.channel, "00,03 Couldn't read pix JSON!04,01");
 			} else {
 				console.log("The file was read!");
 				JSON.parse(data, function (k, v) {
-					if (k === botbr.toLowerCase()) {
+					if (k.toLowerCase() === botbr.toLowerCase()) {
 						picurl = v;
 					}
 				});
 				if (picurl != null) {
-					bot.say(info.channel, "Pixies of " + botbr + ": " + picurl);
+					bot.say(info.channel, "00,03 Pixies of " + botbr + ": " + picurl + " 04,01");
 				} else {
-					bot.say(info.channel, "BotBr not pixelated!");
+					bot.say(info.channel, "00,03 BotBr not pixelated! 04,01");
 				}
 			}
 		}); 
