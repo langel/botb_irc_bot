@@ -410,15 +410,16 @@ module.exports = {
 				var host_domain = body.trim() + ':' + config.http.port;
 				memory.set('host_domain', host_domain);
 				console.log('host domain ' + host_domain + ' saved to memory');
-				var request_uri = 'irc_bot' + '/update_ip/' + config.botb_api_key + '/' + host_domain;
-				console.log(request_uri);
+				var request_uri = 'irc_bot' + '/update_ip/' + config.botb_api_key + '/' + host_domain + '.json';
 				return botb_api.request(request_uri).then(function(data) {
+					console.log('battleofthebits.org response:');
 					console.log(data);
-					console.log('host domain updated on Battle of the Bites site');
 					resolve('irc bot host domain updated');
 				},
 				function(error) {
-					console.log('update_ip is erronous');
+					var response = 'battleofthebits.org domain update error';
+					console.log(response);
+					resolve(response);
 				});
 			});
 		});	
