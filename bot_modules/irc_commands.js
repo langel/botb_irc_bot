@@ -192,8 +192,7 @@ module.exports = {
 		var picurl;
 
 		if (botbr === "") {
-			bot.say(info.channel, "00,03 Pox of whose???? 04,01");
-			return;
+			return "00,03 Pox of whose???? 04,01";
 		}
 
 		var fs = require('fs');
