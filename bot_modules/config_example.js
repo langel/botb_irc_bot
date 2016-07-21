@@ -11,5 +11,6 @@ module.exports = {
 		ip: "localhost",
 		port: 1337,
 		key: "supersecretkey"
-	}
+	},
+	botb_api_key: 'supersupersecretkey',
 };

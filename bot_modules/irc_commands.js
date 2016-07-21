@@ -1,4 +1,7 @@
 var botb_api = require('./botb_api.js');
+var config = require('./config.js');
+var memory = require('./memory.js');
+var request = require('request');
 
 module.exports = {
 
@@ -398,6 +401,27 @@ module.exports = {
 	unknown: function(info, words) {
 		console.log(info.from + ' unknown command');
 		return 'you are in need of ' + info.command_prefix + 'help';
+	},
+
+	update_ip: function(info, word) {
+		return new Promise(function(resolve, reject) {
+			// get public facing ip from free service
+			request('http://ipinfo.io/ip', function(error, response, body) {
+				var host_domain = body.trim() + ':' + config.http.port;
+				memory.set('host_domain', host_domain);
+				console.log('host domain ' + host_domain + ' saved to memory');
+				var request_uri = 'irc_bot' + '/update_ip/' + config.botb_api_key + '/' + host_domain;
+				console.log(request_uri);
+				return botb_api.request(request_uri).then(function(data) {
+					console.log(data);
+					console.log('host domain updated on Battle of the Bites site');
+					resolve('irc bot host domain updated');
+				},
+				function(error) {
+					console.log('update_ip is erronous');
+				});
+			});
+		});	
 	},
 
 	uptime: function(info, words) {

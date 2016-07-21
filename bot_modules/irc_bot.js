@@ -14,6 +14,7 @@ var channel_filters = {
 		botbrsync: false,
 		help: false,
 		unknown: false,
+		update_ip: false,
 	}
 };
 
@@ -45,25 +46,25 @@ module.exports = {
 
 	say: function(channel, text) {
 		say(channel, text);
-	},
+	}
+}
 
-};
-
+// XXX need a way to call this from command parser when it's inside exports
 say = function(channel, text) {
-	console.log('text : ' + text);
-
 	function irc_push(channel, text) {
 		text = color + ' ' + text + color + ' ';
 		bot.say(channel, text);
 	}
+	// is it an array?
 	if (Array.isArray(text)) {
 		text.forEach(function(line) {
 			irc_push(channel, line);
 		});
 		return;
 	}
+	// is it just text?
 	irc_push(channel, text);
-}
+};
 
 
 command_parser = function(from, to, text, info) {
@@ -113,20 +114,20 @@ command_parser = function(from, to, text, info) {
 		console.log('command false');
 		return false;
 	}
-	console.log(words);
 
 	// check for command and call
 	if (typeof commands[command] === "function") {
-		// XXX might want to check for string before bot.say
 		var response = commands[command](info, words);
-		console.log('has returned string');
+		// is it a promise?
 		if (typeof response.then === 'function') {
 			response.then(function(string) {
 				say(info.channel, string);
 			});
-		} else {
-			console.log(response);
+		} 
+		// is it something else?
+		else {
 			say(info.channel, response);
 		}
 	}
 };
+

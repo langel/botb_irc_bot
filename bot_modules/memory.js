@@ -35,8 +35,6 @@ module.exports = {
 
 	set: function(key, val) {
 		ram[key] = val;
-		// XXX too much terminal spam?
-		console.log(ram);
 		console.log('Saving RAM to Disk');
 		fs.writeFileSync(ram_file, JSON.stringify(ram));
 	},
