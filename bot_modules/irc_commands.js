@@ -2,6 +2,7 @@ var botb_api = require('./botb_api.js');
 var config = require('./config.js');
 var memory = require('./memory.js');
 var request = require('request');
+var bot;
 
 module.exports = {
 
@@ -26,6 +27,10 @@ module.exports = {
 		wiki: 'wikipedia',
 		y: 'youtube',
 		yt: 'youtube',
+	},
+
+	init: function(irc_bot) {
+		bot = irc_bot;
 	},
 
 	/// web shortcut commands
@@ -472,7 +477,8 @@ module.exports = {
 		var time = process.uptime();
 		var uptime = (time + "").toWWDDHHMMSS();
 
-		return "BotB has been running for " + uptime;
+		bot.say(info.channel, "BotB has been running for " + uptime);
+		return true;
 	},
 
 };

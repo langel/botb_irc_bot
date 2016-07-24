@@ -27,6 +27,8 @@ module.exports = {
 			channels: config.irc.channels
 		});
 
+		commands.init(this);
+
 		bot.addListener('join', function(channel, who) {
 			console.log(who + ' has joined ' + channel);
 		});
