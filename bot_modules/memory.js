@@ -3,15 +3,11 @@ var ram_file = './memory.json';
 var ram = {};
 
 /* 
-	There's potential here for things to get haywire.
-	I have no idea what would happen if this memory
-	manager tried to write the file multiple times
-	in the same moment.
-
-	Moar research and testing could be done.
+	Experimenting with the RAM only being backed up
+	every 10 seconds.
 */
 
-
+var save_needed = false;
 
 module.exports = {
 
@@ -20,13 +16,21 @@ module.exports = {
 			if (error !== null) {
 				console.log('New RAM created');
 				return;
-			} else {
+			} 
+			else {
 				fs.readFile(ram_file, function(error, data) {
 					ram = JSON.parse(data);
 					console.log('RAM loaded from local file');
 				});
 			}
 		});
+		setInterval(function() {
+			if (save_needed === true) {
+				console.log('Saving RAM to Disk');
+				fs.writeFileSync(ram_file, JSON.stringify(ram));
+				save_needed = false;
+			}
+		}, 10000);
 	},
 
 	get: function(key) {
@@ -35,8 +39,7 @@ module.exports = {
 
 	set: function(key, val) {
 		ram[key] = val;
-		console.log('Saving RAM to Disk');
-		fs.writeFileSync(ram_file, JSON.stringify(ram));
+		save_needed = true;
 	},
 
 	// carefull, this can overwrite a non array
