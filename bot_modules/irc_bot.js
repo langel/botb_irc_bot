@@ -1,8 +1,8 @@
 var irc = require('irc');
-var commands = require('./irc_commands.js');
 var config = require('./config.js');
 
 var bot;
+var commands;
 
 var channel_blocks = {
 	private_chat: {
@@ -18,16 +18,50 @@ var channel_blocks = {
 	}
 };
 
+var commands_aliases = {
+	b: 'battle',
+	chord: 'ultrachord',
+	compo: 'battle',
+	g: 'google',
+	gi: 'image',
+	gif: 'giphy',
+	h: 'help',
+	i: 'imdb',
+	images: 'image',
+	img: 'imgur',
+	imgr: 'imgur',
+	ohb: 'battle',
+	ohc: 'battle',
+	pic: 'pix',
+	uc: 'ultrachord',
+	up: 'uptime',
+	w: 'wikipedia',
+	wiki: 'wikipedia',
+	y: 'youtube',
+	yt: 'youtube',
+};
+
+var commands_alias_filters = {
+	'kudos_minus': /^(.+)\-{2}$/i,
+	'kudos_plus': /^(.+)\+{2}$/i,
+};
+
 var color = '\x0304,01';
 
 module.exports = {
+
+	export_aliases: function() {
+		return commands_aliases;
+	},
 
 	initialize: function() {
 		bot = new irc.Client(config.irc.server, config.bot_name, {
 			channels: config.irc.channels
 		});
 
-		commands.init(this);
+		//commands.init(this);
+		commands = require('./irc_commands.js');
+
 
 		bot.addListener('join', function(channel, who) {
 			console.log(who + ' has joined ' + channel);
@@ -51,7 +85,6 @@ module.exports = {
 	}
 }
 
-// XXX need a way to call this from command parser when it's inside exports
 say = function(channel, text) {
 	function irc_push(channel, text) {
 		text = color + ' ' + text + color + ' ';
@@ -67,7 +100,6 @@ say = function(channel, text) {
 	// is it just text?
 	irc_push(channel, text);
 };
-
 
 command_parser = function(from, to, text, info) {
 
@@ -95,8 +127,8 @@ command_parser = function(from, to, text, info) {
 	}
 
 	// check alias filters (command override)
-	for (var key in commands.alias_filters) {
-		filter = commands.alias_filters[key];
+	for (var key in commands_alias_filters) {
+		filter = commands_alias_filters[key];
 		if (filter.test(text)) {
 			commands[key](info, words);
 			return;
@@ -111,11 +143,9 @@ command_parser = function(from, to, text, info) {
 				console.log('STOP MESSAGING YERSELF!!');
 				return false;
 			}
-
 			info.channel = from;
 			commands.unknown(info, words);
 		}
-
 		return false;
 	}
 
@@ -123,12 +153,9 @@ command_parser = function(from, to, text, info) {
 	var command = words[0].substr(1);
 
 	// check if the command is an alias
-	if (typeof commands.aliases[command] !== 'undefined') {
-		command = commands.aliases[command];
+	if (typeof commands_aliases[command] !== 'undefined') {
+		command = commands_aliases[command];
 	}
-
-
-
 
 	// check channel's blocked commands
 	if (typeof channel_blocks[channel][command] === 'false') {
@@ -139,6 +166,7 @@ command_parser = function(from, to, text, info) {
 	// check for command and call
 	if (typeof commands[command] === "function") {
 		var response = commands[command](info, words);
+		/*
 		// is it a promise?
 		if (typeof response.then === 'function') {
 			response.then(function(string) {
@@ -149,6 +177,7 @@ command_parser = function(from, to, text, info) {
 		else {
 			say(info.channel, response);
 		}
+		*/
 	}
 };
 
