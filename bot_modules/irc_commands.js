@@ -72,6 +72,11 @@ module.exports = {
 	
 	// kudos commands
 
+	kudos: function(info, words) {
+		bot.say(info.channel, kudos.info(words));
+		return false;
+	},
+
 	kudos_minus: function(info, words) {
 		bot.say(info.channel, kudos.minus(words));
 	},
