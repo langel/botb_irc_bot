@@ -4,7 +4,7 @@ var config = require('./config.js');
 
 var bot;
 
-var channel_filters = {
+var channel_blocks = {
 	private_chat: {
 		ultrachord: false,
 	},
@@ -70,12 +70,39 @@ say = function(channel, text) {
 
 
 command_parser = function(from, to, text, info) {
+
+	var command = '';
+
 	// break text into words
 	var words = text.split(' ').filter(e => e !== '');
+
 	// supplement info
 	info.from = from;
 	info.command_prefix = config.command_prefix;
 	info.words = words;
+	
+	// interpret solicitor
+	var channel;
+	if (to === config.bot_name) {
+		console.log('PM <' + from + '> ' + text);
+		channel = 'private_chat';
+		info.channel = from;
+	} 
+	else if (config.irc.channels.indexOf(to) != -1) {
+		console.log(to + ' <' + from + '> ' + text);
+		channel = 'main_chat';
+		info.channel = info.args[0];
+	}
+
+	// check alias filters (command override)
+	for (var key in commands.alias_filters) {
+		filter = commands.alias_filters[key];
+		if (filter.test(text)) {
+			commands[key](info, words);
+			return;
+		}
+	};
+
 	// check for command prefix
 	if (words[0].substr(0, 1) !== config.command_prefix) {
 		if (to === config.bot_name) {
@@ -100,19 +127,11 @@ command_parser = function(from, to, text, info) {
 		command = commands.aliases[command];
 	}
 
-	// check channel filter
-	var channel;
-	if (to === config.bot_name) {
-		console.log('PM <' + from + '> ' + text);
-		channel = 'private_chat';
-		info.channel = from;
-	} else if (config.irc.channels.indexOf(to) != -1) {
-		console.log(to + ' <' + from + '> ' + text);
-		channel = 'main_chat';
-		info.channel = info.args[0];
-	}
 
-	if (typeof channel_filters[channel][command] === 'false') {
+
+
+	// check channel's blocked commands
+	if (typeof channel_blocks[channel][command] === 'false') {
 		console.log('command false');
 		return false;
 	}

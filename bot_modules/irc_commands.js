@@ -1,5 +1,6 @@
 var botb_api = require('./botb_api.js');
 var config = require('./config.js');
+var kudos = require('./commands/kudos.js');
 var memory = require('./memory.js');
 var request = require('request');
 var bot;
@@ -27,6 +28,11 @@ module.exports = {
 		wiki: 'wikipedia',
 		y: 'youtube',
 		yt: 'youtube',
+	},
+
+	alias_filters: {
+		'kudos_minus': /^(.+)\-{2}$/i,
+		'kudos_plus': /^(.+)\+{2}$/i,
 	},
 
 	init: function(irc_bot) {
@@ -62,6 +68,18 @@ module.exports = {
 	youtube: function(info, words) {
 		return "https://www.youtube.com/results?search_query=" + words.slice(1).join('%20');
 	},
+
+	
+	// kudos commands
+
+	kudos_minus: function(info, words) {
+		bot.say(info.channel, kudos.minus(words));
+	},
+
+	kudos_plus: function(info, words) {
+		bot.say(info.channel, kudos.plus(words));
+	},
+
 
 	/// bot commands
 
