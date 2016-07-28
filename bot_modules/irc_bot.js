@@ -158,7 +158,8 @@ command_parser = function(from, to, text, info) {
 	}
 
 	// check channel's blocked commands
-	if (typeof channel_blocks[channel][command] === 'false') {
+	if (channel_blocks[channel][command] === false) {
+		say(info.channel, 'illegal command');
 		console.log('command false');
 		return false;
 	}
