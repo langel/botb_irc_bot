@@ -30,6 +30,7 @@ var commands_aliases = {
 	images: 'image',
 	img: 'imgur',
 	imgr: 'imgur',
+	l: 'lyceum',
 	ohb: 'battle',
 	ohc: 'battle',
 	pic: 'pix',

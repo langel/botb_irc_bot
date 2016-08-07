@@ -183,6 +183,57 @@ module.exports = {
 	},
 
 	/**
+	 * lyceum
+	 *
+	 */
+	lyceum: function(info, words) {
+		var title = words.slice(1).join(' ');
+		if (typeof title === 'undefined' || title.length < 2) {
+			bot.say(info.channel, 'Moar characters!! =X');
+			return;
+		}
+
+		var p = botb_api.request('lyceum_article/search/' + title);
+		var none_found = 'Article no found! =0';
+
+		p.then(function(data) {
+			if (data.length == 0) {
+				bot.say(info.channel, none_found);
+				return;
+			}
+
+			var article;
+			if (data.length > 1) {
+				var response;
+				var articles = [];
+				data.forEach(function(article_object) {
+					articles.push(article_object.title);
+					if (title == article_object.title) {
+						article = article_object;
+					}
+				});
+
+				if (typeof article === 'undefined') {
+					response = 'Possible matches :: ';
+					response += articles.join(', ');
+					bot.say(info.channel, response);
+					return;
+				}
+			}
+
+			if (data.length == 1) {
+				article = data[0];
+			}
+
+			var response = article.title;
+			response += ' :: ' + article.profile_url;
+			bot.say(info.channel, response);
+		}).catch(function(error) {
+			bot.say(info.channel, none_found);
+		});
+	},
+
+	/**
 	 *	top
 	 *
 	 */
