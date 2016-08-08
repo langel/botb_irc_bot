@@ -1,7 +1,7 @@
 var bot = require('./irc_bot.js');
 var botb_api = require('./botb_api.js');
 var config = require('./config.js');
-var kudos = require('./commands/kudos.js');
+var kudos = require('./irc_kudos.js');
 var memory = require('./memory.js');
 var request = require('request');
 
@@ -35,6 +35,14 @@ module.exports = {
 			function(error) {
 				bot.say(channel.info, 'No current Battles teh running! =0');
 			});
+	},
+
+	/**
+	 * blocked
+	 *
+	 */
+	blocked: function(info, words) {
+		bot.say(info.channel, 'illegal command');
 	},
 
 	/**
@@ -130,6 +138,22 @@ module.exports = {
 	},
 
 	/**
+	 *	giphy
+	 *
+	 */
+	giphy: function(info, words) {
+		bot.say(info.channel, "http://giphy.com/search/" + words.slice(1).join('%20'));
+	},
+
+	/**
+	 *	google
+	 *
+	 */
+	google: function(info, words) {
+		bot.say(info.channel, "https://encrypted.google.com/search?q=" + words.slice(1).join('%20'));
+	},
+
+	/**
 	 *	help
 	 *
 	 */
@@ -179,22 +203,6 @@ module.exports = {
 		}
 	},
 	
-	/**
-	 *	giphy
-	 *
-	 */
-	giphy: function(info, words) {
-		bot.say(info.channel, "http://giphy.com/search/" + words.slice(1).join('%20'));
-	},
-
-	/**
-	 *	google
-	 *
-	 */
-	google: function(info, words) {
-		bot.say(info.channel, "https://encrypted.google.com/search?q=" + words.slice(1).join('%20'));
-	},
-
 	/**
 	 *	image
 	 *
@@ -539,7 +547,7 @@ module.exports = {
 	 *
 	 */
 	ultrachord: function(info, words) {
-		var ultrachord = require('./commands/ultrachord.js');
+		var ultrachord = require('./irc_ultrachord.js');
 		var chat_text = ultrachord.ultrachord(words);
 		if (chat_text != null) {
 			bot.say(info.channel, info.nick + ": " + chat_text);

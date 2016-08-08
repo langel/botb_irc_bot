@@ -6,14 +6,15 @@ var commands;
 
 var channel_blocks = {
 	private_chat: {
+		blocked: false,
 		ultrachord: false,
 	},
 	main_chat: {
+		blocked: false,
 		// XXX merge these into identify
 		botbrname: false,
 		botbrpass: false,
 		botbrsync: false,
-		unknown: false,
 		update_ip: false,
 	}
 };
@@ -125,7 +126,7 @@ command_parser = function(from, to, text, info) {
 
 	// check channel's blocked commands
 	if (command_check(channel, command) === false) {
-		say(info.channel, 'illegal command');
+		commands.blocked(info, words);
 		console.log('"' + command + '" in #' + channel + ' blocked');
 		return false;
 	}
@@ -136,39 +137,15 @@ command_parser = function(from, to, text, info) {
 	}
 };
 
-say = function(channel, text) {
-	function irc_push(channel, text) {
-		text = color + ' ' + text + color + ' ';
-		bot.say(channel, text);
-	}
-	// is it an array?
-	if (Array.isArray(text)) {
-		text.forEach(function(line) {
-			irc_push(channel, line);
-		});
-		return;
-	}
-	// is it just text?
-	irc_push(channel, text);
-};
-
 
 module.exports = {
 
-	alias_check: function(string) {
-		return alias_check(string);
+	alias_check: function(command) {
+		return alias_check(command);
 	},
 
 	command_check: function(command, channel) {
 		return command_check(command, channel);
-	},
-
-	export_channel_blocks: function() {
-		return channel_blocks;
-	},
-
-	export_aliases: function() {
-		return commands_aliases;
 	},
 
 	initialize: function() {
@@ -192,12 +169,24 @@ module.exports = {
 			console.log(who + ' has quit ' + channel);
 		});
 
-		bot.addListener("message", function(from, to, text, info) {
+		bot.addListener('message', function(from, to, text, info) {
 			command_parser(from, to, text, info);
 		});
 	},
 
 	say: function(channel, text) {
-		say(channel, text);
+		function irc_push(channel, text) {
+			text = color + ' ' + text + color + ' ';
+			bot.say(channel, text);
+		}
+		// is it an array?
+		if (Array.isArray(text)) {
+			text.forEach(function(line) {
+				irc_push(channel, line);
+			});
+			return;
+		}
+		// is it just text?
+		irc_push(channel, text);
 	}
 }

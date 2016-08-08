@@ -1,4 +1,4 @@
-var ram = require('./../memory.js');
+var ram = require('./memory.js');
 
 var what_max_length = 32;
 
