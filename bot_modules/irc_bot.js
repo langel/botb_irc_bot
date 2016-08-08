@@ -9,10 +9,10 @@ var channel_blocks = {
 		ultrachord: false,
 	},
 	main_chat: {
+		// XXX merge these into identify
 		botbrname: false,
 		botbrpass: false,
 		botbrsync: false,
-		help: false,
 		unknown: false,
 		update_ip: false,
 	}
@@ -57,8 +57,11 @@ alias_check = function(command) {
 	return command;
 };
 
-command_check = function(command, channel) {
+command_check = function(channel, command) {
 	if (channel_blocks[channel][command] === false) {
+		return false;
+	}
+	if (typeof commands[command] === 'undefined') {
 		return false;
 	}
 	return true;
@@ -82,11 +85,13 @@ command_parser = function(from, to, text, info) {
 		console.log('PM <' + from + '> ' + text);
 		channel = 'private_chat';
 		info.channel = from;
+		info.channel_type = channel;
 	} 
 	else if (config.irc.channels.indexOf(to) != -1) {
 		console.log(to + ' <' + from + '> ' + text);
 		channel = 'main_chat';
 		info.channel = info.args[0];
+		info.channel_type = channel;
 	}
 
 	// check alias filters (command override)
@@ -119,7 +124,7 @@ command_parser = function(from, to, text, info) {
 	command = alias_check(command);
 
 	// check channel's blocked commands
-	if (command_check(command, channel) === false) {
+	if (command_check(channel, command) === false) {
 		say(info.channel, 'illegal command');
 		console.log('"' + command + '" in #' + channel + ' blocked');
 		return false;
