@@ -188,7 +188,7 @@ module.exports = {
 	 */
 	lyceum: function(info, words) {
 		var title = words.slice(1).join(' ');
-		if (typeof title === 'undefined' || title.length < 2) {
+		if (typeof title === 'undefined' || title.length < 3) {
 			bot.say(info.channel, 'Moar characters!! =X');
 			return;
 		}
