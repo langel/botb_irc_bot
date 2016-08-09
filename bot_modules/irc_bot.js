@@ -7,6 +7,8 @@ var commands;
 var channel_blocks = {
 	private_chat: {
 		blocked: false,
+		kudos_minus: false,
+		kudos_plus: false,
 		ultrachord: false,
 	},
 	main_chat: {
@@ -15,6 +17,8 @@ var channel_blocks = {
 		botbrname: false,
 		botbrpass: false,
 		botbrsync: false,
+		kudos_minus: false,
+		kudos_plus: false,
 		update_ip: false,
 	}
 };
@@ -58,8 +62,8 @@ alias_check = function(command) {
 	return command;
 };
 
-command_check = function(channel, command) {
-	if (channel_blocks[channel][command] === false) {
+command_check = function(channel_type, command) {
+	if (channel_blocks[channel_type][command] === false) {
 		return false;
 	}
 	if (typeof commands[command] === 'undefined') {
@@ -144,8 +148,28 @@ module.exports = {
 		return alias_check(command);
 	},
 
-	command_check: function(command, channel) {
-		return command_check(command, channel);
+	alias_find: function(command) {
+		var alias_list = [];
+		for (alias in commands_aliases) {
+			if (commands_aliases[alias] === command) {
+				alias_list.push(alias);
+			}
+		}
+		return alias_list;
+	},
+
+	command_check: function(command, channel_type) {
+		return command_check(command, channel_type);
+	},
+
+	command_list: function(channel_type) {
+		var command_list = [];
+		for (command in commands) {
+			if (command_check(channel_type, command)) {
+				command_list.push(command);
+			}
+		}
+		return command_list;
 	},
 
 	initialize: function() {
