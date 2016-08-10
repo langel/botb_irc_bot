@@ -52,8 +52,6 @@ var commands_alias_filters = {
 	'kudos_plus': /^(.+)\+{2}$/i,
 };
 
-var color = '\x0304,01';
-
 
 alias_check = function(command) {
 	if (typeof commands_aliases[command] !== 'undefined') {
@@ -200,7 +198,7 @@ module.exports = {
 
 	say: function(channel, text) {
 		function irc_push(channel, text) {
-			text = color + ' ' + text + color + ' ';
+			text = config.irc.text_color + ' ' + text + config.irc.text_color + ' ';
 			bot.say(channel, text);
 		}
 		// is it an array?

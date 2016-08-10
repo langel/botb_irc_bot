@@ -6,6 +6,7 @@ module.exports = {
 		server: 'irc.esper.net',
 		autoRejoin: true,
 		debug: true,
+		text_color: '\x0304,01',
 	},
 	http: {
 		ip: "localhost",
