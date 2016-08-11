@@ -6,7 +6,7 @@ Runs on node and Linux/Mac (or Windows w/ Cygwin due to execSync usage). For dev
 
 To install the prerequisites:
 
-``npm install irc curl``
+``npm install``
 
 You also need the LAME, SoX, and curl packages. On Ubuntu/Debian, you can use the following command:
 
