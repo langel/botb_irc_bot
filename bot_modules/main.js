@@ -29,6 +29,7 @@ module.exports = {
 
 		// initialize services
 		services.forEach(function(service) {
+			console.log('Initializing Module : ' + service);
 			var module = require('./' + service + '.js');
 			module.initialize();
 		});
