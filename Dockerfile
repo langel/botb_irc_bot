@@ -1,9 +1,12 @@
 FROM nodesource/jessie:6.3.1
 
+RUN apt-get update && apt-get install -y lame sox curl
+
 ADD package.json package.json  
 RUN npm install  
-ADD . .
+RUN npm install supervisor -g
+ADD bot.js .
 
 EXPOSE 3000
 
-CMD ["node","bot.js"] 
+CMD ["supervisor","bot.js"]
