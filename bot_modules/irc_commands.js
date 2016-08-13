@@ -14,11 +14,11 @@ module.exports = {
 	 */
 	battle: function(info, words) {
 		var p = botb_api.request('battle/current');
-		return p.then(function(data) {
+		p.then(function(data) {
 				var response = [];
 				var text = '';
 				data.forEach(function(battle) {
-					text += battle.title;
+					text = battle.title;
 					// XXX bit period v entry period stuff
 					text += ' :: ' + battle.entry_count + ' entries';
 					text += ' :: ' + battle.period + ' period deadline';
@@ -29,12 +29,10 @@ module.exports = {
 					text += ' :: ' + battle.profile_url;
 					response.push(text);
 				});
-				console.log(response);
-				bot.say(channel.info, response);
-
+				bot.say(info.channel, response);
 			},
 			function(error) {
-				bot.say(channel.info, 'No current Battles teh running! =0');
+				bot.say(info.channel, 'No current Battles teh running! =0');
 			});
 	},
 
