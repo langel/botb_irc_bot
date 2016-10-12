@@ -140,7 +140,12 @@ command_parser = function(from, to, text, info) {
 
 	// check for command and call
 	if (typeof commands[command] === "function") {
-		var response = commands[command](info, words);
+		try {
+			var response = commands[command](info, words);
+		} catch(err) {
+			bot.say(info.channel, 'an error hath occured :X');
+			console.log(err);
+		}
 	}
 };
 
