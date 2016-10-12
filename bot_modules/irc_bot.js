@@ -208,6 +208,7 @@ module.exports = {
 	say: function(channel, text) {
 		function irc_push(channel, text) {
 			text = config.irc.text_color + ' ' + text + config.irc.text_color + ' ';
+			console.log(channel + " <" + config.bot_name + "> " + text)
 			bot.say(channel, text);
 		}
 		// is it an array?
