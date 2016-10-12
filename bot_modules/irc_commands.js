@@ -4,6 +4,7 @@ var config = require('./config.js');
 var kudos = require('./irc_kudos.js');
 var memory = require('./memory.js');
 var request = require('request');
+var ultrachord = require('./irc_ultrachord.js');
 var util = require('./util.js');
 
 
@@ -176,7 +177,7 @@ module.exports = {
 			levelup: "Usage: " + prefix + "levelup <botbr> | Returns BotBr's current level, current points, calculated points per year, estimated time to level up, estimated time to reach GRAND WIZARD STATUS of level 33, current boons, and calculated boons per year.",
 			pix: "Usage: " + prefix + "pix <botbr> | Returns a URL of a picture of the BotBr in the flesh, if one has been submitted.",
 			top: "Usage: " + prefix + "top [class] | Returns list of top BotBrs over all or by class.",
-			ultrachord: "Usage: " + prefix + "ultrachord <notes> [timbre] | Returns a URL to a .wav file of the notes and timbre provided, in a format such as 'C4 E4 G4 sawtooth'. Available notes range from C0 to B7. If number is omitted it will pick octave 2. Default timbre is sine. Available timbres are sine, sawtooth, square, triangle, and pluck.",
+			ultrachord: "Usage: " + prefix + "ultrachord [timbre] <notes> | Returns a URL to a .wav file of the notes and timbre provided, in a format such as 'sawtooth C4 E4 Bb4 D#5'. Available notes range from C0 to B7. If number is omitted it will pick octave " + ultrachord.default_octave + ". Default timbre is sine. Available timbres are sine, sawtooth, square, triangle, and pluck.",
 			uptime: "Usage: " + prefix + "uptime | Displays how long the bot has been running.",
 			wikipedia: "Usage: " + prefix + "wikipedia <query> | Returns a URL of the Wikipedia search of your query.",
 			youtube: "Usage: " + prefix + "youtube <query> | Returns a URL of the YouTube search of your query.",
@@ -520,7 +521,6 @@ module.exports = {
 	 *
 	 */
 	ultrachord: function(info, words) {
-		var ultrachord = require('./irc_ultrachord.js');
 		var chat_text = ultrachord.ultrachord(words);
 		if (chat_text != null) {
 			bot.say(info.channel, info.nick + ": " + chat_text);
