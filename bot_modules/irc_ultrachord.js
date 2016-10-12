@@ -101,7 +101,7 @@ module.exports = {
 			});
 		});
 
-		if (notes.length == 0) return;
+		if (notes.length == 0) return 'notes missing or invalid';
 		console.log(notes);
 		console.log(filename);
 
