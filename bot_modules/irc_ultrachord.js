@@ -62,30 +62,27 @@ module.exports = {
 				return;
 			}
 
-			// the max length of a note is X[#/b][0-9] == 3
-			// anything more is garbage (because we already handled
-			// timbres above)
-			if (param.length > 3) return;
-
-			// if there's 3 characters and the middle is a number,
-			// discard the ultrachord!
-			if (param.length == 3 && (Number.isInteger(parseInt(param.charAt(1), 10)))) return;
+			// abort if a note parameter is not well-formed
+			if (!param.match(/^[a-gA-G](-|[#b♯♭]{0,2})[0-9]$/)) return;
 
 			// note to number function call happens
 			var note_val = noteToNumber(param.charAt(0));
-			// if not a note (A-G)
-			if (note_val == -1) return;
 			filename += param.charAt(0);
 
 			// sharps and flats handling
-			switch (param.charAt(1)) {
-				case '#':
-					note_val++;
-					filename += 'S';
-					break;
-				case 'b':
-					note_val--;
-					filename += 'b';
+			for (var i = 1; i < param.length; i++) {
+				switch (param.charAt(i)) {
+					case '#':
+					case '♯':
+						note_val++;
+						filename += 'S';
+						break;
+					case 'b':
+					case '♭':
+						note_val--;
+						filename += 'b';
+						break;
+				}
 			}
 
 			// octave handling
