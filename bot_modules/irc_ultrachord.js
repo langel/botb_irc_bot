@@ -1,4 +1,6 @@
 module.exports = {
+	default_octave: 4, // exported so that help can reference it
+
 	// returns a link to an ultrachord
 	ultrachord: function(words) {
 		const execSync = require('child_process').execSync;
@@ -16,7 +18,7 @@ module.exports = {
 		function getFrequency(octave, note) {
 			// 1.059463094359 == 2^12, used for note frequency calculation!
 			var base_note = 10; // A
-			var base_octave = 4; // 4
+			var base_octave = module.exports.default_octave;
 			var note_distance = ((octave * 12) + note) - ((base_octave * 12) + base_note);
 			// 440hz == A4
 			var frequency = 440 * Math.pow(1.059463094359, note_distance);
@@ -63,7 +65,7 @@ module.exports = {
 			}
 
 			// abort if a note parameter is not well-formed
-			if (!param.match(/^[a-gA-G](-|[#b♯♭]{0,2})[0-9]$/)) return;
+			if (!param.match(/^[a-gA-G](-|[#b♯♭]{0,2})[0-9]?$/)) return;
 
 			// note to number function call happens
 			var note_val = noteToNumber(param.charAt(0));
