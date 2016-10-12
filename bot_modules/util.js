@@ -7,6 +7,8 @@ var self = module.exports = {
 	// Due to the way it's calculated, it takes month lengths, leap years,
 	// hell even leap seconds into account. All thanks to Javascript Date.
 	day_string: function(days) {
+		if (days === Infinity) return '∞ years'; // no need to calculate
+
 		// this is used to convert days into milliseconds for the Date constructor
 		var milliseconds_per_day = 24 * 60 * 60 * 1000;
 		var current_date = new Date(Date.now());
