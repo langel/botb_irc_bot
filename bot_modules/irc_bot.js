@@ -142,7 +142,7 @@ command_parser = function(from, to, text, info) {
 		try {
 			var response = commands[command](info, words);
 		} catch(err) {
-			bot.say(info.channel, 'an error hath occured :X');
+			module.exports.say(info.channel, 'an error hath occured :X');
 			console.log(err);
 		}
 	}
