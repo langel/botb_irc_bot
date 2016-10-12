@@ -1,3 +1,6 @@
+var https = require('https')
+var querystring = require('querystring')
+
 var bot = require('./irc_bot.js');
 var botb_api = require('./botb_api.js');
 var config = require('./config.js');
@@ -180,7 +183,7 @@ module.exports = {
 			ultrachord: "Usage: " + prefix + "ultrachord [timbre] <notes> | Returns a URL to a .wav file of the notes and timbre provided, in a format such as 'sawtooth C4 E4 Bb4 D#5'. Available notes range from C0 to B7. If number is omitted it will pick octave " + ultrachord.default_octave + ". Default timbre is sine. Available timbres are sine, sawtooth, square, triangle, and pluck.",
 			uptime: "Usage: " + prefix + "uptime | Displays how long the bot has been running.",
 			wikipedia: "Usage: " + prefix + "wikipedia <query> | Returns a URL of the Wikipedia search of your query.",
-			youtube: "Usage: " + prefix + "youtube <query> | Returns a URL of the YouTube search of your query.",
+			youtube: "Usage: " + prefix + "youtube <query> | Returns a URL of the first YouTube result for your query.",
 		};
 		// general help or command helper?
 		var command_help = false;
@@ -582,7 +585,23 @@ module.exports = {
 	 *
 	 */
 	youtube: function(info, words) {
-		bot.say(info.channel, "https://www.youtube.com/results?search_query=" + words.slice(1).join('%20'));
+		// make a request to the youtube API requesting the first video
+		// matching a search query, using jangler's API key
+		var req_url = 'https://www.googleapis.com/youtube/v3/search?key=' +
+			'AIzaSyDR5xOXOViVLMUyWWJM1iQefTaRiKkJfqs&part=id&maxResults=1&q=' +
+			querystring.escape(words.slice(1).join(' ')) + '&type=video';
+		https.request(req_url, (resp) => {
+			resp.on('data', data => {
+				// parse API response and give video URL (if video exists)
+				var results = JSON.parse(data)
+				if (results['items'].length != 0) {
+					bot.say(info.channel, 'https://youtu.be/' +
+						results['items'][0]['id']['videoId']);
+				} else {
+					bot.say(info.channel, 'no youtube results');
+				}
+			});
+		}).end();
 	},
 
 };
