@@ -123,6 +123,11 @@ command_parser = function(from, to, text, info) {
 	// remove command prefix
 	var command = words[0].substr(1);
 
+	// abort if command is empty or non-alphabetic (likely an emoticon)
+	if (command === '' || !command.match(/^[a-zA-Z]/)) {
+		return false;
+	}
+
 	// check if the command is an alias
 	command = alias_check(command);
 
