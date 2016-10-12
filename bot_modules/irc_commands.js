@@ -6,6 +6,26 @@ var memory = require('./memory.js');
 var request = require('request');
 var util = require('./util.js');
 
+
+function battle_data_to_response(data) {
+	var response = [];
+	var text = '';
+	data.forEach(function(battle) {
+		text = battle.title;
+		// XXX bit period v entry period stuff
+		text += ' :: ' + battle.entry_count + ' entries';
+		text += ' :: ' + battle.period + ' period deadline';
+		text += ' ' + battle.period_end_date;
+		text += ' ' + battle.period_end_time_left;
+		text += ' :: final results ' + battle.end_date;
+		text += ' ' + battle.end_time_left;
+		text += ' :: ' + battle.profile_url;
+		response.push(text);
+	});
+	return response;
+};
+
+
 module.exports = {
 
 	/**
@@ -15,21 +35,7 @@ module.exports = {
 	battle: function(info, words) {
 		var p = botb_api.request('battle/current');
 		p.then(function(data) {
-				var response = [];
-				var text = '';
-				data.forEach(function(battle) {
-					text = battle.title;
-					// XXX bit period v entry period stuff
-					text += ' :: ' + battle.entry_count + ' entries';
-					text += ' :: ' + battle.period + ' period deadline';
-					text += ' ' + battle.period_end_date;
-					text += ' ' + battle.period_end_time_left;
-					text += ' :: final results ' + battle.end_date;
-					text += ' ' + battle.end_time_left;
-					text += ' :: ' + battle.profile_url;
-					response.push(text);
-				});
-				bot.say(info.channel, response);
+				bot.say(info.channel, battle_data_to_response(data));
 			},
 			function(error) {
 				bot.say(info.channel, 'No current Battles teh running! =0');
@@ -386,6 +392,23 @@ module.exports = {
 			bot.say(info.channel, response);
 		}).catch(function(error) {
 			bot.say(info.channel, none_found);
+		});
+	},
+
+	ohb: function(info, words) {
+		var no_ohb_message = 'We ALL love OHBs, but none is currently runningz :)))))))';
+		var p = botb_api.request('battle/current');
+		p.then(function(data) {
+			data = data.filter(function(battle) { return battle.type === 3; });
+			if (data.length === 0) {
+				bot.say(info.channel, no_ohb_message);
+				return;
+			}
+			var response = battle_data_to_response(data);
+			bot.say(info.channel, response);
+		}).catch(function(error) {
+			bot.say(info.channel, no_ohb_message);
+			console.log(error);
 		});
 	},
 
