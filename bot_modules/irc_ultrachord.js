@@ -103,7 +103,7 @@ module.exports = {
 			filename += '_';
 
 			// push the final note via a get frequency function
-			var freq = getFrequency(octave_val, note_val)
+			var freq = getFrequency(octave_val, note_val);
 			if (timbre == 'pluck' && freq > MAX_PLUCK_FREQ) {
 				errors.push(param + ' out of pluck range');
 				return;
