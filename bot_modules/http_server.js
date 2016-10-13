@@ -62,9 +62,10 @@ module.exports = {
 			} else {
 				respond(response, 500, 'text/plain', 'must post data');
 			}
-		}).listen(config.http.port, config.http.ip);
-		// XXX i believe this is firing asynchronously before the server is up
-		console.log('Server running at ' + config.http.ip + ':' + config.http.port);
+		}).listen(config.http.port, config.http.ip, null, function() {
+			console.log('Server running at ' + config.http.ip + ':' +
+				config.http.port);
+		});
 	}
 
 };
