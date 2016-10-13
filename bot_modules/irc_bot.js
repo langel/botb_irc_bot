@@ -181,6 +181,8 @@ module.exports = {
 
 	initialize: function() {
 		bot = new irc.Client(config.irc.server, config.bot_name, {
+			debug: config.irc.debug,
+			autoRejoin: config.irc.autoRejoin,
 			channels: config.irc.channels
 		});
 
