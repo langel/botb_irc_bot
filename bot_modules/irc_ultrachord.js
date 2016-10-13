@@ -1,9 +1,13 @@
+const MAX_PLUCK_FREQ = 4220; // straight from SoX source code (src/syncth.c)
+
 module.exports = {
 	default_octave: 4, // exported so that help can reference it
 
 	// returns a link to an ultrachord
 	ultrachord: function(words) {
 		const execSync = require('child_process').execSync;
+
+		var errors = [];
 
 		function makeid() {
 			var text = "";
@@ -65,7 +69,10 @@ module.exports = {
 			}
 
 			// abort if a note parameter is not well-formed
-			if (!param.match(/^[a-gA-G](-|[#b♯♭]{0,2})[0-9]?$/)) return;
+			if (!param.match(/^[a-gA-G](-|[#b♯♭]{0,2})[0-9]?$/)) {
+				errors.push(param + ' unrecognized');
+				return;
+			}
 
 			// note to number function call happens
 			var note_val = noteToNumber(param.charAt(0));
@@ -90,20 +97,23 @@ module.exports = {
 			// octave handling
 			var octave_val = parseInt(param.charAt(param.length - 1), 10);
 			if (!Number.isInteger(octave_val)) {
-				if (param.length > 2) return;
 				octave_val = 4;
 			}
 			filename += octave_val;
 			filename += '_';
 
 			// push the final note via a get frequency function
-			notes.push({
-				timbre: timbre,
-				freq: getFrequency(octave_val, note_val)
-			});
+			var freq = getFrequency(octave_val, note_val)
+			if (timbre == 'pluck' && freq > MAX_PLUCK_FREQ) {
+				errors.push(param + ' out of pluck range');
+				return;
+			}
+			notes.push({ timbre: timbre, freq: freq });
 		});
 
-		if (notes.length == 0) return 'notes missing or invalid';
+		var error_text = errors.length ? ' (' + errors.join(', ') + ')' : '';
+
+		if (notes.length == 0) return 'no valid notes' + error_text;
 		console.log(notes);
 		console.log(filename);
 
@@ -122,6 +132,6 @@ module.exports = {
 		execSync('rm ' + id + '.mp3 ' + id + '.wav');
 
 		var link = upload.toString().split(/\r?\n/);
-		return link[link.length - 1];
+		return link[link.length - 1] + error_text;
 	}
 };
