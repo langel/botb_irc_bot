@@ -188,6 +188,10 @@ module.exports = {
 		commands = require('./irc_commands.js');
 
 
+		bot.addListener('error', function(message) {
+			console.log('IRC error: ' + message);
+		});
+
 		bot.addListener('join', function(channel, who) {
 			console.log(who + ' has joined ' + channel);
 		});
