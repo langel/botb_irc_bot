@@ -28,8 +28,7 @@ var self = module.exports = {
 		let days_left_in_present_month = days_in_present_month - current_date.getDate()
 		days = future_date.getDate() + days_left_in_present_month
 		}
-		return
-			years  > 0 ? `${years} years ${months} months ${days} days` :
+		return years  > 0 ? `${years} years ${months} months ${days} days` : 
 			months > 0 ? `${months} months ${days} days` : `${days} days`
 	},
 
