@@ -149,7 +149,7 @@ module.exports = {
 			var octaves = timbre_octaves[timbre];
 			if (octaves) {
 				if (octave_val < octaves[0] || octave_val > octaves[1]) {
-					errors.push(param + ` out of ${timbre} range`);
+					errors.push(`${param} out of ${timbre} range`);
 					return;
 				}
 			}
@@ -179,12 +179,11 @@ module.exports = {
 		var nsamples = 0;
 		notes.forEach(function(note_data) {
 			if (sample_timbres.indexOf(note_data.timbre) != -1) {
-				exec_samples += SAMPLE_DIR + '/' + note_data.timbre + '/' +
-					note_data.name + '.wav ';
+				exec_samples += `${SAMPLE_DIR}/${note_data.timbre}/` +
+					`${note_data.name}.wav `;
 				nsamples++;
 			} else {
-				exec_synths += note_data.timbre + ' mix ' + note_data.freq +
-					' ';
+				exec_synths += `${note_data.timbre} mix ${note_data.freq} `;
 			}
 		});
 		// just testing this concept out  D:
