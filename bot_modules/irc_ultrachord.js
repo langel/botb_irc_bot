@@ -1,7 +1,42 @@
 const MAX_PLUCK_FREQ = 4220; // straight from SoX source code (src/syncth.c)
+const SAMPLE_DIR = 'sounds';
+
+const note_names = [
+	'c',
+	'c#',
+	'd',
+	'd#',
+	'e',
+	'f',
+	'f#',
+	'g',
+	'g#',
+	'a',
+	'a#',
+	'b'
+];
+
+// must declare before exports so that timbres can concat them
+const sample_timbres = [
+	'baseline',
+	'piano',
+	'synth'
+];
+const synth_timbres = [
+	'pluck',
+	'saw',
+	'sawtooth',
+	'sin',
+	'sine',
+	'square',
+	'tri',
+	'triangle'
+];
 
 module.exports = {
 	default_octave: 4, // exported so that help can reference it
+
+	timbres: sample_timbres.concat(synth_timbres),
 
 	// returns a link to an ultrachord
 	ultrachord: function(words) {
@@ -52,9 +87,7 @@ module.exports = {
 
 		var id = makeid();
 		var filename = '';
-
-		var timbres = ['pluck', 'square', 'triangle', 'sawtooth', 'sine', 'sin', 'saw', 'tri'];
-		var timbre = timbres[2]; // square wave because chiptune dumbo
+		var timbre = 'square'; // square wave because chiptune dumbo
 		var notes = [];
 
 		words.slice(1).forEach(function(word) {
@@ -62,7 +95,7 @@ module.exports = {
 			var param = word.toLowerCase();
 
 			// check if it's a timbre
-			if (timbres.indexOf(param) !== -1) {
+			if (module.exports.timbres.indexOf(param) !== -1) {
 				filename += timbre = param;
 				filename += '_';
 				return;
@@ -94,6 +127,9 @@ module.exports = {
 				}
 			}
 
+			// get canonical note name for sample lookup
+			var note_name = note_names[note_val % 12];
+
 			// octave handling
 			var octave_val = parseInt(param.charAt(param.length - 1), 10);
 			if (!Number.isInteger(octave_val)) {
@@ -108,7 +144,7 @@ module.exports = {
 				errors.push(param + ' out of pluck range');
 				return;
 			}
-			notes.push({ timbre: timbre, freq: freq });
+			notes.push({ timbre: timbre, freq: freq, name: note_name });
 		});
 
 		var error_text = errors.length ? ' (' + errors.join(', ') + ')' : '';
@@ -118,15 +154,26 @@ module.exports = {
 		console.log(filename);
 
 		// create the synth, convert to mp3, upload to uguu.se
-		var exec_notes = '';
+		var exec_samples = exec_synths = '';
+		var nsamples = 0;
 		notes.forEach(function(note_data) {
-			exec_notes += note_data.timbre + ' ' + note_data.freq + ' ';
+			if (sample_timbres.indexOf(note_data.timbre) != -1) {
+				exec_samples += SAMPLE_DIR + '/' + note_data.timbre + '/' +
+					note_data.name + '.wav ';
+				nsamples++;
+			} else {
+				exec_synths += note_data.timbre + ' mix ' + note_data.freq +
+					' ';
+			}
 		});
 		// just testing this concept out  D:
 		id = filename;
-		execSync('sox -n ' + id + '.wav synth 5 ' +
-			exec_notes +
-			" remix 1-");
+		execSync('sox ' +
+			(nsamples > 1 ? '-m ' : '') + // use mix flag for multiple samples
+			(nsamples > 0 ? '' : '-n ') + // null input file if no samples used
+			exec_samples + ' ' + id + '.wav ' +
+			(exec_synths ? 'synth 5 ' + exec_synths : '') +
+			' remix 1-');
 		execSync('lame -V2 ' + id + '.wav ' + id + '.mp3');
 		var upload = execSync('curl -i -F file=@' + id + '.mp3 https://uguu.se/api.php?d=upload-tool');
 		execSync('rm ' + id + '.mp3 ' + id + '.wav');
