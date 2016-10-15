@@ -23,10 +23,10 @@ var self = module.exports = {
 		if (months < 0) months += 12
 		if (days < 0) {
 			months--
-		let days_in_future_month  = new Date(future_date.getFullYear(),  future_date.getMonth()  + 1, 0).getDate()
-		let days_in_present_month = new Date(current_date.getFullYear(), current_date.getMonth() + 1, 0).getDate()
-		let days_left_in_present_month = days_in_present_month - current_date.getDate()
-		days = future_date.getDate() + days_left_in_present_month
+			let days_in_future_month  = new Date(future_date.getFullYear(),  future_date.getMonth()  + 1, 0).getDate()
+			let days_in_present_month = new Date(current_date.getFullYear(), current_date.getMonth() + 1, 0).getDate()
+			let days_left_in_present_month = days_in_present_month - current_date.getDate()
+			days = future_date.getDate() + days_left_in_present_month
 		}
 		return years  > 0 ? `${years} years ${months} months ${days} days` : 
 			months > 0 ? `${months} months ${days} days` : `${days} days`
