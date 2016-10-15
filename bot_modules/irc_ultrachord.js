@@ -1,26 +1,30 @@
 const MAX_PLUCK_FREQ = 4220; // straight from SoX source code (src/syncth.c)
 const SAMPLE_DIR = 'sounds';
 
+// declaring all these as const is probably useless
+
 const note_names = [
-	'c',
-	'c#',
-	'd',
-	'd#',
-	'e',
-	'f',
-	'f#',
-	'g',
-	'g#',
-	'a',
-	'a#',
-	'b'
+	'C',
+	'C#',
+	'D',
+	'D#',
+	'E',
+	'F',
+	'F#',
+	'G',
+	'G#',
+	'A',
+	'A#',
+	'B'
 ];
 
 // must declare before exports so that timbres can concat them
 const sample_timbres = [
 	'baseline',
+	'choirs',
 	'piano',
-	'synth'
+	'synth',
+	'trem'
 ];
 const synth_timbres = [
 	'pluck',
@@ -32,6 +36,15 @@ const synth_timbres = [
 	'tri',
 	'triangle'
 ];
+
+// min and max octaves for timbres. if omitted, no restriction
+const timbre_octaves = {
+	baseline: [4, 4],
+	choirs: [4, 4],
+	piano: [4, 4],
+	synth: [4, 4],
+	trem: [0, 4]
+};
 
 module.exports = {
 	default_octave: 4, // exported so that help can reference it
@@ -127,16 +140,24 @@ module.exports = {
 				}
 			}
 
-			// get canonical note name for sample lookup
-			var note_name = note_names[note_val % 12];
-
 			// octave handling
 			var octave_val = parseInt(param.charAt(param.length - 1), 10);
 			if (!Number.isInteger(octave_val)) {
 				octave_val = 4;
 			}
+			// check if note is within octave range of instrument
+			var octaves = timbre_octaves[timbre];
+			if (octaves) {
+				if (octave_val < octaves[0] || octave_val > octaves[1]) {
+					errors.push(param + ` out of ${timbre} range`);
+					return;
+				}
+			}
 			filename += octave_val;
 			filename += '_';
+
+			// get canonical note name for sample lookup
+			var note_name = `${note_names[note_val % 12]}${octave_val}`;
 
 			// push the final note via a get frequency function
 			var freq = getFrequency(octave_val, note_val);
