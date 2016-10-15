@@ -320,22 +320,22 @@ module.exports = {
 		// Get a list of botbrs using the API.
 		var botbr_list = botb_api.request('botbr/list?filters=name~' + username);
 		return botbr_list.then(function(data) {
-			var botbr = data[0];
-			var level = parseInt(botbr.level);
-			var points = parseInt(botbr.points);
-			var boons = parseFloat(botbr.boons);
+			var botbr  = data[0];
+			var level  = parseFloat(botbr.level);
+			var points = parseFloat(botbr.points);
+			var boons  = parseFloat(botbr.boons);
 			// get the current date and the date of the botbr's creation.
-			var time_current = Date.now();
-			var time_botbr = new Date(botbr.create_date).getTime();
-			var milliseconds_per_day = 24 * 60 * 60 * 1000;
-			//                         hr   mn   sec  milli
-			var botbrs_age = (time_current - time_botbr) / milliseconds_per_day; // in days
-			var points_per_day = points / botbrs_age;
-			var boons_per_day = boons / botbrs_age;
+			var ms_current = new Date().getTime();
+			var ms_botbr_creation = new Date(botbr.create_date).getTime();
+			var ms_per_day = 1 * 24 * 60 * 60 * 1000;
+			//               day hr   min  sec  milli
+			var botbr_days_existing = (ms_current - ms_botbr_creation) / ms_per_day; // in days
+			var points_per_day = points / botbr_days_existing;
+			var boons_per_day = boons / botbr_days_existing;
 			var days_until_levelup = (points_array[level + 1] - points) / points_per_day;
 			var days_until_level33 = (points_array[33] - points) / points_per_day;
-			var levelup = util.day_string(days_until_levelup);
-			var level33 = util.day_string(days_until_level33);
+			var levelup = util.days_to_fulldate(days_until_levelup);
+			var level33 = util.days_to_fulldate(days_until_level33);
 			var response = "Points: " + points +
 				" - Level: " + botbr.level +
 				" - Points per year: " + Math.round(points_per_day * 365) +

@@ -6,53 +6,32 @@ var self = module.exports = {
 	//     x years x months x days
 	// Due to the way it's calculated, it takes month lengths, leap years,
 	// hell even leap seconds into account. All thanks to Javascript Date.
-	day_string: function(days) {
-		if (days === Infinity) return '∞ years'; // no need to calculate
-
-		// this is used to convert days into milliseconds for the Date constructor
-		var milliseconds_per_day = 24 * 60 * 60 * 1000;
-		var current_date = new Date(Date.now());
-		var future_date = new Date(Math.round(
-			// (ms / d) * d = ms
-			current_date.getTime() + (milliseconds_per_day * days)
-		));
-		// Calculate how many years ahead the future date is.
-		// Notice: this can be inaccurate! Example: dec 25th 2015 and 
-		//         jan 23rd 2016 would say 1 year apart! We check for
-		//         this later in the code however.
-		var years = future_date.getUTCFullYear() - current_date.getUTCFullYear();
-		// Next we set the current date to its current date + how many years
-		// we calculated!
-		current_date.setUTCFullYear(current_date.getUTCFullYear() + years);
-		// Calculate the number of months ahead the future date is.
-		// If the month crosses over the 12th month border, the difference
-		// is negative. This is checked for further in the program.
-		var months = future_date.getUTCMonth() - current_date.getUTCMonth();
-		// If it IS negative, we subtract the months to set the correct month. 
-		current_date.setUTCMonth(current_date.getUTCMonth() + months);
-		if (months < 0) {
-			// if we did get a negative month number, that means we went
-			// ahead one year too far earlier. Lets take it back!...
-			current_date.setUTCFullYear(current_date.getUTCFullYear() - 1);
-			years--;
-			// ...and lets get that month out of the negatives!
-			months += 12;
-		}
-		// Lastly, we check the days. Once again, if we cross a month threshold, we will go into the
-		// negatives. This is made up for though by checking how many days are in the month at hand, 	
-		// and adding that to the negative days. 
-		var days = future_date.getUTCDate() - current_date.getUTCDate();
+	days_to_fulldate: function(days_in_future) {
+		if (days_in_future === Infinity) return '∞ years'; // no need to calculate
+ 		if (days_in_future < 1.0) return "less than 1 day" // also covers the 'hasn't levelled up bug
+		var ms_per_day = 1 * 24 * 60 * 60 * 1000;
+		//               day hr   min  sec  milli
+		var present_in_ms = new Date().getTime();
+		var future_in_ms  = ms_per_day * days_in_future + present_in_ms;
+		// now as date objects
+		var future_date  = new Date(future_in_ms);
+		var current_date = new Date(present_in_ms);
+		var years  = future_date.getFullYear() - current_date.getFullYear();
+		var months = future_date.getMonth()    - current_date.getMonth();
+		var days   = future_date.getDate()     - current_date.getDate();
+		if ((months == 0 && days < 0) || (months < 0)) years--;
+		if (months < 0) months += 12;
 		if (days < 0) {
-			// if the days roll over into the next month...
-			months--; // we were lied to earlier a la the years calculation
-			current_date.setUTCMonth(current_date.getUTCMonth() - 1);
-			days += new Date(current_date.getUTCFullYear(), current_date.getUTCMonth() + 1, 0).getDate();
-		}
-		// Only display the lowest level of day display that you can. This is to save space!
+			months--;
+    	var days_in_future_month  = new Date(future_date.getFullYear(),  future_date.getMonth()  + 1, 0).getDate();
+    	var days_in_present_month = new Date(current_date.getFullYear(), current_date.getMonth() + 1, 0).getDate();
+    	var days_left_in_present_month = days_in_present_month - current_date.getDate();
+    	days = future_date.getDate() + days_left_in_present_month;
+ 		}
 		var formatted_ymd = days + " days";
 		if (years > 0) {
 			formatted_ymd = years + " years " + months + " months " + formatted_ymd;
-		} 
+		}
 		else if (months > 0) {
 			formatted_ymd = months + " months " + formatted_ymd;
 		}
