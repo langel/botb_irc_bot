@@ -142,21 +142,21 @@ module.exports = {
 		let prefix = config.command_prefix
 		let usage = 'Usage:'
 		let command_help_text = {
-			    battle: `${usage} ${prefix}battle | Returns a list of the current battles taking place.`,
-			     botbr: `${usage} ${prefix}botbr <botbr> | Returns information about BotBrs whose name matched the query.`,
-			     entry: `${usage} ${prefix}entry <name> | Returns information about a specific entry.`,
-			    google: `${usage} ${prefix}google <query> | Returns a URL of the Google search of your query.`,
-			      help: `${usage} ${prefix}help [command] | Returns a list of commands, or specific help with a command.`,
-			  	 image: `${usage} ${prefix}image <query> | Returns a URL of the Google Images search of your query.`,
-			      imdb: `${usage} ${prefix}imdb <query> | Returns a URL of the IMDB search of your query.`,
-				 levelup: `${usage} ${prefix}levelup <botbr> | Returns BotBr's current level, current points, calculated points per year, estimated time to level up, estimated time to reach GRAND WIZARD STATUS of level 33, current boons, and calculated boons per year.`,
-			  		 pix: `${usage} ${prefix}pix <botbr> | Returns a URL of a picture of the BotBr in the flesh, if one has been submitted.`,
-			       top: `${usage} ${prefix}top [class] | Returns list of top BotBrs over all or by class.`,
+			battle:     `${usage} ${prefix}battle | Returns a list of the current battles taking place.`,
+			botbr:      `${usage} ${prefix}botbr <botbr> | Returns information about BotBrs whose name matched the query.`,
+			entry:      `${usage} ${prefix}entry <name> | Returns information about a specific entry.`,
+			google:     `${usage} ${prefix}google <query> | Returns a URL of the Google search of your query.`,
+			help:       `${usage} ${prefix}help [command] | Returns a list of commands, or specific help with a command.`,
+			image:      `${usage} ${prefix}image <query> | Returns a URL of the Google Images search of your query.`,
+			imdb:       `${usage} ${prefix}imdb <query> | Returns a URL of the IMDB search of your query.`,
+			levelup:    `${usage} ${prefix}levelup <botbr> | Returns BotBr's current level, current points, calculated points per year, estimated time to level up, estimated time to reach GRAND WIZARD STATUS of level 33, current boons, and calculated boons per year.`,
+			pix:        `${usage} ${prefix}pix <botbr> | Returns a URL of a picture of the BotBr in the flesh, if one has been submitted.`,
+			top:        `${usage} ${prefix}top [class] | Returns list of top BotBrs over all or by class.`,
 			ultrachord: `${usage} ${prefix}ultrachord [timbre] <notes> | Returns a URL to a .wav file of the notes and timbre provided, in a format such as 'sawtooth C4 E4 Bb4 D#5'. Available notes range from C0 to B7. If number is omitted it will pick octave " + ultrachord.default_octave + ". Default timbre is sine. Available timbres are sine, sawtooth, square, triangle, and pluck.`,
-			    uptime: `${usage} ${prefix}uptime | Displays how long the bot has been running.`,
-			 wikipedia: `${usage} ${prefix}wikipedia <query> | Returns a URL of the Wikipedia search of your query.`,
-			   youtube: `${usage} ${prefix}youtube <query> | Returns a URL of the first YouTube result for your query.`,
-		} // ' //  <-- so my ide closes the ' in the levelup text (sublime text 2 is not es6 ` ready... i should probably upgrade lol) - Savestate
+			uptime:     `${usage} ${prefix}uptime | Displays how long the bot has been running.`,
+			wikipedia:  `${usage} ${prefix}wikipedia <query> | Returns a URL of the Wikipedia search of your query.`,
+			youtube:    `${usage} ${prefix}youtube <query> | Returns a URL of the first YouTube result for your query.`,
+		}
 		// general help or command helper?
 		let command_help = false
 		let response
@@ -307,9 +307,9 @@ module.exports = {
 			let levelup = util.days_to_fulldate(days_until_levelup)
 			let level33 = util.days_to_fulldate(days_until_level33)
 			let response = 	`Points: ${points} - Level: ${botbr.level}` +
-			 								` - Points per year: ${Math.round(points_per_day * 365)}` +
-											` - Next level ETA: ${levelup} - for Level 33: ${level33}` +
-											` - Boons: ${boons}, Boons per year: ${Math.round(boons_per_day * 365)}`
+				` - Points per year: ${Math.round(points_per_day * 365)}` +
+				` - Next level ETA: ${levelup} - for Level 33: ${level33}` +
+				` - Boons: ${boons}, Boons per year: ${Math.round(boons_per_day * 365)}`
 			bot.say(info.channel, response)
 		}, error => {
 			bot.say(info.channel, "BotBr unfound!  :O")
@@ -389,9 +389,10 @@ module.exports = {
 				for (datum in data) {
 					if (response !== '') response += ', '
 					response += esc
-					response += datum==0 ? "08,01" :
-											datum==1 ? "15,01" :
-											datum==2 ? "07,01" : "04,01"
+					response += 
+						datum==0 ? "08,01" :
+						datum==1 ? "15,01" :
+						datum==2 ? "07,01" : "04,01"
 					response += `${data[datum].name} :: Lvl ${data[datum].level}`
 					if (typeof filter === 'undefined' || filter.length < 2)
 						response += ` ${data[datum].class}`

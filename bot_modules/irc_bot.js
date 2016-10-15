@@ -55,7 +55,7 @@ var commands_alias_filters = {
 alias_check = command => {
 	if (typeof commands_aliases[command] !== 'undefined')
 		command = commands_aliases[command]
-	return command;
+	return command
 }
 
 command_check = (channel_type, command) => {
@@ -63,11 +63,11 @@ command_check = (channel_type, command) => {
 		return false
 	if (typeof commands[command] === 'undefined')
 		return false
-	return true;
+	return true
 }
 
 command_parser = (from, to, text, info) => {
-	let command = '';	
+	let command = ''
 	// break text into words
 	let words = text.split(' ').filter(e => e !== '')
 	// supplement info
@@ -104,7 +104,7 @@ command_parser = (from, to, text, info) => {
 			// XXX something is fukt here
 			if (from === config.bot_name) {
 				console.log('STOP MESSAGING YERSELF!!')
-				return false;
+				return false
 			}
 			info.channel = from
 			commands.unknown(info, words)
@@ -180,7 +180,7 @@ module.exports = {
 			channels: config.irc.channels
 		})
 
-		//commands.init(this);
+		//commands.init(this)
 		commands = require('./irc_commands.js')
 
 		bot.addListener('error', message => {

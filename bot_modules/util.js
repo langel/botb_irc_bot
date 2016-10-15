@@ -8,7 +8,7 @@ var self = module.exports = {
 	// hell even leap seconds into account. All thanks to Javascript Date.
 	days_to_fulldate: days_in_future => {
 		if (days_in_future === Infinity) return '∞ years' // no need to calculate
- 		if (days_in_future < 1.0) return "less than 1 day" // also covers the 'hasn't levelled up bug
+		if (days_in_future < 1.0) return "less than 1 day" // also covers the 'hasn't levelled up bug
 		let ms_per_day = 1 * 24 * 60 * 60 * 1000
 		//               day hr   min  sec  milli
 		let present_in_ms = new Date().getTime()
@@ -23,13 +23,14 @@ var self = module.exports = {
 		if (months < 0) months += 12
 		if (days < 0) {
 			months--
-    	let days_in_future_month  = new Date(future_date.getFullYear(),  future_date.getMonth()  + 1, 0).getDate()
-    	let days_in_present_month = new Date(current_date.getFullYear(), current_date.getMonth() + 1, 0).getDate()
-    	let days_left_in_present_month = days_in_present_month - current_date.getDate()
-    	days = future_date.getDate() + days_left_in_present_month
- 		}
-		return 	years > 0  ? `${years} years ${months} months ${days} days` :
-						months > 0 ? `${months} months ${days} days` : `${days} days`
+		let days_in_future_month  = new Date(future_date.getFullYear(),  future_date.getMonth()  + 1, 0).getDate()
+		let days_in_present_month = new Date(current_date.getFullYear(), current_date.getMonth() + 1, 0).getDate()
+		let days_left_in_present_month = days_in_present_month - current_date.getDate()
+		days = future_date.getDate() + days_left_in_present_month
+		}
+		return
+			years  > 0 ? `${years} years ${months} months ${days} days` :
+			months > 0 ? `${months} months ${days} days` : `${days} days`
 	},
 
 	plural_simple: (word, val) => 

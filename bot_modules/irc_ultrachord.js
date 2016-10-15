@@ -28,7 +28,7 @@ module.exports = {
 		function noteToNumber(letter) {
 			switch (letter) {
 				case 'a': return 9
-				case 'b':	return 11
+				case 'b': return 11
 				case 'c': return 0
 				case 'd': return 2
 				case 'e': return 4
@@ -42,7 +42,7 @@ module.exports = {
 		let filename = ''
 
 		let timbres = ['pluck', 'square', 'triangle', 'sawtooth', 'sine', 'sin', 'saw', 'tri']
-		let timbre = timbres[1] // square wave because chiptune dumbo
+		let timbre = timbres[2] // default triangle wave
 		let notes = []
 
 		words.slice(1).forEach(word => {
