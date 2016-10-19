@@ -1,7 +1,56 @@
-const MAX_PLUCK_FREQ = 4220 // straight from SoX source code (src/syncth.c)
+const MAX_PLUCK_FREQ = 4220; // straight from SoX source code (src/syncth.c)
+const SAMPLE_DIR = 'sounds';
+
+// declaring all these as const is probably useless
+
+const note_names = [
+	'C',
+	'C#',
+	'D',
+	'D#',
+	'E',
+	'F',
+	'F#',
+	'G',
+	'G#',
+	'A',
+	'A#',
+	'B'
+];
+
+// must declare before exports so that timbres can concat them
+const sample_timbres = [
+	'baseline',
+	'choirs',
+	'piano',
+	'synth',
+	'trem'
+];
+const synth_timbres = [
+	'pluck',
+	'saw',
+	'sawtooth',
+	'sin',
+	'sine',
+	'square',
+	'tri',
+	'triangle'
+];
+
+// min and max octaves for timbres. if omitted, no restriction
+const timbre_octaves = {
+	baseline: [4, 4],
+	choirs: [4, 4],
+	piano: [4, 4],
+	synth: [4, 4],
+	trem: [0, 4]
+};
 
 module.exports = {
 	default_octave: 4, // exported so that help can reference it
+
+	timbres: sample_timbres.concat(synth_timbres),
+
 	// returns a link to an ultrachord
 	ultrachord: words => {
 		const execSync = require('child_process').execSync
@@ -38,22 +87,20 @@ module.exports = {
 			}
 		}
 
-		let id = makeid()
-		let filename = ''
-
-		let timbres = ['pluck', 'square', 'triangle', 'sawtooth', 'sine', 'sin', 'saw', 'tri']
-		let timbre = timbres[2] // default triangle wave
-		let notes = []
+		var id = makeid();
+		var filename = '';
+		var timbre = 'square'; // square wave because chiptune dumbo
+		var notes = [];
 
 		words.slice(1).forEach(word => {
 			// toLowerCase to make life easier!
 			let param = word.toLowerCase()
 
 			// check if it's a timbre
-			if (timbres.indexOf(param) !== -1) {
-				filename += timbre = param
-				filename += '_'
-				return
+			if (module.exports.timbres.indexOf(param) !== -1) {
+				filename += timbre = param;
+				filename += '_';
+				return;
 			}
 
 			// abort if a note parameter is not well-formed
@@ -83,10 +130,23 @@ module.exports = {
 			}
 
 			// octave handling
-			let octave_val = parseInt(param.charAt(param.length - 1), 10)
-			if (!Number.isInteger(octave_val)) octave_val = 4
-			filename += octave_val
-			filename += '_'
+			var octave_val = parseInt(param.charAt(param.length - 1), 10);
+			if (!Number.isInteger(octave_val)) {
+				octave_val = 4;
+			}
+			// check if note is within octave range of instrument
+			var octaves = timbre_octaves[timbre];
+			if (octaves) {
+				if (octave_val < octaves[0] || octave_val > octaves[1]) {
+					errors.push(`${param} out of ${timbre} range`);
+					return;
+				}
+			}
+			filename += octave_val;
+			filename += '_';
+
+			// get canonical note name for sample lookup
+			var note_name = `${note_names[note_val % 12]}${octave_val}`;
 
 			// push the final note via a get frequency function
 			let freq = getFrequency(octave_val, note_val)
@@ -94,8 +154,8 @@ module.exports = {
 				errors.push(param + ' out of pluck range')
 				return
 			}
-			notes.push({ timbre: timbre, freq: freq })
-		})
+			notes.push({ timbre: timbre, freq: freq, name: note_name });
+		});
 
 		let error_text = errors.length ? ' (' + errors.join(', ') + ')' : ''
 
@@ -104,17 +164,30 @@ module.exports = {
 		console.log(filename)
 
 		// create the synth, convert to mp3, upload to uguu.se
-		let exec_notes = ''
-		notes.forEach(note_data => {
-			exec_notes += `${note_data.timbre} ${note_data.freq} `
-		})
+		var exec_samples = exec_synths = '';
+		var nsamples = 0;
+		notes.forEach(function(note_data) {
+			if (sample_timbres.indexOf(note_data.timbre) != -1) {
+				exec_samples += `${SAMPLE_DIR}/${note_data.timbre}/` +
+					`${note_data.name}.wav `;
+				nsamples++;
+			} else {
+				exec_synths += `${note_data.timbre} mix ${note_data.freq} `;
+			}
+		});
 		// just testing this concept out  D:
-		id = filename
-		execSync(`sox -n ${id}.wav synth 5 ${exec_notes} remix 1-`)
-		execSync(`lame -V2 ${id}.wav ${id}.mp3`)
-		let upload = execSync(`curl -i -F file=@${id}.mp3 https://uguu.se/api.php?d=upload-tool`)
-		execSync(`rm ${id}.mp3 ${id}.wav`)
-		let link = upload.toString().split(/\r?\n/)
-		return `${link[link.length - 1]} ${error_text}`
+		id = filename;
+		execSync('sox ' +
+			(nsamples > 1 ? '-m ' : '') + // use mix flag for multiple samples
+			(nsamples > 0 ? '' : '-n ') + // null input file if no samples used
+			exec_samples + ' ' + id + '.wav ' +
+			(exec_synths ? 'synth 5 ' + exec_synths : '') +
+			' remix 1-');
+		execSync('lame -V2 ' + id + '.wav ' + id + '.mp3');
+		var upload = execSync('curl -i -F file=@' + id + '.mp3 https://uguu.se/api.php?d=upload-tool');
+		execSync('rm ' + id + '.mp3 ' + id + '.wav');
+
+		var link = upload.toString().split(/\r?\n/);
+		return link[link.length - 1] + error_text;
 	}
 }
