@@ -98,6 +98,9 @@ command_parser = (from, to, text, info) => {
 		}
 	}
 
+	// make sure there's a string to parse! :X
+	if (typeof words[0] == 'undefined') return false;
+
 	// check for command prefix
 	if (words[0].substr(0, 1) !== config.command_prefix) {
 		if (to === config.bot_name) {
