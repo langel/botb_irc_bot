@@ -105,6 +105,9 @@ command_parser = function(from, to, text, info) {
 		}
 	};
 
+	// make sure there's a string to parse! :X
+	if (words.length === 0) { return false; }
+
 	// check for command prefix
 	if (words[0].substr(0, 1) !== config.command_prefix) {
 		if (to === config.bot_name) {

@@ -26,6 +26,7 @@ var post_handler = function(request, response) {
 		});
 		request.on('end', function() {
 			respond(response, 200, 'text/plain', 'thanxiez for teh datas!');
+			// XXX CRASHES if JSON is borked
 			resolve(JSON.parse(post_data));
 		});
 	});
@@ -55,6 +56,7 @@ module.exports = {
 						return;
 					}
 					// check for and run command
+					console.log(`run command: ${data.command}`);
 					if (typeof commands[data.command] === 'function') {
 						commands[data.command](data.message);
 					}

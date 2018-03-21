@@ -4,13 +4,17 @@ var what_max_length = 32;
 
 var process = function(words, operator) {
 	// build what
-	what = words.join(' ');
+	var what = words.join(' ');
 	// shave operator off
-	what = what.substr(0, what.length - 2).trim();
+	what = what.substr(0, what.length - 2);
+	// remove dicksword identifier and trim
+	what = what.replace(/\s*\[[^)]*\]\s*/, '').trim();
 	// check what length
 	if (what.length > what_max_length) {
-		return 'kudos max length : ' + what_max_length;
+		return `kudos max length : ${what_max_length}`;
 	}
+	var display = what;
+	what = what.toLowerCase();
 	// load kudos object from memory or setup
 	kudos = ram.get('kudos');
 	if (typeof kudos == 'undefined') {
@@ -22,14 +26,13 @@ var process = function(words, operator) {
 	}
 	// operate on what
 	if (operator == 'minus') {
-		kudos[what]--
-	}
-	else if (operator == 'plus') {
+		kudos[what]--;
+	} else if (operator == 'plus') {
 		kudos[what]++;
 	}
 	// save and return
 	ram.set('kudos', kudos);
-	return (what + ' has ' + kudos[what] + ' kudos');
+	return `${display} has ${kudos[what]} kudos`;
 };
 
 module.exports = {

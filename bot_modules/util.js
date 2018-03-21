@@ -8,7 +8,7 @@ var self = module.exports = {
 	// hell even leap seconds into account. All thanks to Javascript Date.
 	days_to_fulldate: function(days_in_future) {
 		if (days_in_future === Infinity) return '∞ years'; // no need to calculate
- 		if (days_in_future < 1.0) return "less than 1 day" // also covers the 'hasn't levelled up bug
+		if (days_in_future < 1.0) return 'less than 1 day'; // also covers the 'hasn't levelled up bug
 		var ms_per_day = 1 * 24 * 60 * 60 * 1000;
 		//               day hr   min  sec  milli
 		var present_in_ms = new Date().getTime();
@@ -23,19 +23,24 @@ var self = module.exports = {
 		if (months < 0) months += 12;
 		if (days < 0) {
 			months--;
-    	var days_in_future_month  = new Date(future_date.getFullYear(),  future_date.getMonth()  + 1, 0).getDate();
-    	var days_in_present_month = new Date(current_date.getFullYear(), current_date.getMonth() + 1, 0).getDate();
-    	var days_left_in_present_month = days_in_present_month - current_date.getDate();
-    	days = future_date.getDate() + days_left_in_present_month;
- 		}
-		var formatted_ymd = days + " days";
+			var days_in_future_month  = new Date(
+				future_date.getFullYear(),
+				future_date.getMonth()  + 1,
+				0).getDate();
+			var days_in_present_month = new Date(
+				current_date.getFullYear(),
+				current_date.getMonth() + 1,
+				0).getDate();
+			var days_left_in_present_month = days_in_present_month - current_date.getDate();
+		days = future_date.getDate() + days_left_in_present_month;
+		}
 		if (years > 0) {
-			formatted_ymd = years + " years " + months + " months " + formatted_ymd;
+			return `${years} years ${months} months ${days} days`;
+		} else if (months > 0) {
+			return `${months} months ${days} days`;
+		} else {
+			return `${days} days`;
 		}
-		else if (months > 0) {
-			formatted_ymd = months + " months " + formatted_ymd;
-		}
-		return formatted_ymd;
 	},
 
 	plural_simple: function(word, val) {
