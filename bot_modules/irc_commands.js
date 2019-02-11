@@ -116,6 +116,32 @@ module.exports = {
 			bot.say(info.channel, `String "${title}" does not match entry %title%;`)
 		})
 	},
+	
+	/**
+	 *	entryid
+	 *
+	 */
+	entryid: (info, words) => {
+		let title = words.slice(1).join(' ')
+		let p
+		if (typeof title === 'undefined' || title.length < 2) {
+			p = botb_api.request(`entry/random`)
+		} else {
+			p = botb_api.request(`entry/load/${title}`)
+		}
+
+		p.then(data => {
+			if (data.length == 0) throw "No entry data returned!"
+
+			let entry
+			if (data.length == 1) entry = data[0]
+			if (data.length > 1) entry = data[Math.floor(Math.random() * data.length)]
+			let response = `${entry.botbr.name} - ${entry.title} :: ${entry.profile_url}`
+			bot.say(info.channel, response)
+		}).catch(error => {
+			bot.say(info.channel, `String "${title}" does not match entry %title%;`)
+		})
+	},
 
 	/**
 	 *	giphy
