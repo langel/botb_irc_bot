@@ -139,7 +139,7 @@ module.exports = {
 			let response = `${entry.botbr.name} - ${entry.title} :: ${entry.profile_url}`
 			bot.say(info.channel, response)
 		}).catch(error => {
-			bot.say(info.channel, `String "${title}" does not match entry %title%;`)
+			bot.say(info.channel, `${title} is not a valid entry ID!`)
 		})
 	},
 
