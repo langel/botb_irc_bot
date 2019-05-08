@@ -4,6 +4,7 @@ var botb_api_root = 'http://battleofthebits.org/api/v1/'
 module.exports = {
 
 	request: request_url => {
+		console.log('API Request: ' + botb_api_root + request_url);
 		return new Promise((resolve, reject) => {
 			curl.get(botb_api_root + request_url, {
 					headers: {
@@ -11,12 +12,20 @@ module.exports = {
 					}
 				},
 				(err, response, body) => {
-					let stat = response.statusCode
-					if (stat == '400' || stat == '500') {
-						reject(response)
+					try {
+						let stat = response.statusCode
+						if (stat != '200') {
+							reject(response)
+							return
+						}
+						let obj;
+						obj = JSON.parse(body);
+					}
+					catch(e) {
+						reject(response);
 						return
 					}
-					resolve(JSON.parse(body))
+					resolve(obj)
 				}
 			)
 		})
