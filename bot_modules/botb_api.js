@@ -12,13 +12,13 @@ module.exports = {
 					}
 				},
 				(err, response, body) => {
+					let obj;
 					try {
 						let stat = response.statusCode
 						if (stat != '200') {
 							reject(response)
 							return
 						}
-						let obj;
 						obj = JSON.parse(body);
 					}
 					catch(e) {
