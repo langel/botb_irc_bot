@@ -26,8 +26,8 @@ var post_handler = (request, response) => {
 		})
 		request.on('end', () => {
 			respond(response, 200, 'text/plain', 'thanxiez for teh datas!')
-			// XXX CRASHES if JSON is borked
-			resolve(JSON.parse(post_data))
+			if (typeof post_data !== 'object') return resolve(false);
+			else resolve(post_data);
 		})
 	})
 }
