@@ -26,6 +26,7 @@ var post_handler = (request, response) => {
 		})
 		request.on('end', () => {
 			respond(response, 200, 'text/plain', 'thanxiez for teh datas!')
+			if (typeof post_data === 'string') return resolve(JSON.parse(post_data));
 			if (typeof post_data !== 'object') return resolve(false);
 			else resolve(post_data);
 		})
