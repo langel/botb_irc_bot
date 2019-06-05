@@ -17,8 +17,9 @@ var post_handler = (request, response) => {
 	return new Promise((resolve, reject) => {
 		let post_data = ''
 		request.on('data', data => {
+			console.log(data);
 			post_data += data
-			if (post_data.length > 1e6) {
+			if (post_data.length > 1000000) {
 				post_data = ''
 				respond(response, 413, 'text/plain', 'TOO MUCH DATA!  D:').end()
 				request.connection.destroy()
@@ -26,7 +27,8 @@ var post_handler = (request, response) => {
 		})
 		request.on('end', () => {
 			respond(response, 200, 'text/plain', 'thanxiez for teh datas!')
-			if (typeof post_data === 'string') return resolve(JSON.parse(post_data));
+			resolve(post_data);
+//			if (typeof post_data === 'string') return resolve(post_data);
 			if (typeof post_data !== 'object') return resolve(false);
 			else resolve(post_data);
 		})
@@ -50,7 +52,6 @@ module.exports = {
 			if (request.method == 'POST') {
 				let p = post_handler(request, response)
 				p.then(data => {
-					console.log(data)
 					// check for valid key
 					if (data.key !== config.http.key) {
 						respond(response, 500, 'text/plain', 'invalid access key')

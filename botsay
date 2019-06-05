@@ -1,2 +1,2 @@
 #!/bin/bash
-curl -X POST -H "Content-Type: application/json" -d '{"key":"aimceiehdasdf","command":"say","message":"'"$1"'"}' 66.90.166.83:3000/say
+curl -X POST -H "Content-Type: application/json" -d '{"key":"aimceiehdasdf","command":"say","message":"'"$1"'"}' 172.31.17.31:3000/say
