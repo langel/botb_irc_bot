@@ -7,8 +7,9 @@ var bot = require('./irc_bot.js')
 var commands = {
 
 	say: message => {
-		bot.say(config.irc.channels[0], message)
-		respond(response, 200, 'text/plain', 'the bot speaks!')
+		console.log('SAY FROM SITE :: ' + message);
+		bot.say(config.irc.channels[0], message);
+		return 'the bot speaks!';
 	},
 
 }
@@ -52,20 +53,26 @@ module.exports = {
 			if (request.method == 'POST') {
 				let p = post_handler(request, response)
 				p.then(data => {
+					if (typeof data !== 'object') data = JSON.parse(data);
+					let rtype = 200;
+					let rtext = '';
 					// check for valid key
-					if (data.key !== config.http.key) {
-						respond(response, 500, 'text/plain', 'invalid access key')
-						return
+					if (data.key != config.http.key) {
+						console.log('BAD KEY');
+						rtype = 500;
+						rtext = 'invalid access key';
 					}
 					// check for and run command
-					console.log('run command');
-					console.log(commands);
+					// XXX could add error handling to response
 					if (typeof commands[data.command] === 'function') {
-						commands[data.command](data.message)
+						console.log('run command: ' + data.command);
+						rtext = commands[data.command](data.message);
 					}
-				})
+					respond(response, rtype, 'text/plain', rtext);
+					return;
+				});
 			} else {
-				respond(response, 500, 'text/plain', 'must post data')
+				respond(response, 500, 'text/plain', 'must post data');
 			}
 		}).listen(config.http.port, config.http.ip, null, () => {
 			console.log(`Server running at ${config.http.ip}:${config.http.port}`)
