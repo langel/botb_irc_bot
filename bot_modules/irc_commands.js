@@ -36,12 +36,27 @@ module.exports = {
 	 *
 	 */
 	battle: (info, words) => {
-		botb_api.request('battle/current').then(data => {
-				bot.say(info.channel, battle_data_to_response(data))
+		let title = words.slice(1).join(' ')
+		if (typeof title === 'undefined' || title.length < 3) {
+			botb_api.request('battle/current').then(data => {
+				bot.say(info.channel, battle_data_to_response(data));
 			},
 			error => {
-				bot.say(info.channel, 'No current Battles teh running! =0')
-			})
+				bot.say(info.channel, 'No current Battles teh running! =0');
+			});
+		} 
+		else {
+			// pagination: 0 page, limit 3
+			botb_api.request('battle/search/' + title + '/0/3').then(data => {
+				if (data.length == 0) throw 'garbage';
+				let out = [];
+				data.forEach(battle_object => {
+					out.push(battle_object.title+' :: '+battle_object.profile_url);
+				});
+				bot.say(info.channel, out.join(' $_$ '));
+				return;
+			}).catch(error => { bot.say(info.channel, 'Battle no found! =0')});
+		}
 	},
 
 	/**
