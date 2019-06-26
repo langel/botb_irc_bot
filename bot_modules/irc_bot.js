@@ -58,6 +58,14 @@ alias_check = command => {
 	return command
 }
 
+alias_filter_check = text => {
+	for (let key in commands_alias_filters) {
+		filter = commands_alias_filters[key];
+		if (filter.test(text)) return key;
+	}
+	return false;
+}
+
 command_check = (channel_type, command) => {
 	if (channel_blocks[channel_type][command] === false)
 		return false
@@ -89,13 +97,12 @@ command_parser = (from, to, text, info) => {
 		info.channel_type = channel
 	}
 
-	// check alias filters (command override)
-	for (let key in commands_alias_filters) {
-		filter = commands_alias_filters[key]
-		if (filter.test(text)) {
-			commands[key](info, words)
-			return
-		}
+	// check alias filters 
+	// commands override
+	if (words[0].substr(0, 1) !== config.command_prefix) {
+		command = alias_filter_check(text);
+		if (command !== false) commands[command](info, words);
+		return;
 	}
 
 	// make sure there's a string to parse! :X
