@@ -13,6 +13,8 @@ var process = (words, operator) => {
 		return `kudos max length : ${what_max_length}`
 	var display = what
 	what = what.toLowerCase()
+	// special cases? :shrug:
+	if (what == '56') return `56 has 56 kudos`;
 	// load kudos object from memory or setup
 	kudos = ram.get('kudos')
 	if (typeof kudos == 'undefined') kudos = {}
