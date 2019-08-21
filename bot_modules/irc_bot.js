@@ -78,6 +78,7 @@ command_parser = (from, to, text, info) => {
 	let command = ''
 	// break text into words
 	let words = text.split(' ').filter(e => e !== '')
+	if (words.length < 1) return false;
 	// supplement info
 	info.from = from
 	info.command_prefix = config.command_prefix
