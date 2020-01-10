@@ -221,7 +221,7 @@ module.exports = {
 		// is it an array?
 		if (Array.isArray(text)) {
 			text.forEach(line => {
-				irc_push(channel, line)
+				if (line.length > 0) irc_push(channel, line)
 			})
 			return
 		}
