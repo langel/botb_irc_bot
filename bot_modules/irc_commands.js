@@ -373,10 +373,16 @@ module.exports = {
 
 	ohb: (info, words) => {
 		botb_api.request('battle/current').then(data => {
-			data = data.filter(battle => battle.type === 3)
+			data = data.filter(battle => parseInt(battle.type) === 3)
 			if (data.length === 0) throw "No ohb data returned!"
-			let response = battle_data_to_response(data)
-			bot.say(info.channel, response)
+			data.forEach(battle => {
+				let ohb_info = "OHB \"" + battle.title + "\" :: ";
+				if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left;
+				if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left;
+				if (battle.period == 'vote') ohb_info += "Vorting Tiem";
+				ohb_info += " :: Format: " + battle.format_tokens[0];
+				bot.say(info.channel, ohb_info);
+			})
 		}).catch( error => {
 			bot.say(info.channel, 'We ALL love OHBs, but none is currently runningz :)))))))')
 			console.log(error)
