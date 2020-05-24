@@ -133,6 +133,20 @@ module.exports = {
 	},
 
 	/**
+	 * entry_id
+	 *
+	 */
+	entry_id: (info, words) => {
+		let id = words.slice(1).join(' ');
+		let p = botb_api.request(`entry/load/${id}/`);
+		p.then(data => {
+			bot.say(info.channel, `${data.botbr.name} -- ${data.title} :: Σ${data.score} ${data.rank}${data.rank_suffix} ${data.format_token} :: ${data.datetime} :: ${data.profile_url}`);
+		}).catch(error => {
+			bot.say(info.channel, `Integer "${id}" is an invalid entry id`);
+		});
+	},
+
+	/**
 	 *	giphy
 	 *
 	 */
