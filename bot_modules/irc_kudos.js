@@ -68,9 +68,10 @@ module.exports = {
 		}
 		console.log(what)
 		kudos = ram.get('kudos')
-		if (typeof kudos[what] == 'undefined')
-			return `${what} has no <3`
-		return `${what} has ${kudos[what]} kudos`
+		for (let prop in kudos) if (prop.toLowerCase() == what.toLowerCase()) {
+			return `${prop} has ${kudos[prop]} kudos`;
+		}
+		return `${what} has no <3`
 	},
 
 	minus: words => process(words, 'minus'),
