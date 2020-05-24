@@ -352,7 +352,7 @@ module.exports = {
 	lyceum: (info, words) => {
 		let title = words.slice(1).join(' ')
 		if (typeof title === 'undefined' || title.length < 3) {
-			bot.say(info.channel, 'Moar characters!! =X')
+			bot.say(info.channel, "https://battleofthebits.org/lyceum/");
 			return
 		}
 
