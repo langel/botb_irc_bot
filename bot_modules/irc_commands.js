@@ -552,9 +552,10 @@ module.exports = {
 			resp.on('data', data => {
 				// parse API response and give video URL (if video exists)
 				let results = JSON.parse(data)
-				if (results['items'].length != 0) {
+				try {
 					bot.say(info.channel, `https://youtu.be/${results['items'][0]['id']['videoId']}`)
-				} else {
+				} 
+				catch(e) {
 					bot.say(info.channel, 'no youtorb results U:')
 				}
 			})
