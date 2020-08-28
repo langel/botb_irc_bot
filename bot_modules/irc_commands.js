@@ -486,7 +486,7 @@ module.exports = {
 	 */
 	ultrachord: (info, words) => {
 		let chat_text = ultrachord.ultrachord(words)
-		if (chat_text) bot.say(info.channel, `${info.nick}: ${chat_text}`)
+		if (chat_text) bot.say(info.channel, `${chat_text}`)
 	},
 
 	/**
