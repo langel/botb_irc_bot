@@ -42,6 +42,7 @@ var commands_aliases = {
 	up: 'uptime',
 	w: 'wikipedia',
 	wiki: 'wikipedia',
+	xhb: 'ohb',
 	y: 'youtube',
 	yt: 'youtube',
 }
