@@ -22,7 +22,7 @@ function battle_data_to_response(data) {
 			` ${battle.period_end_time_left}`      +
 			` :: final results ${battle.end_date}` +
 			` ${battle.end_time_left}`             +
-			` :: ${battle.profile_url}`
+			` :: <${battle.profile_url}>`
 		response.push(text)
 	})
 	return response
@@ -395,6 +395,7 @@ module.exports = {
 				if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left;
 				if (battle.period == 'vote') ohb_info += "Vorting Tiem";
 				ohb_info += " :: Format: " + battle.format_tokens[0];
+				ohb_info += " :: <" + battle.profile_url + "> ";
 				bot.say(info.channel, ohb_info);
 			})
 		}).catch( error => {
