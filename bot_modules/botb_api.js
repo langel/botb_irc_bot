@@ -15,6 +15,7 @@ module.exports = {
 					let obj;
 					try {
 						let stat = response.statusCode
+						console.log('stat : ' + stat);
 						if (stat != '200') {
 							reject(response)
 							return
