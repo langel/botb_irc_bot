@@ -32,7 +32,38 @@ module.exports = {
 		})
 	},
 
-	post: post_url => {
-		// XXX BotB API does not yet accept POSTs
+	post: (request_url, body) => {
+		// XXX does not currently handle returns
+		request_url = botb_api_root + request_url;
+		console.log(request_url);
+		console.log(body);
+		return new Promise((resolve, reject) => {
+			curl.post(request_url, body, {
+					headers: { 
+						'User-Agent': 'curl', 
+						'Content-Type': 'application/x-www-form-urlencoded'
+					}
+				},
+				(err, response, body) => {
+					let obj;
+					try {
+						let stat = response.statusCode
+						console.log('stat : ' + stat);
+						if (stat != '200') {
+							reject(response)
+							return
+						}
+						obj = JSON.parse(body);
+					}
+					catch(e) {
+						reject(response);
+						return
+					}
+					resolve(obj)
+				}
+			)
+		});
 	},
+
+
 }

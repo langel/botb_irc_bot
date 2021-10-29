@@ -1,5 +1,6 @@
 var irc = require('irc')
 var config = require('./config.js')
+var botb_api = require('./botb_api.js')
 
 var bot
 var commands
@@ -209,7 +210,13 @@ module.exports = {
 			console.log(`${who} has quit ${channel}`)
 		})
 		bot.addListener('message', (from, to, text, info) => {
+			// handle any attempted commands
 			command_parser(from, to, text, info)
+			// send message to potentional server loggings
+			var time = new Date(Date.now());
+			var message = '[' + time.getHours() + ':' + time.getMinutes() + '] <' + from + '> ' + text;
+			botb_api.post('battle/log_from_bot', 'message=' + encodeURIComponent(message));
+			console.log(info);
 		})
 	},
 
