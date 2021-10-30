@@ -35,8 +35,7 @@ module.exports = {
 	post: (request_url, body) => {
 		// XXX does not currently handle returns
 		request_url = botb_api_root + request_url;
-		console.log(request_url);
-		console.log(body);
+		console.log('API POST: ' + request_url);
 		return new Promise((resolve, reject) => {
 			curl.post(request_url, body, {
 					headers: { 

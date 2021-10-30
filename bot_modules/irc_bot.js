@@ -213,10 +213,12 @@ module.exports = {
 			// handle any attempted commands
 			command_parser(from, to, text, info)
 			// send message to potentional server loggings
-			var time = new Date(Date.now());
-			var message = '[' + time.getHours() + ':' + time.getMinutes() + '] <' + from + '> ' + text;
+			console.log(text);
+			// XXX color codes are stuck in messages
+//			var message = text.replace(/\u0003[0-9]+/g, '');
+			var message = text;
+			if (from !== 'botbd') message = '<' + from + '> ' + message;
 			botb_api.post('battle/log_from_bot', 'message=' + encodeURIComponent(message));
-			console.log(info);
 		})
 	},
 
