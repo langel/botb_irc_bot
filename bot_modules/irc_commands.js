@@ -32,7 +32,7 @@ function battle_data_to_response(data) {
 
 
 module.exports = {
-
+	url_regex: url_regex,
 	/**
 	 *	battle
 	 *
