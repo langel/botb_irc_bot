@@ -48,7 +48,8 @@ var respond = (response, code, content, message) => {
 module.exports = {
 
 	initialize: () => {
-		alerts.setXHBTimeouts();
+		// wait until bot joins IRC, hopefully it's done so in 30 seconds
+		setTimeout(alerts.setXHBTimeouts, 30000);
 		setInterval(alerts.setXHBTimeouts, 5 * 60 * 1000);
 
 		http.createServer((request, response) => {
