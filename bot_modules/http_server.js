@@ -2,11 +2,12 @@ var config = require('./config.js')
 var ram = require('./memory.js')
 var http = require('http')
 var bot = require('./irc_bot.js')
-
+var alerts = require('./irc_alerts.js')
 
 var commands = {
 
 	say: message => {
+		alerts.setXHBTimeouts(); // update XHB alerts
 		console.log('SAY FROM SITE :: ' + message);
 		bot.say(config.irc.channels[0], message);
 		return 'the bot speaks!';
@@ -47,6 +48,8 @@ var respond = (response, code, content, message) => {
 module.exports = {
 
 	initialize: () => {
+		alerts.setXHBTimeouts();
+		setInterval(alerts.setXHBTimeouts, 5 * 60 * 1000);
 
 		http.createServer((request, response) => {
 			console.log(`SERVER REQUEST ::  ${request.method} ${request.url}`)
