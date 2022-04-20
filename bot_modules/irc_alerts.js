@@ -33,7 +33,7 @@ let announce = {
     battleAlerts[battle.id].start = true;
 
     let allFormats = battle.format_tokens.join(", "); // just in case XHBs contain multiple formats in future
-    let announceString = `XHB :: ${battle.title} :: Format ${allFormats} :: started! g0g0g0g0g0! <${battle.profile_url.match(commands.url_regex)}>`;
+    let announceString = `XHB started! g0g0g0g0g0! :: ${battle.title} :: Format ${allFormats} :: <${battle.profile_url.match(commands.url_regex)}>`;
     bot.say(alertChannel, announceString);
   },
 
@@ -43,7 +43,7 @@ let announce = {
 
     let minutes = Math.round((startTime / 1000) / 60);
     let allFormats = battle.format_tokens.join(", ");
-    let announceString = `XHB :: ${battle.title} :: Format ${allFormats} :: will begin in ${minutes} minutes! ${roleXHBr}`;
+    let announceString = `XHB will begin in ${minutes} minutes! :: ${battle.title} :: Format ${allFormats} ${roleXHBr}`;
     bot.say(alertChannel, announceString);
   },
 
@@ -64,7 +64,10 @@ let announce = {
     }
 
     let allFormats = battle.format_tokens.join(", ");
-    let announceString = `XHB :: ${battle.title} :: Format ${allFormats} :: ${minutes} minutes left!`;
+    let announceString = `${minutes} minutes left! @ XHB :: ${battle.title} :: Format ${allFormats}`;
+    if (battleAlerts[battle.id].end2) {
+      announceString = `${minutes} minutes left! @ XHB !!! I suggest you R teh uploading !!!! :: ${battle.title} :: Format ${allFormats}`;
+    }
     bot.say(alertChannel, announceString);
   },
 
@@ -73,7 +76,7 @@ let announce = {
     battleAlerts[battle.id].end = true;
 
     let allFormats = battle.format_tokens.join(", ");
-    let announceString = `XHB :: ${battle.title} :: Format ${allFormats} :: Time is teh up, slackerz.`;
+    let announceString = `Yer XHB time is teh up. slackerz. :: ${battle.title} :: Format ${allFormats}`;
     bot.say(alertChannel, announceString);
 
     // remove battle from battleAlerts
