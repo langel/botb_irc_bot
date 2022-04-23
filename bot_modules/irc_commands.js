@@ -409,13 +409,13 @@ module.exports = {
 			    if (current.getUTCHours() + hours > 23) hours -= 24;
 				let ohb_info = "OHB \"" + battle.title + "\" :: ";
 				if (timezone == "") {
-				    if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left + " (" + (current.getUTCHours() + hours) + ":" + (current.getUTCMinutes() + minutes) + ")";
-				    if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left + " (" + (current.getUTCHours() + hours) + ":" + (current.getUTCMinutes() + minutes) + ")";
+				    if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left + "(" + (current.getUTCHours() + hours) + ":" + (current.getUTCMinutes() + minutes) + ")";
+				    if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left + "(" + (current.getUTCHours() + hours) + ":" + (current.getUTCMinutes() + minutes) + ")";
 				}
 				if (timezone.startsWith("utc") || timezone.startsWith("gmt")) {
 				    let addToDate = parseInt(timezone.slice(3))
-				    if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left + " (" + (current.getUTCHours() + hours + addToDate) + ":" + (current.getUTCMinutes() + minutes) + ")";
-				    if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left + " (" + (current.getUTCHours() + hours + addToDate) + ":" + (current.getUTCMinutes() + minutes) + ")";
+				    if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left + "(" + (current.getUTCHours() + hours + addToDate) + ":" + (current.getUTCMinutes() + minutes) + ")";
+				    if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left + "(" + (current.getUTCHours() + hours + addToDate) + ":" + (current.getUTCMinutes() + minutes) + ")";
 				}
 				if (battle.period == 'vote') ohb_info += "Vorting Tiem";
 				ohb_info += " :: Format: " + battle.format_tokens[0];
