@@ -394,46 +394,46 @@ module.exports = {
 			var current = new Date();
 			if (data.length === 0) throw "No ohb data returned!"
 			data.forEach(battle => {
-			    let times = battle.period_end_time_left.split(" ")
-			    let hours = parseInt(times[0].slice(0, -1))
-			    console.log(times[0])
-			    console.log(times[0].slice(-1))
-			    console.log(parseInt(times[0].slice(0, -1)))
-			    let minutes = parseInt(times[1].slice(0, -1))
+				let times = battle.period_end_time_left.split(" ")
+				let hours = parseInt(times[0].slice(0, -1))
+				console.log(times[0])
+				console.log(times[0].slice(-1))
+				console.log(parseInt(times[0].slice(0, -1)))
+			    	let minutes = parseInt(times[1].slice(0, -1))
 			    
-			    let ohb_info = "OHB \"" + battle.title + "\" :: ";
+			    	let ohb_info = "OHB \"" + battle.title + "\" :: ";
 				
-			    if (timezone == "") {var addToDate = 0; console.log("addToDate defined")}
-			    else if (timezone.startsWith("utc") || timezone.startsWith("gmt")) {
-				if (timezone.slice(3) == "") {var addToDate = 0}
-				else {var addToDate = parseInt(timezone.slice(3))};
-		            }
-			    else if (timezone.startsWith("est")) {
-				if (timezone.slice(3) == "") {var addToDate = -5}
-				else {var addToDate = -5 + parseInt(timezone.slice(3))};
-			    }
-			    else if (timezone.startsWith("edt") || timezone.startsWith("et")) {
-				if (timezone.slice(3) == "") {var addToDate = -4}
-				else {var addToDate = -4 + parseInt(timezone.slice(3))};
-			    }
-			    else if (timezone.startsWith("cet") || timezone.startsWith("cest")) {
-				if (timezone.slice(3) == "") {var addToDate = 1}
-				else {var addToDate = 1 + parseInt(timezone.slice(3))};
-			    };
+			    	if (timezone == "") {var addToDate = 0; console.log("addToDate defined")}
+			    	else if (timezone.startsWith("utc") || timezone.startsWith("gmt")) {
+					if (timezone.slice(3) == "") {var addToDate = 0}
+					else {var addToDate = parseInt(timezone.slice(3))};
+		            	}
+			    	else if (timezone.startsWith("est")) {
+					if (timezone.slice(3) == "") {var addToDate = -5}
+					else {var addToDate = -5 + parseInt(timezone.slice(3))};
+			    	}
+			    	else if (timezone.startsWith("edt") || timezone.startsWith("et")) {
+					if (timezone.slice(3) == "") {var addToDate = -4}
+					else {var addToDate = -4 + parseInt(timezone.slice(3))};
+			    	}
+			    	else if (timezone.startsWith("cet") || timezone.startsWith("cest")) {
+					if (timezone.slice(3) == "") {var addToDate = 1}
+					else {var addToDate = 1 + parseInt(timezone.slice(3))};
+			    	};
 				
-			    hours += addToDate + current.getUTCHours();
-			    minutes += addToDate + current.getUTCMinutes();
-			    while (minutes > 59) {
-			        hours += 1;
-			        minutes -= 60;
-			    };
-			    if (hours > 23) hours -= 24;
-			    if (hours < 0) hours += 24;
+			    	hours += addToDate + current.getUTCHours();
+			    	minutes += addToDate + current.getUTCMinutes();
+			    	while (minutes > 59) {
+			        	hours += 1;
+			        	minutes -= 60;
+			    	};
+			    	if (hours > 23) hours -= 24;
+			    	if (hours < 0) hours += 24;
 			    
-			    if (hours.toString().length === 1) {hours = "0" + hours};
-			    if (minutes.toString().length === 1) {minutes = "0" + minutes};
+			    	if (hours.toString().length === 1) {hours = "0" + hours};
+			    	if (minutes.toString().length === 1) {minutes = "0" + minutes};
 			    
-			    if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left + " (" + (hours) + ":" + (minutes) + ")";
+			    	if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left + " (" + (hours) + ":" + (minutes) + ")";
 				if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left + " (" + (hours) + ":" + (minutes) + ")";
 				if (battle.period == 'vote') ohb_info += "Vorting Tiem";
 				ohb_info += " :: Format: " + battle.format_tokens[0];
