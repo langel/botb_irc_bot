@@ -403,7 +403,7 @@ module.exports = {
 			    
 			    	let ohb_info = "OHB \"" + battle.title + "\" :: ";
 				
-			    	if (timezone == "") {var addToDate = 0; console.log("addToDate defined")}
+			    	if (timezone == "") {var addToDate = 0;}
 			    	else if (timezone.startsWith("utc") || timezone.startsWith("gmt")) {
 					if (timezone.slice(3) == "") {var addToDate = 0}
 					else {var addToDate = parseInt(timezone.slice(3))};
