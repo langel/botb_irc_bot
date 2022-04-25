@@ -388,47 +388,75 @@ module.exports = {
 	},
 
 	ohb: (info, words) => {
+		ohb: (info, words) => {
 		botb_api.request('battle/current').then(data => {
 			data = data.filter(battle => parseInt(battle.type) === 3)
 			let timezone = words.slice(1).join(" ").toLowerCase()
 			var current = new Date();
 			if (data.length === 0) throw "No ohb data returned!"
 			data.forEach(battle => {
-				let times = battle.period_end_time_left.split(" ")
-				let hours = parseInt(times[0].slice(0, -1))
-				console.log(times[0])
-				console.log(times[0].slice(-1))
-				console.log(parseInt(times[0].slice(0, -1)))
+			    	let times = battle.period_end_time_left.split(" ")
+			    	let hours = parseInt(times[0].slice(0, -1))
+			    	console.log(times[0])
+			    	console.log(times[0].slice(-1))
+			    	console.log(parseInt(times[0].slice(0, -1)))
 			    	let minutes = parseInt(times[1].slice(0, -1))
 			    
-			    	let ohb_info = "OHB \"" + battle.title + "\" :: ";
+				let ohb_info = "OHB \"" + battle.title + "\" :: ";
 				
-			    	if (timezone == "") {var addToDate = 0;}
-			    	else if (timezone.startsWith("utc") || timezone.startsWith("gmt")) {
-					if (timezone.slice(3) == "") {var addToDate = 0}
-					else {var addToDate = parseInt(timezone.slice(3))};
-		            	}
-			    	else if (timezone.startsWith("est")) {
-					if (timezone.slice(3) == "") {var addToDate = -5}
-					else {var addToDate = -5 + parseInt(timezone.slice(3))};
-			    	}
-			    	else if (timezone.startsWith("edt") || timezone.startsWith("et")) {
-					if (timezone.slice(3) == "") {var addToDate = -4}
-					else {var addToDate = -4 + parseInt(timezone.slice(3))};
-			    	}
-			    	else if (timezone.startsWith("cet") || timezone.startsWith("cest")) {
-					if (timezone.slice(3) == "") {var addToDate = 1}
-					else {var addToDate = 1 + parseInt(timezone.slice(3))};
-			    	};
+				if (timezone.startsWith("utc") || timezone.startsWith("gmt")) {
+				    if (timezone.slice(3) != "") {hours += parseInt(timezone.slice(3))};
+				}
 				
-			    	hours += addToDate + current.getUTCHours();
-			    	minutes += addToDate + current.getUTCMinutes();
+				switch (timezone) {
+				    	case "pdt":
+				    	case "pacific us":
+				        	hours -= 7;
+				    	case "mdt":
+				    	case "mountain us":
+				        	hours -= 6;
+				    	case "cdt":
+				    	case "central us":
+				        	hours -= 5;
+				    	case "edt":
+				    	case "eastern us":
+				        	hours -= 4;
+				    	case "bst":
+				    	case "uk":
+				        	hours += 1;
+				    	case "cest":
+				    	case "germany":
+				        	hours += 2;
+				    	case "msk":
+				    	case "russia":
+				        	hours += 3;
+				    	case "ist":
+				    	case "india":
+				        	hours += 5;
+				        	minutes += 30;
+				    	case "cst":
+				    	case "china":
+				        	hours += 8;
+				    	case "jst":
+				    	case "japan":
+				        	hours += 9;
+				    	case "aest":
+				    	case "australia":
+				        	hours += 10;
+				    	case "nzst":
+				    	case "new zealand":
+				        	hours += 12;
+				};
+				
+				hours += current.getUTCHours();
+				minutes += current.getUTCMinutes();
 			    	while (minutes > 59) {
 			        	hours += 1;
 			        	minutes -= 60;
 			    	};
-			    	if (hours > 23) hours -= 24;
-			    	if (hours < 0) hours += 24;
+			    
+			    	while (hours > 23) hours -= 24;
+			    	while (hours < 0) hours += 24;
 			    
 			    	if (hours.toString().length === 1) {hours = "0" + hours};
 			    	if (minutes.toString().length === 1) {minutes = "0" + minutes};
