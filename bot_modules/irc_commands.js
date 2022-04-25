@@ -387,7 +387,6 @@ module.exports = {
 		})
 	},
 
-	ohb: (info, words) => {
 		ohb: (info, words) => {
 		botb_api.request('battle/current').then(data => {
 			data = data.filter(battle => parseInt(battle.type) === 3)
@@ -405,13 +404,13 @@ module.exports = {
 				let ohb_info = "OHB \"" + battle.title + "\" :: ";
 				
 				if (timezone.startsWith("utc") || timezone.startsWith("gmt")) {
-				    if (timezone.slice(3) != "") {hours += parseInt(timezone.slice(3))};
+				    	if (timezone.slice(3) != "") {hours += parseInt(timezone.slice(3))};
 				}
 				
 				switch (timezone) {
 				    	case "pdt":
 				    	case "pacific us":
-				        	hours -= 7;
+				       		hours -= 7;
 				    	case "mdt":
 				    	case "mountain us":
 				        	hours -= 6;
@@ -458,11 +457,18 @@ module.exports = {
 			    	while (hours > 23) hours -= 24;
 			    	while (hours < 0) hours += 24;
 			    
+			    	if (hours >= 12) {var hours_am_pm = " PM"}
+			    	else if (hours < 12) {var hours_am_pm = " AM"};
+			    
+			    	if (hours == 0 || hours == 12) {var hours_am_pm_time = 12}
+			    	else if (hours > 12) {var hours_am_pm_time = hours - 12}
+			    	else {var hours_am_pm_time = hours};
+			    
 			    	if (hours.toString().length === 1) {hours = "0" + hours};
 			    	if (minutes.toString().length === 1) {minutes = "0" + minutes};
 			    
-			    	if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left + " (" + (hours) + ":" + (minutes) + ")";
-				if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left + " (" + (hours) + ":" + (minutes) + ")";
+			    	if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left + "(" + hours + ":" + minutes + "/" + hours_am_pm_time + ":" + minutes + hours_am_pm + ")";
+				if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left + "(" + hours + ":" + minutes + "/" + hours_am_pm_time + ":" + minutes + hours_am_pm + ")";
 				if (battle.period == 'vote') ohb_info += "Vorting Tiem";
 				ohb_info += " :: Format: " + battle.format_tokens[0];
 				ohb_info += " :: <" + battle.profile_url.match(url_regex) + "> ";
