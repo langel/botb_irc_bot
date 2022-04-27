@@ -390,12 +390,11 @@ module.exports = {
 	ohb: (info, words) => {
 		botb_api.request('battle/current').then(data => {
 			data = data.filter(battle => parseInt(battle.type) === 3)
-			let timezone = words.slice(1).join(" ");
-			var current = new Date();
 			if (data.length === 0) throw "No ohb data returned!"
 			data.forEach(battle => {
-				if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left);
-				if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left);
+				let ohb_info = "OHB \"" + battle.title + "\" :: ";
+				if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left;
+				if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left;
 				if (battle.period == 'vote') ohb_info += "Vorting Tiem";
 				ohb_info += " :: Format: " + battle.format_tokens[0];
 				ohb_info += " :: <" + battle.profile_url.match(url_regex) + "> ";
