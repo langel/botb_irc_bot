@@ -490,20 +490,43 @@ module.exports = {
 	
 	roll: (info, words) => {
 	    	let dice_notation = words.slice(1).join(" ").toLowerCase();
-	    	if (dice_notation == "") dice_notation = "d10";
+	    	if (dice_notation == "") dice_notation = "1d10";
 	    
-	    	if (dice_notation.startsWith("d")) {var dice_amount = 1}
+	    	if (dice_notation.startsWith("d")) {dice_notation = "1" + dice_notation; var dice_amount = 1}
 	    	else {var dice_amount = parseInt(dice_notation.split("d")[0])};
 	    
 	    	let sum = 0;
 	    
-	    	let dice_amount_length = dice_amount.toString().length;
+	    	var dice_amount_length = dice_amount.toString().length + 1;
+	    
 	    	if (dice_notation.includes("+")) {
-	        	sum += parseInt(dice_notation.split("+")[1]);
+	        	let add_to_sum = dice_notation.split("+")[1];
+	        
+	        	if (add_to_sum.includes("d")) {
+	            		if (add_to_sum.startsWith("d")) add_to_sum = "1" + add_to_sum;
+	            		let subdice_amount = parseInt(add_to_sum.split("d")[0]);;
+	            		let subnumber_limit = parseInt(add_to_sum.split("d")[1]);
+	            		for (let i = 0; i < subdice_amount; i++) {sum += Math.floor(Math.random() * subnumber_limit) + 1};
+	        	}
+	        	else {
+	            		sum += parseInt(add_to_sum);
+	        	};
+	        
 	        	var number_limit = parseInt(dice_notation.split("+")[0].slice(dice_amount_length));
-	    	}	
+	    	}
 	    	else if (dice_notation.includes("-")) {
-	        	sum -= parseInt(dice_notation.split("-")[1]);
+	        	let subtract_to_sum = dice_notation.split("-")[1];
+	        
+	        	if (subtract_to_sum.includes("d")) {
+	            		if (subtract_to_sum.startsWith("d")) subtract_to_sum = "1" + subtract_to_sum;
+	            		let subdice_amount = parseInt(subtract_to_sum.split("d")[0]);
+	            		let subnumber_limit = parseInt(subtract_to_sum.split("d")[1]);
+	            		for (let i = 0; i < subdice_amount; i++) {sum -= Math.floor(Math.random() * subnumber_limit) + 1};
+	        	}
+	        	else {
+	            		sum += parseInt(subtract_to_sum);
+	        	};
+	        
 	        	var number_limit = parseInt(dice_notation.split("-")[0].slice(dice_amount_length));
 	    	}
 	    	else {
