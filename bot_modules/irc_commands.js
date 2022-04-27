@@ -482,6 +482,18 @@ module.exports = {
 			})
 		})
 	},
+	
+	/**
+	 *	roll
+	 *
+	 */
+	
+	roll: (info, words) => {
+	    	let number = words.slice(1).join(" ");
+	    	if (number == "") number = 10;
+	    	let chat_text = `${info.from} rolls ` + (Math.floor(Math.random() * number) + 1) + "!"
+	    	bot.say(info.channel, `${chat_text}`)
+	},
 
 	/**
 	 *	ultrachord
