@@ -489,10 +489,31 @@ module.exports = {
 	 */
 	
 	roll: (info, words) => {
-	    	let number = words.slice(1).join(" ");
-	    	if (number == "") number = 10;
-	    	let chat_text = `${info.from} rolls ` + (Math.floor(Math.random() * number) + 1) + "!"
-	    	bot.say(info.channel, `${chat_text}`)
+	    	let dice_notation = words.slice(1).join(" ").toLowerCase();
+	    	if (dice_notation == "") dice_notation = "d10";
+	    
+	    	if (dice_notation.startsWith("d")) {var dice_amount = 1}
+	    	else {var dice_amount = parseInt(dice_notation.split("d")[0])};
+	    
+	    	let sum = 0;
+	    
+	    	let dice_amount_length = dice_amount.toString().length;
+	    	if (dice_notation.includes("+")) {
+	        	sum += parseInt(dice_notation.split("+")[1]);
+	        	var number_limit = parseInt(dice_notation.split("+")[0].slice(dice_amount_length));
+	    	}	
+	    	else if (dice_notation.includes("-")) {
+	        	sum -= parseInt(dice_notation.split("-")[1]);
+	        	var number_limit = parseInt(dice_notation.split("-")[0].slice(dice_amount_length));
+	    	}
+	    	else {
+	        	var number_limit = parseInt(dice_notation.slice(dice_amount_length));
+	    	};
+	    
+	    	for (let i = 0; i < dice_amount; i++) {sum += Math.floor(Math.random() * number_limit) + 1};
+	    	let chat_text = `${info.from} rolls ` + sum + "!";
+	    
+	    	bot.say(info.channel, `${chat_text}`);
 	},
 
 	/**
