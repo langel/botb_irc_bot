@@ -394,29 +394,8 @@ module.exports = {
 			var current = new Date();
 			if (data.length === 0) throw "No ohb data returned!"
 			data.forEach(battle => {
-			    let times = battle.period_end_time_left.split(" ");
-			    let hours = parseInt(times[0].slice(0, -1));
-			    let minutes = parseInt(times[1].slice(0, -1));
-			    let seconds = parseInt(times[2].slice(0, -1));
-			    while (current.getUTCSeconds() + seconds > 59) {
-			        minutes += 1;
-			        seconds -= 60;
-			    };
-			    while (current.getUTCMinutes() + minutes > 59) {
-			        hours += 1;
-			        minutes -= 60;
-			    };
-			    if (current.getUTCHours() + hours > 23) hours -= 24;
-				let ohb_info = "OHB \"" + battle.title + "\" :: ";
-				if (timezone == "") {
-				    if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left + " (" + (current.getUTCHours() + hours) + ":" + (current.getUTCMinutes() + minutes) + ")";
-				    if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left + " (" + (current.getUTCHours() + hours) + ":" + (current.getUTCMinutes() + minutes) + ")";
-				}
-				if (timezone.startsWith("utc") || timezone.startsWith("gmt")) {
-				    let addToDate = parseInt(timezone.slice(3))
-				    if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left + " (" + (current.getUTCHours() + hours + addToDate) + ":" + (current.getUTCMinutes() + minutes) + ")";
-				    if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left + " (" + (current.getUTCHours() + hours + addToDate) + ":" + (current.getUTCMinutes() + minutes) + ")";
-				}
+				if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left);
+				if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left);
 				if (battle.period == 'vote') ohb_info += "Vorting Tiem";
 				ohb_info += " :: Format: " + battle.format_tokens[0];
 				ohb_info += " :: <" + battle.profile_url.match(url_regex) + "> ";
