@@ -537,6 +537,7 @@ module.exports = {
 	        	var chat_text = `${info.from} rolls ` + sum + "!";
 	    	}
 	    	else {
+			if (dice_notation == "") dice_notation = "10";
 	    		var chat_text = `${info.from} rolls ` + (Math.floor(Math.random() * parseInt(dice_notation)) + 1) + "!";
 	    	};
 	    
