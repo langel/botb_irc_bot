@@ -490,8 +490,6 @@ module.exports = {
 	roll: (info, words) => {
 		let dice_notation = words.slice(1).join(" ").toLowerCase();
 		if (dice_notation.includes("d")) {
-	   		if (dice_notation == "") dice_notation = "1d10";
-	        
 	   		if (dice_notation.startsWith("d")) {dice_notation = "1" + dice_notation; var dice_amount = 1}
 	   		else {var dice_amount = parseInt(dice_notation.split("d")[0])};
 	        
