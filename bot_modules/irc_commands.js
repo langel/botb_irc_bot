@@ -505,7 +505,7 @@ module.exports = {
 					let subdice_amount = parseInt(add_to_sum.split("d")[0]);;
 					let subnumber_limit = parseInt(add_to_sum.split("d")[1]);
 					
-					if (Math.random() > 0.5 && dice_amount != 1) dice_amount -= 1;
+					if (Math.random() > 0.5 && dice_amount > 1) dice_amount -= 1;
 					sum += dice_amount * (Math.floor(Math.random() * number_limit) + 1);
 				}
 				else {
@@ -522,7 +522,7 @@ module.exports = {
 					let subdice_amount = parseInt(subtract_to_sum.split("d")[0]);
 					let subnumber_limit = parseInt(subtract_to_sum.split("d")[1]);
 					
-					if (Math.random() > 0.5 && dice_amount != 1) dice_amount -= 1;
+					if (Math.random() > 0.5 && dice_amount > 1) dice_amount -= 1;
 					sum -= dice_amount * (Math.floor(Math.random() * number_limit) + 1);
 				}
 				else {
@@ -534,7 +534,7 @@ module.exports = {
 			else {var number_limit = parseInt(dice_notation.slice(dice_amount_length));};
 		
 			// deleting the for loop, makes it less random, but more efficient
-			if (Math.random() > 0.5 && dice_amount != 1) dice_amount -= 1;
+			if (Math.random() > 0.5 && dice_amount > 1) dice_amount -= 1;
 			sum += dice_amount * (Math.floor(Math.random() * number_limit) + 1);
 			
 			var chat_text = `${info.from} rolls ` + sum + "!";
