@@ -482,6 +482,70 @@ module.exports = {
 			})
 		})
 	},
+	
+	/**
+	 *  roll
+	 *
+	 */
+	roll: (info, words) => {
+		let dice_notation = words.slice(1).join(" ").toLowerCase();
+		if (dice_notation.includes("d")) {
+			if (dice_notation.startsWith("d")) {dice_notation = "1" + dice_notation; var dice_amount = 1}
+			else {var dice_amount = parseInt(dice_notation.split("d")[0])};
+
+			let sum = 0;
+		
+			var dice_amount_length = dice_amount.toString().length + 1;
+		
+			if (dice_notation.includes("+")) {
+				let add_to_sum = dice_notation.split("+")[1];
+		    
+				if (add_to_sum.includes("d")) {
+					if (add_to_sum.startsWith("d")) add_to_sum = "1" + add_to_sum;
+					let subdice_amount = parseInt(add_to_sum.split("d")[0]);;
+					let subnumber_limit = parseInt(add_to_sum.split("d")[1]);
+					
+					if (Math.random() > 0.5 && dice_amount != 1) dice_amount -= 1;
+					sum += dice_amount * (Math.floor(Math.random() * number_limit) + 1);
+				}
+				else {
+					sum += parseInt(add_to_sum);
+				};
+		    
+				var number_limit = parseInt(dice_notation.split("+")[0].slice(dice_amount_length));
+			}
+			else if (dice_notation.includes("-")) {
+				let subtract_to_sum = dice_notation.split("-")[1];
+		    
+				if (subtract_to_sum.includes("d")) {
+					if (subtract_to_sum.startsWith("d")) subtract_to_sum = "1" + subtract_to_sum;
+					let subdice_amount = parseInt(subtract_to_sum.split("d")[0]);
+					let subnumber_limit = parseInt(subtract_to_sum.split("d")[1]);
+					
+					if (Math.random() > 0.5 && dice_amount != 1) dice_amount -= 1;
+					sum -= dice_amount * (Math.floor(Math.random() * number_limit) + 1);
+				}
+				else {
+					sum -= parseInt(subtract_to_sum);
+				};
+		    
+				var number_limit = parseInt(dice_notation.split("-")[0].slice(dice_amount_length));
+			}
+			else {var number_limit = parseInt(dice_notation.slice(dice_amount_length));};
+		
+			// deleting the for loop, makes it less random, but more efficient
+			if (Math.random() > 0.5 && dice_amount != 1) dice_amount -= 1;
+			sum += dice_amount * (Math.floor(Math.random() * number_limit) + 1);
+			
+			var chat_text = `${info.from} rolls ` + sum + "!";
+		}
+		else {
+			if (dice_notation == "") dice_notation = "10";
+			var chat_text = `${info.from} rolls ` + (Math.floor(Math.random() * parseInt(dice_notation)) + 1) + "!";
+		};
+	    
+		bot.say(info.channel, `${chat_text}`);
+	},
 
 	/**
 	 *	ultrachord
