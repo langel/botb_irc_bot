@@ -11,7 +11,9 @@
     "eslint": "^8.17.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint bot.js bot_modules",
+    "lint:fix": "eslint --fix bot.js bot_modules"
   },
   "repository": {
     "type": "git",
