@@ -4,5 +4,5 @@
 	all of the bot's modules are in the same directory.
 */
 
-var main = require('./bot_modules/main.js')
-main.initialize()
+var main = require('./bot_modules/main.js');
+main.initialize();

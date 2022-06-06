@@ -1,14 +1,14 @@
-var https = require('https')
-var querystring = require('querystring')
+var https = require('https');
+var querystring = require('querystring');
 
-var bot = require('./irc_bot.js')
-var botb_api = require('./botb_api.js')
-var config = require('./config.js')
-var kudos = require('./irc_kudos.js')
-var memory = require('./memory.js')
-var request = require('request')
-var ultrachord = require('./irc_ultrachord.js')
-var util = require('./util.js')
+var bot = require('./irc_bot.js');
+var botb_api = require('./botb_api.js');
+var config = require('./config.js');
+var kudos = require('./irc_kudos.js');
+var memory = require('./memory.js');
+var request = require('request');
+var ultrachord = require('./irc_ultrachord.js');
+var util = require('./util.js');
 
 // regex to shorten battle urls
 let url_regex = /^http.*\d\//i;
@@ -24,10 +24,10 @@ function battle_data_to_response(data) {
 			` ${battle.period_end_time_left}`      +
 			` :: final results ${battle.end_date}` +
 			` ${battle.end_time_left}`             +
-			` :: <${battle.profile_url.match(url_regex)}>`
-		response.push(text)
-	})
-	return response
+			` :: <${battle.profile_url.match(url_regex)}>`;
+		response.push(text);
+	});
+	return response;
 }
 
 
@@ -38,7 +38,7 @@ module.exports = {
 	 *
 	 */
 	battle: (info, words) => {
-		let title = words.slice(1).join(' ')
+		let title = words.slice(1).join(' ');
 		if (typeof title === 'undefined' || title.length < 3) {
 			botb_api.request('battle/current').then(data => {
 				bot.say(info.channel, battle_data_to_response(data));
@@ -57,7 +57,7 @@ module.exports = {
 				});
 				bot.say(info.channel, out.join(' $_$ '));
 				return;
-			}).catch(error => { bot.say(info.channel, 'Battle no found! =0')});
+			}).catch(error => { bot.say(info.channel, 'Battle no found! =0');});
 		}
 	},
 
@@ -66,7 +66,7 @@ module.exports = {
 	 *
 	 */
 	blocked: (info, words) => {
-		bot.say(info.channel, 'illegal command')
+		bot.say(info.channel, 'illegal command');
 	},
 
 	/**
@@ -74,38 +74,38 @@ module.exports = {
 	 *
 	 */
 	botbr: (info, words) => {
-		let name = words.slice(1).join(' ')
+		let name = words.slice(1).join(' ');
 		if (typeof name === 'undefined' || name.length < 2) {
-			bot.say(info.channel, 'Moar characters!! =X')
-			return
+			bot.say(info.channel, 'Moar characters!! =X');
+			return;
 		}
 
 		botb_api.request('botbr/search/' + name).then(data => {
-			if (data.length == 0) throw "No botbr search data returned!"
-			let botbr
+			if (data.length == 0) throw "No botbr search data returned!";
+			let botbr;
 			if (data.length > 1) {
-				let response
-				let botbrs = []
+				let response;
+				let botbrs = [];
 				data.forEach(botbr_object => {
-					botbrs.push(botbr_object.name)
+					botbrs.push(botbr_object.name);
 					if (name == botbr_object.name)
-						botbr = botbr_object
-				})
+						botbr = botbr_object;
+				});
 
 				if (typeof botbr === 'undefined') {
-					response = `Possible matches :: ${botbrs.join(', ')}`
-					bot.say(info.channel, response)
-					return
+					response = `Possible matches :: ${botbrs.join(', ')}`;
+					bot.say(info.channel, response);
+					return;
 				}
 			}
 
-			if (data.length == 1) botbr = data[0]
+			if (data.length == 1) botbr = data[0];
 
-			let response = `${botbr.name} :: Lvl ${botbr.level} ${botbr.class} :: ${botbr.profile_url}`
-			bot.say(info.channel, response)
+			let response = `${botbr.name} :: Lvl ${botbr.level} ${botbr.class} :: ${botbr.profile_url}`;
+			bot.say(info.channel, response);
 		}).catch(error => {
-			bot.say(info.channel, 'BotBr no found! =0')
-		})
+			bot.say(info.channel, 'BotBr no found! =0');
+		});
 	},
 
 	/**
@@ -113,25 +113,25 @@ module.exports = {
 	 *
 	 */
 	entry: (info, words) => {
-		let title = words.slice(1).join(' ')
-		let p
+		let title = words.slice(1).join(' ');
+		let p;
 		if (typeof title === 'undefined' || title.length < 2) {
-			p = botb_api.request(`entry/random`)
+			p = botb_api.request(`entry/random`);
 		} else {
-			p = botb_api.request(`entry/search/${title}`)
+			p = botb_api.request(`entry/search/${title}`);
 		}
 
 		p.then(data => {
-			if (data.length == 0) throw "No entry data returned!"
+			if (data.length == 0) throw "No entry data returned!";
 
-			let entry
-			if (data.length == 1) entry = data[0]
-			if (data.length > 1) entry = data[Math.floor(Math.random() * data.length)]
-			let response = `${entry.botbr.name} - ${entry.title} :: ${entry.profile_url}`
-			bot.say(info.channel, response)
+			let entry;
+			if (data.length == 1) entry = data[0];
+			if (data.length > 1) entry = data[Math.floor(Math.random() * data.length)];
+			let response = `${entry.botbr.name} - ${entry.title} :: ${entry.profile_url}`;
+			bot.say(info.channel, response);
 		}).catch(error => {
-			bot.say(info.channel, `String "${title}" does not match entry %title%;`)
-		})
+			bot.say(info.channel, `String "${title}" does not match entry %title%;`);
+		});
 	},
 
 	/**
@@ -153,7 +153,7 @@ module.exports = {
 	 *
 	 */
 	giphy: (info, words) => {
-		bot.say(info.channel, `http://giphy.com/search/${words.slice(1).join('%20')}`)
+		bot.say(info.channel, `http://giphy.com/search/${words.slice(1).join('%20')}`);
 	},
 
 	/**
@@ -161,7 +161,7 @@ module.exports = {
 	 *
 	 */
 	google: (info, words) => {
-		bot.say(info.channel, `https://encrypted.google.com/search?q=${words.slice(1).join('%20')}`)
+		bot.say(info.channel, `https://encrypted.google.com/search?q=${words.slice(1).join('%20')}`);
 	},
 
 	/**
@@ -170,8 +170,8 @@ module.exports = {
 	 */
 	help: (info, words) => {
 		// define command helper texts
-		let prefix = config.command_prefix
-		let usage = 'Usage:'
+		let prefix = config.command_prefix;
+		let usage = 'Usage:';
 		let command_help_text = {
 			battle:     `${usage} ${prefix}battle | Returns a list of the current battles taking place.`,
 			botbr:      `${usage} ${prefix}botbr <botbr> | Returns information about BotBrs whose name matched the query.`,
@@ -188,37 +188,37 @@ module.exports = {
 			uptime:     `${usage} ${prefix}uptime | Displays how long the bot has been running.`,
 			wikipedia:  `${usage} ${prefix}wikipedia <query> | Returns a URL of the Wikipedia search of your query.`,
 			youtube:    `${usage} ${prefix}youtube <query> | Returns a URL of the first YouTube result for your query.`,
-		}
+		};
 		// general help or command helper?
-		let command_help = false
-		let response
+		let command_help = false;
+		let response;
 		if (words.length > 1) {
 			// check for alias
-			command_help = bot.alias_check(words[1])
+			command_help = bot.alias_check(words[1]);
 			// make sure command is defined and available
 			if (!bot.command_check(info.channel_type, command_help)) {
-				bot.say(info.channel, 'teh command no defined and/or availables  D:')
-				return
+				bot.say(info.channel, 'teh command no defined and/or availables  D:');
+				return;
 			}
 		}
 		// no command defined for help
 		if (command_help === false) {
 			// list commands available
-			bot.say(info.channel, `Available commands: ${bot.command_list(info.channel_type).join(', ')}`)
-			return
+			bot.say(info.channel, `Available commands: ${bot.command_list(info.channel_type).join(', ')}`);
+			return;
 		}
 		// finally, give usage definition
 		if (typeof command_help_text[command_help] !== 'undefined') {
-			response = command_help_text[command_help]
+			response = command_help_text[command_help];
 		} 
 		else {
-			response = `${command_help} has no defined help  :C`
+			response = `${command_help} has no defined help  :C`;
 		}
-		let alias_list = bot.alias_find(command_help)
+		let alias_list = bot.alias_find(command_help);
 		if (alias_list.length) {
-			response += ` | Aliases: ${prefix}${alias_list.join(', ' + prefix)}`
+			response += ` | Aliases: ${prefix}${alias_list.join(', ' + prefix)}`;
 		}
-		bot.say(info.channel, response)
+		bot.say(info.channel, response);
 	},
 	
 	/**
@@ -226,7 +226,7 @@ module.exports = {
 	 *
 	 */
 	image: (info, words) => {
-		bot.say(info.channel, `https://www.google.com/search?tbm=isch&q=${words.slice(1).join('%20')}`)
+		bot.say(info.channel, `https://www.google.com/search?tbm=isch&q=${words.slice(1).join('%20')}`);
 	},
 	
 	/**
@@ -234,7 +234,7 @@ module.exports = {
 	 *
 	 */
 	imdb: (info, words) => {
-		bot.say(info.channel, `http://www.imdb.com/find?s=all&q=${words.slice(1).join('%20')}`)
+		bot.say(info.channel, `http://www.imdb.com/find?s=all&q=${words.slice(1).join('%20')}`);
 	},
 
 	/**
@@ -242,7 +242,7 @@ module.exports = {
 	 *
 	 */
 	imgur: (info, words) => {
-		bot.say(info.channel, `http://imgur.com/search?q=${words.slice(1).join('%20')}`)
+		bot.say(info.channel, `http://imgur.com/search?q=${words.slice(1).join('%20')}`);
 	},
 
 	/**
@@ -250,7 +250,7 @@ module.exports = {
 	 *
 	 */
 	kudos: (info, words) => {
-		bot.say(info.channel, kudos.info(words))
+		bot.say(info.channel, kudos.info(words));
 	},
 
 	/**
@@ -258,7 +258,7 @@ module.exports = {
 	 *
 	 */
 	kudos_minus: (info, words) => {
-		bot.say(info.channel, kudos.minus(words))
+		bot.say(info.channel, kudos.minus(words));
 	},
 
 	/**
@@ -266,7 +266,7 @@ module.exports = {
 	 *
 	 */
 	kudos_plus: (info, words) => {
-		bot.say(info.channel, kudos.plus(words))
+		bot.say(info.channel, kudos.plus(words));
 	},
 
 	/**
@@ -311,40 +311,40 @@ module.exports = {
 			510494,
 			1060247,
 			99999999
-		]
+		];
 
 		// == Target Response ==
 		// Points: 55306 - Level: 26 - Points per year: 23139 - 
 		// Next level ETA: 0 years 0 months 11 days - 
 		// for Level 33: 43 years 5 months 4 days - Boons: 6265 , Boons per year: 2621
 		// ==================
-		let username = words.length > 2 ? words.slice(1).join(' ') : words[1]
+		let username = words.length > 2 ? words.slice(1).join(' ') : words[1];
 		// Get a list of botbrs using the API.
 		botb_api.request(`botbr/list?filters=name~${username}`).then(data => {
-			let botbr  = data[0]
-			let level  = parseFloat(botbr.level)
-			let points = parseFloat(botbr.points)
-			let boons  = parseFloat(botbr.boons)
+			let botbr  = data[0];
+			let level  = parseFloat(botbr.level);
+			let points = parseFloat(botbr.points);
+			let boons  = parseFloat(botbr.boons);
 			// get the current date and the date of the botbr's creation.
-			let ms_current = new Date().getTime()
-			let ms_botbr_creation = new Date(botbr.create_date).getTime()
-			let ms_per_day = 1 * 24 * 60 * 60 * 1000
+			let ms_current = new Date().getTime();
+			let ms_botbr_creation = new Date(botbr.create_date).getTime();
+			let ms_per_day = 1 * 24 * 60 * 60 * 1000;
 			//               day hr   min  sec  milli
-			let botbr_days_existing = (ms_current - ms_botbr_creation) / ms_per_day // in days
-			let points_per_day = points / botbr_days_existing
-			let boons_per_day = boons / botbr_days_existing
-			let days_until_levelup = (points_array[level + 1] - points) / points_per_day
-			let days_until_level33 = (points_array[33] - points) / points_per_day
-			let levelup = util.days_to_fulldate(days_until_levelup)
-			let level33 = util.days_to_fulldate(days_until_level33)
+			let botbr_days_existing = (ms_current - ms_botbr_creation) / ms_per_day; // in days
+			let points_per_day = points / botbr_days_existing;
+			let boons_per_day = boons / botbr_days_existing;
+			let days_until_levelup = (points_array[level + 1] - points) / points_per_day;
+			let days_until_level33 = (points_array[33] - points) / points_per_day;
+			let levelup = util.days_to_fulldate(days_until_levelup);
+			let level33 = util.days_to_fulldate(days_until_level33);
 			let response = 	`Points: ${points} - Level: ${botbr.level}` +
 				` - Points per year: ${Math.round(points_per_day * 365)}` +
 				` - Next level ETA: ${levelup} - for Level 33: ${level33}` +
-				` - Boons: ${boons}, Boons per year: ${Math.round(boons_per_day * 365)}`
-			bot.say(info.channel, response)
+				` - Boons: ${boons}, Boons per year: ${Math.round(boons_per_day * 365)}`;
+			bot.say(info.channel, response);
 		}, error => {
-			bot.say(info.channel, "BotBr unfound!  :O")
-		})
+			bot.say(info.channel, "BotBr unfound!  :O");
+		});
 	},
 	
 	/**
@@ -352,45 +352,45 @@ module.exports = {
 	 *
 	 */
 	lyceum: (info, words) => {
-		let title = words.slice(1).join(' ')
+		let title = words.slice(1).join(' ');
 		if (typeof title === 'undefined' || title.length < 3) {
 			bot.say(info.channel, "https://battleofthebits.org/lyceum/");
-			return
+			return;
 		}
 
 		botb_api.request(`lyceum_article/search/${title}`).then(data => {
-			if (data.length == 0) throw "No lyceum data returned!"
+			if (data.length == 0) throw "No lyceum data returned!";
 
-			let article
+			let article;
 			if (data.length > 1) {
-				let response
-				let articles = []
+				let response;
+				let articles = [];
 				data.forEach(article_object => {
-					articles.push(article_object.title)
+					articles.push(article_object.title);
 					if (title == article_object.title) {
-						article = article_object
+						article = article_object;
 					}
-				})
+				});
 
 				if (typeof article === 'undefined') {
-					response = `Possible matches :: ${articles.join(', ')}`
-					bot.say(info.channel, response)
-					return
+					response = `Possible matches :: ${articles.join(', ')}`;
+					bot.say(info.channel, response);
+					return;
 				}
 			}
 
-			if (data.length == 1) article = data[0]
-			let response = `${article.title} :: ${article.profile_url}`
-			bot.say(info.channel, response)
+			if (data.length == 1) article = data[0];
+			let response = `${article.title} :: ${article.profile_url}`;
+			bot.say(info.channel, response);
 		}).catch(error => {
-			bot.say(info.channel, 'Article no found! =0')
-		})
+			bot.say(info.channel, 'Article no found! =0');
+		});
 	},
 
 	ohb: (info, words) => {
 		botb_api.request('battle/current').then(data => {
-			data = data.filter(battle => parseInt(battle.type) === 3)
-			if (data.length === 0) throw "No ohb data returned!"
+			data = data.filter(battle => parseInt(battle.type) === 3);
+			if (data.length === 0) throw "No ohb data returned!";
 			data.forEach(battle => {
 				let ohb_info = "OHB \"" + battle.title + "\" :: ";
 				if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left;
@@ -399,11 +399,11 @@ module.exports = {
 				ohb_info += " :: Format: " + battle.format_tokens[0];
 				ohb_info += " :: <" + battle.profile_url.match(url_regex) + "> ";
 				bot.say(info.channel, ohb_info);
-			})
+			});
 		}).catch( error => {
-			bot.say(info.channel, 'We ALL love OHBs, but none is currently runningz :)))))))')
-			console.log(error)
-		})
+			bot.say(info.channel, 'We ALL love OHBs, but none is currently runningz :)))))))');
+			console.log(error);
+		});
 	},
 
 	/**
@@ -411,38 +411,38 @@ module.exports = {
 	 *
 	 */
 	top: (info, words) => {
-		let filter = words.slice(1).join(' ')
-		let p
+		let filter = words.slice(1).join(' ');
+		let p;
 		if (typeof filter === 'undefined' || filter.length < 2) {
-			p = botb_api.request(`botbr/list/0/5?sort=points&desc=true`)
+			p = botb_api.request(`botbr/list/0/5?sort=points&desc=true`);
 		} else {
-			p = botb_api.request(`botbr/list/0/5?filters=class~${filter}&sort=points&desc=true`)
+			p = botb_api.request(`botbr/list/0/5?filters=class~${filter}&sort=points&desc=true`);
 		}
 
-		let response = ''
+		let response = '';
 		return p.then(data => {
-				if (data.length == 0) throw "No top botbr data returned!"
-				let botbrs = []
-				let esc = '\x03'
+				if (data.length == 0) throw "No top botbr data returned!";
+				let botbrs = [];
+				let esc = '\x03';
 				for (datum in data) {
-					if (response !== '') response += ', '
-					response += esc
+					if (response !== '') response += ', ';
+					response += esc;
 					response += 
 						datum==0 ? "08,01" :
 						datum==1 ? "15,01" :
-						datum==2 ? "07,01" : "04,01"
-					response += `${data[datum].name} :: Lvl ${data[datum].level}`
+						datum==2 ? "07,01" : "04,01";
+					response += `${data[datum].name} :: Lvl ${data[datum].level}`;
 					if (typeof filter === 'undefined' || filter.length < 2)
-						response += ` ${data[datum].class}`
+						response += ` ${data[datum].class}`;
 				}
 				if (response === '') {
-					throw `No botbrs are class ${filter} U:`
+					throw `No botbrs are class ${filter} U:`;
 				}	else {
-					bot.say(info.channel, response)
+					bot.say(info.channel, response);
 				}
 			}, error => {
-				bot.say(info.channel, "Couldn't find anything! Did you spell the class right?")
-			})
+				bot.say(info.channel, "Couldn't find anything! Did you spell the class right?");
+			});
 	},
 	
 	/**
@@ -450,37 +450,37 @@ module.exports = {
 	 *
 	 */
 	pix: (info, words) => {
-		let botbr = words.slice(1).join(" ")
-		let picurl
-		let esc = '\x03'
+		let botbr = words.slice(1).join(" ");
+		let picurl;
+		let esc = '\x03';
 		if (botbr === "") {
-			bot.say(info.channel, `${esc}00,03 Pox of whose???? ${esc}04,01`)
-			return
+			bot.say(info.channel, `${esc}00,03 Pox of whose???? ${esc}04,01`);
+			return;
 		}
 
-		let fs = require('fs')
-		let response
+		let fs = require('fs');
+		let response;
 		return new Promise((resolve, reject) => {
 			fs.readFile("pix.json", "utf-8", (err, data) => {
 				if (err) {
-					console.log(err)
-					bot.say(info.channel, `${esc}00,03 No read pix JSON! )): ${esc}04,01`)
+					console.log(err);
+					bot.say(info.channel, `${esc}00,03 No read pix JSON! )): ${esc}04,01`);
 				} else {
-					console.log("The file was read!")
+					console.log("The file was read!");
 					JSON.parse(data, (k, v) => {
 						if (k.toLowerCase() === botbr.toLowerCase()) {
-							picurl = v
-							botbr = k
+							picurl = v;
+							botbr = k;
 						}
-					})
+					});
 					if (picurl) {
-						bot.say(info.channel, `${esc}00,03 Pixies of ${botbr}: ${picurl} ${esc}04,01`)
+						bot.say(info.channel, `${esc}00,03 Pixies of ${botbr}: ${picurl} ${esc}04,01`);
 					} else {
-						bot.say(info.channel, `${esc}00,03 BotBr not pixelated! ${esc}04,01`)
+						bot.say(info.channel, `${esc}00,03 BotBr not pixelated! ${esc}04,01`);
 					}
 				}
-			})
-		})
+			});
+		});
 	},
 	
 	/**
@@ -529,8 +529,8 @@ module.exports = {
 	 *
 	 */
 	ultrachord: (info, words) => {
-		let chat_text = ultrachord.ultrachord(words)
-		if (chat_text) bot.say(info.channel, `${chat_text}`)
+		let chat_text = ultrachord.ultrachord(words);
+		if (chat_text) bot.say(info.channel, `${chat_text}`);
 	},
 
 	/**
@@ -538,8 +538,8 @@ module.exports = {
 	 *
 	 */
 	unknown: (info, words) => {
-		console.log(`${info.from} unknown command`)
-		bot.say(info.channel, `you are in need of ${info.command_prefix}help`)
+		console.log(`${info.from} unknown command`);
+		bot.say(info.channel, `you are in need of ${info.command_prefix}help`);
 	},
 
 	/**
@@ -549,20 +549,20 @@ module.exports = {
 	update_ip: (info, word) => {
 		// get public facing ip from free service
 		request('http://ipinfo.io/ip', (error, response, body) => {
-			let host_domain = `${body.trim()}:${config.http.port}`
-			memory.set('host_domain', host_domain)
-			console.log(`host domain ${host_domain} saved to memory`)
-			let request_uri = `irc_bot/update_ip/${config.botb_api_key}/${host_domain}.json`
+			let host_domain = `${body.trim()}:${config.http.port}`;
+			memory.set('host_domain', host_domain);
+			console.log(`host domain ${host_domain} saved to memory`);
+			let request_uri = `irc_bot/update_ip/${config.botb_api_key}/${host_domain}.json`;
 			botb_api.request(request_uri).then(data => {
-				console.log('battleofthebits.org response:')
-				console.log(data)
-				bot.say(info.channel, 'irc bot host domain updated')
+				console.log('battleofthebits.org response:');
+				console.log(data);
+				bot.say(info.channel, 'irc bot host domain updated');
 			}, error => {
-				let response = 'battleofthebits.org domain update error'
-				console.log(response)
-				bot.say(info.channel, response)
-			})
-		})
+				let response = 'battleofthebits.org domain update error';
+				console.log(response);
+				bot.say(info.channel, response);
+			});
+		});
 	},
 
 	/**
@@ -570,8 +570,8 @@ module.exports = {
 	 *
 	 */
 	uptime: (info, words) => {
-		let uptime = util.seconds_string(process.uptime())
-		bot.say(info.channel, `${config.bot_name} has been running for ${uptime}`)
+		let uptime = util.seconds_string(process.uptime());
+		bot.say(info.channel, `${config.bot_name} has been running for ${uptime}`);
 	},
 	
 	/**
@@ -579,7 +579,7 @@ module.exports = {
 	 *
 	 */
 	wikipedia: (info, words) => {
-		bot.say(info.channel, `https://en.wikipedia.org/w/index.php?search=${words.slice(1).join('%20')}`)
+		bot.say(info.channel, `https://en.wikipedia.org/w/index.php?search=${words.slice(1).join('%20')}`);
 	},
 
 	/**
@@ -591,19 +591,19 @@ module.exports = {
 		// matching a search query, using jangler's API key
 		let req_url = 'https://www.googleapis.com/youtube/v3/search?key=' +
 			'AIzaSyDR5xOXOViVLMUyWWJM1iQefTaRiKkJfqs&part=id&maxResults=1&q=' +
-			querystring.escape(words.slice(1).join(' ')) + '&type=video'
+			querystring.escape(words.slice(1).join(' ')) + '&type=video';
 		https.request(req_url, resp => {
 			resp.on('data', data => {
 				// parse API response and give video URL (if video exists)
-				let results = JSON.parse(data)
+				let results = JSON.parse(data);
 				try {
-					bot.say(info.channel, `https://youtu.be/${results['items'][0]['id']['videoId']}`)
+					bot.say(info.channel, `https://youtu.be/${results['items'][0]['id']['videoId']}`);
 				} 
 				catch(e) {
-					bot.say(info.channel, 'no youtorb results U:')
+					bot.say(info.channel, 'no youtorb results U:');
 				}
-			})
-		}).end()
+			});
+		}).end();
 	},
 
-}
+};
