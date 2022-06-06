@@ -107,6 +107,19 @@ module.exports = {
 			bot.say(info.channel, 'BotBr no found! =0')
 		})
 	},
+	
+	/**
+	 * 	choice
+	 *
+	 */
+	choice: (info, words) => {
+		let choice_words = words.slice(1).join(' ')
+	    
+		if (choice_words.includes(";")) {
+			let choices = choice_words.split(";")
+			bot.say(info.channel, choices[Math.floor(Math.random() * choices.length)].trim())
+		} else {bot.say(info.channel, "there's nothing to choose from! =X")}
+	},
 
 	/**
 	 *	entry
