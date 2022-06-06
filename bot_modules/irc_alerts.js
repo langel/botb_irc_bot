@@ -7,14 +7,14 @@
  * - when an XHB ends, and voting begins
  */
 
-var https = require('https')
-var querystring = require('querystring')
-var request = require('request')
+var https = require('https');
+var querystring = require('querystring');
+var request = require('request');
 
-var bot = require('./irc_bot.js')
-var commands = require('./irc_commands.js')
-var botb_api = require('./botb_api.js')
-var config = require('./config.js')
+var bot = require('./irc_bot.js');
+var commands = require('./irc_commands.js');
+var botb_api = require('./botb_api.js');
+var config = require('./config.js');
 
 // keep track of all timeout ids
 let timeouts = [];
@@ -82,7 +82,7 @@ let announce = {
     // remove battle from battleAlerts
     delete battleAlerts[battle.id];
   }
-}
+};
 
 let setXHBTimeouts = () => {
   console.log("updating XHB timeouts!!");
@@ -109,7 +109,7 @@ let setXHBTimeouts = () => {
             pre: false, start: false,
             end30: false, end10: false, end2: false,
             end: false
-          }
+          };
         }
 
         if (battle.period === "warmup") {
@@ -183,4 +183,4 @@ let setXHBTimeouts = () => {
 
 module.exports = {
   setXHBTimeouts: setXHBTimeouts
-}
+};
