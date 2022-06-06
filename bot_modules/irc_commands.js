@@ -182,6 +182,7 @@ module.exports = {
 			imdb:       `${usage} ${prefix}imdb <query> | Returns a URL of the IMDB search of your query.`,
 			levelup:    `${usage} ${prefix}levelup <botbr> | Returns BotBr's current level, current points, calculated points per year, estimated time to level up, estimated time to reach GRAND WIZARD STATUS of level 33, current boons, and calculated boons per year.`,
 			pix:        `${usage} ${prefix}pix <botbr> | Returns a URL of a picture of the BotBr in the flesh, if one has been submitted.`,
+			roll:       `${usage} ${prefix}roll <(c'd')n(+/-m)> | Returns a calculated dice roll with modifier from a 2d10+5 style notation. Dice count and modifier are optional. Defaults to 1d10.`,
 			top:        `${usage} ${prefix}top [class] | Returns list of top BotBrs over all or by class.`,
 			ultrachord: `${usage} ${prefix}ultrachord [timbre] <notes> | Returns a URL to a .wav file of the notes and timbre provided, in a format such as 'sawtooth C4 E4 Bb4 D#5'. Available notes range from C0 to B7. If number is omitted it will pick octave " + ultrachord.default_octave + ". Default timbre is sine. Available timbres are sine, sawtooth, square, triangle, and pluck.`,
 			uptime:     `${usage} ${prefix}uptime | Displays how long the bot has been running.`,
@@ -208,7 +209,6 @@ module.exports = {
 		}
 		// finally, give usage definition
 		if (typeof command_help_text[command_help] !== 'undefined') {
-			// XXX this could dynamically list and append aliases of a command
 			response = command_help_text[command_help]
 		} 
 		else {
@@ -488,63 +488,40 @@ module.exports = {
 	 *
 	 */
 	roll: (info, words) => {
-		let dice_notation = words.slice(1).join(" ").toLowerCase();
-		if (dice_notation.includes("d")) {
-			if (dice_notation.startsWith("d")) {dice_notation = "1" + dice_notation; var dice_amount = 1}
-			else {var dice_amount = parseInt(dice_notation.split("d")[0])};
-
-			let sum = 0;
-		
-			var dice_amount_length = dice_amount.toString().length + 1;
-		
-			if (dice_notation.includes("+")) {
-				let add_to_sum = dice_notation.split("+")[1];
-		    
-				if (add_to_sum.includes("d")) {
-					if (add_to_sum.startsWith("d")) add_to_sum = "1" + add_to_sum;
-					let subdice_amount = parseInt(add_to_sum.split("d")[0]);;
-					let subnumber_limit = parseInt(add_to_sum.split("d")[1]);
-					
-					if (Math.random() > 0.5 && dice_amount > 1) dice_amount -= 1;
-					sum += dice_amount * (Math.floor(Math.random() * number_limit) + 1);
-				}
-				else {
-					sum += parseInt(add_to_sum);
-				};
-		    
-				var number_limit = parseInt(dice_notation.split("+")[0].slice(dice_amount_length));
-			}
-			else if (dice_notation.includes("-")) {
-				let subtract_to_sum = dice_notation.split("-")[1];
-		    
-				if (subtract_to_sum.includes("d")) {
-					if (subtract_to_sum.startsWith("d")) subtract_to_sum = "1" + subtract_to_sum;
-					let subdice_amount = parseInt(subtract_to_sum.split("d")[0]);
-					let subnumber_limit = parseInt(subtract_to_sum.split("d")[1]);
-					
-					if (Math.random() > 0.5 && dice_amount > 1) dice_amount -= 1;
-					sum -= dice_amount * (Math.floor(Math.random() * number_limit) + 1);
-				}
-				else {
-					sum -= parseInt(subtract_to_sum);
-				};
-		    
-				var number_limit = parseInt(dice_notation.split("-")[0].slice(dice_amount_length));
-			}
-			else {var number_limit = parseInt(dice_notation.slice(dice_amount_length));};
-		
-			// deleting the for loop, makes it less random, but more efficient
-			if (Math.random() > 0.5 && dice_amount > 1) dice_amount -= 1;
-			sum += dice_amount * (Math.floor(Math.random() * number_limit) + 1);
-			
-			var chat_text = `${info.from} rolls ` + sum + "!";
+		let dice_notation = "10";
+		if (words.length > 1) dice_notation = words.slice(1).join(" ").toLowerCase();
+		const dice_regex = /([0-9]+d)?([0-9]+)((-|\+){1}[0-9]+)?/;
+		if (!dice_notation.match(dice_regex)) {
+			bot.say(info.channel, 'santyx error |:: try 1d10+5 style notation; count and modifier optional');
+			return;
 		}
-		else {
-			if (dice_notation == "") dice_notation = "10";
-			var chat_text = `${info.from} rolls ` + (Math.floor(Math.random() * parseInt(dice_notation)) + 1) + "!";
-		};
-	    
-		bot.say(info.channel, `${chat_text}`);
+		let dice_size = 10;
+		let dice_count = 1;
+		let dice_max_count = 1323;
+		let dice_modifier = 0;
+		if (dice_notation.includes('d')) {
+			if (!dice_notation.startsWith('d')) dice_count = parseInt(dice_notation.split('d')[0]);
+			dice_notation = dice_notation.split('d')[1];
+		}
+		if (dice_notation.includes('+')) {
+			dice_modifier = parseInt(dice_notation.split('+')[1]);
+			dice_notation = dice_notation.split('+')[0];
+		}
+		if (dice_notation.includes('-')) {
+			dice_modifier = -parseInt(dice_notation.split('-')[1]);
+			dice_notation = dice_notation.split('-')[0];
+		}
+		if (dice_notation != '') dice_size = parseInt(dice_notation);
+		if (dice_count > dice_max_count) {
+			bot.say(info.channel, 'max dice count: ' + dice_max_count);
+			return;
+		}
+		let result = 0;
+		for (let i = 0; i < dice_count; i++) {
+			result += Math.ceil(Math.random() * dice_size);
+		}
+		result += dice_modifier;
+		bot.say(info.channel, `${info.from} rolls ${result}!`);
 	},
 
 	/**

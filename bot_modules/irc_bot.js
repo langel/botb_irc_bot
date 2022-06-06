@@ -28,6 +28,7 @@ var commands_aliases = {
 	b: 'battle',
 	chord: 'ultrachord',
 	compo: 'battle',
+	dice: 'roll',
 	g: 'google',
 	gi: 'image',
 	gif: 'giphy',
