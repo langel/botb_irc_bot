@@ -1,5 +1,5 @@
-var curl = require('curl')
-var botb_api_root = 'https://battleofthebits.org/api/v1/'
+var curl = require('curl');
+var botb_api_root = 'https://battleofthebits.org/api/v1/';
 
 module.exports = {
 
@@ -14,22 +14,22 @@ module.exports = {
 				(err, response, body) => {
 					let obj;
 					try {
-						let stat = response.statusCode
+						let stat = response.statusCode;
 						console.log('stat : ' + stat);
 						if (stat != '200') {
-							reject(response)
-							return
+							reject(response);
+							return;
 						}
 						obj = JSON.parse(body);
 					}
 					catch(e) {
 						reject(response);
-						return
+						return;
 					}
-					resolve(obj)
+					resolve(obj);
 				}
-			)
-		})
+			);
+		});
 	},
 
 	post: (request_url, body) => {
@@ -46,23 +46,23 @@ module.exports = {
 				(err, response, body) => {
 					let obj;
 					try {
-						let stat = response.statusCode
+						let stat = response.statusCode;
 						console.log('stat : ' + stat);
 						if (stat != '200') {
-							reject(response)
-							return
+							reject(response);
+							return;
 						}
 						obj = JSON.parse(body);
 					}
 					catch(e) {
 						reject(response);
-						return
+						return;
 					}
-					resolve(obj)
+					resolve(obj);
 				}
-			)
+			);
 		});
 	},
 
 
-}
+};
