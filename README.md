@@ -12,7 +12,7 @@ You also need the LAME, SoX, and curl packages. On Ubuntu/Debian, you can use th
 
 ``apt-get install lame sox curl``
 
-Last tested to work on node v10.x!
+Last tested to work on node v12.x!
 
 # Configuration
 Copy bot_modules/config_example.js to bot_modules/config.js and edit as you deem necessary.
