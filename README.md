@@ -18,9 +18,7 @@ Last tested to work on node v10.x!
 Copy bot_modules/config_example.js to bot_modules/config.js and edit as you deem necessary.
 
 # Contributing
-Keep in mind ES6 standards when developing to keep things consistent.
+ES6 with semicolons please ;)
 
-Read up on the features here --> http://es6-features.org
-
-
-testing webhook
+`npm run lint` before you commit
+`npm run lint:fix` will attempt autofixings
