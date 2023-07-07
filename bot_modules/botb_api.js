@@ -1,5 +1,5 @@
 var curl = require('curl');
-var botb_api_root = 'https://battleofthebits.org/api/v1/';
+var botb_api_root = 'https://battleofthebits.com/api/v1/';
 
 module.exports = {
 
