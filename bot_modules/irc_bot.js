@@ -26,6 +26,7 @@ var channel_blocks = {
 
 var commands_aliases = {
 	b: 'battle',
+	batol: 'battle',
 	chord: 'ultrachord',
 	compo: 'battle',
 	dice: 'roll',
