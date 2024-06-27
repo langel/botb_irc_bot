@@ -49,7 +49,7 @@ module.exports = {
 		} 
 		else {
 			// pagination: 0 page, limit 3
-			botb_api.request('battle/search/' + title + '/0/3').then(data => {
+			botb_api.request('battle/search/' + encodeURIComponent(title) + '/0/3').then(data => {
 				if (data.length == 0) throw 'garbage';
 				let out = [];
 				data.forEach(battle_object => {
@@ -80,7 +80,7 @@ module.exports = {
 			return;
 		}
 
-		botb_api.request('botbr/search/' + name).then(data => {
+		botb_api.request('botbr/search/' + encodeURIComponent(name)).then(data => {
 			if (data.length == 0) throw "No botbr search data returned!";
 			let botbr;
 			if (data.length > 1) {
@@ -118,7 +118,7 @@ module.exports = {
 		if (typeof title === 'undefined' || title.length < 2) {
 			p = botb_api.request(`entry/random`);
 		} else {
-			p = botb_api.request(`entry/search/${title}`);
+			p = botb_api.request(`entry/search/${encodeURIComponent(title)}`);
 		}
 
 		p.then(data => {
@@ -320,7 +320,7 @@ module.exports = {
 		// ==================
 		let username = words.length > 2 ? words.slice(1).join(' ') : words[1];
 		// Get a list of botbrs using the API.
-		botb_api.request(`botbr/list?filters=name~${username}`).then(data => {
+		botb_api.request(`botbr/list?filters=name~${encodeURIComponent(username)}`).then(data => {
 			let botbr  = data[0];
 			let level  = parseFloat(botbr.level);
 			let points = parseFloat(botbr.points);
@@ -358,7 +358,7 @@ module.exports = {
 			return;
 		}
 
-		botb_api.request(`lyceum_article/search/${title}`).then(data => {
+		botb_api.request(`lyceum_article/search/${encodeURIComponent(title)}`).then(data => {
 			if (data.length == 0) throw "No lyceum data returned!";
 
 			let article;
@@ -416,7 +416,7 @@ module.exports = {
 		if (typeof filter === 'undefined' || filter.length < 2) {
 			p = botb_api.request(`botbr/list/0/5?sort=points&desc=true`);
 		} else {
-			p = botb_api.request(`botbr/list/0/5?filters=class~${filter}&sort=points&desc=true`);
+			p = botb_api.request(`botbr/list/0/5?filters=class~${encodeURIComponent(filter)}&sort=points&desc=true`);
 		}
 
 		let response = '';
