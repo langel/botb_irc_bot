@@ -137,13 +137,14 @@ module.exports = {
 					return;
 				}
 				let hour_count = get_xhb_type(battle.cover_art_url);
-				let ohb_info = hour_count.toUpperCase() + " \"" + battle.title + "\" :: ";
-				if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left;
-				if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left;
-				if (battle.period == 'vote') ohb_info += "Vorting Tiem";
-				ohb_info += " :: Format: " + battle.format_tokens[0];
-				ohb_info += " :: <" + battle.profile_url.match(url_regex) + "> ";
-				bot.say(info.channel, ohb_info);
+				let ohb_info = [];
+				ohb_info.push(`${hour_count.toUpperCase()} "${battle.title}"`);
+				if (battle.period === 'warmup') ohb_info.push("Starting in: " + battle.period_end_time_left);
+				if (battle.period === 'entry') ohb_info.push("Time left: " + battle.period_end_time_left);
+				if (battle.period === 'vote') ohb_info.push("Vorting Tiem");
+				ohb_info.push("Format: " + battle.format_tokens[0]);
+				ohb_info.push(`<${battle.profile_url.match(url_regex)}>`);
+				bot.say(info.channel, ohb_info.join(' :: '));
 			});
 		}).catch( error => {
 			bot.say(info.channel, 'We ALL love XHBs, but none is currently runningz :)))))))');
@@ -227,6 +228,7 @@ module.exports = {
 			image:      `${usage} ${prefix}image <query> | Returns a URL of the Google Images search of your query.`,
 			imdb:       `${usage} ${prefix}imdb <query> | Returns a URL of the IMDB search of your query.`,
 			levelup:    `${usage} ${prefix}levelup <botbr> | Returns BotBr's current level, current points, calculated points per year, estimated time to level up, estimated time to reach GRAND WIZARD STATUS of level 33, current boons, and calculated boons per year.`,
+			major:      `${usage} ${prefix}major | Returns a list of currently ongoing Major Battles.`,
 			ohb:        `${usage} ${prefix}ohb | Returns a list of currently ongoing XHBs and those which are already scheduled for the future.`,
 			pix:        `${usage} ${prefix}pix <botbr> | Returns a URL of a picture of the BotBr in the flesh, if one has been submitted.`,
 			roll:       `${usage} ${prefix}roll <(c'd')n(+/-m)> | Returns a calculated dice roll with modifier from a 2d10+5 style notation. Dice count and modifier are optional. Defaults to 1d10.`,
@@ -435,19 +437,42 @@ module.exports = {
 		});
 	},
 
+	major: (info, words) => {
+		botb_api.request('battle/current').then(data => {
+			data = data.filter(battle => parseInt(battle.type) !== 3);
+			if (data.length === 0) throw "No major data returned!";
+			data.forEach(battle => {
+				let format_str = battle.format_tokens.length > 1 ? 'Formats' : 'Format';
+				let battle_info = [];
+				battle_info.push(`Major "${battle.title}"`);
+				battle_info.push(`Current Period: ${battle.period} period`);
+				if (battle.period === 'warmup') battle_info.push("Starting in: " + battle.period_end_time_left);
+				if (battle.period === 'entry') battle_info.push("Time left: " + battle.period_end_time_left);
+				if (battle.period === 'vote') battle_info.push("Vorting Tiem");
+				battle_info.push(`${format_str}: ${battle.format_tokens.join(', ')}`);
+				battle_info.push(`<${battle.profile_url.match(url_regex)}>`);
+				bot.say(info.channel, battle_info.join(' :: '));
+			});
+		}).catch( error => {
+			bot.say(info.channel, 'We ALL love Major Battles, but none is currently runningz :)))))))');
+			console.log(error);
+		});
+	},
+
 	ohb: (info, words) => {
 		botb_api.request('battle/current').then(data => {
 			data = data.filter(battle => parseInt(battle.type) === 3);
 			if (data.length === 0) throw "No ohb data returned!";
 			data.forEach(battle => {
 				let hour_count = get_xhb_type(battle.cover_art_url);
-				let ohb_info = hour_count.toUpperCase() + " \"" + battle.title + "\" :: ";
-				if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left;
-				if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left;
-				if (battle.period == 'vote') ohb_info += "Vorting Tiem";
-				ohb_info += " :: Format: " + battle.format_tokens[0];
-				ohb_info += " :: <" + battle.profile_url.match(url_regex) + "> ";
-				bot.say(info.channel, ohb_info);
+				let ohb_info = [];
+				ohb_info.push(`${hour_count.toUpperCase()} "${battle.title}"`);
+				if (battle.period === 'warmup') ohb_info.push("Starting in: " + battle.period_end_time_left);
+				if (battle.period === 'entry') ohb_info.push("Time left: " + battle.period_end_time_left);
+				if (battle.period === 'vote') ohb_info.push("Vorting Tiem");
+				ohb_info.push("Format: " + battle.format_tokens[0]);
+				ohb_info.push(`<${battle.profile_url.match(url_regex)}>`);
+				bot.say(info.channel, ohb_info.join(' :: '));
 			});
 		}).catch( error => {
 			bot.say(info.channel, 'We ALL love XHBs, but none is currently runningz :)))))))');
