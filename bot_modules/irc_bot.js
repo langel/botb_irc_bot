@@ -29,6 +29,7 @@ var commands_aliases = {
 	batol: 'battle',
 	chord: 'ultrachord',
 	compo: 'battle',
+	cxhb: 'cohb',
 	dice: 'roll',
 	g: 'google',
 	gi: 'image',
@@ -220,7 +221,9 @@ module.exports = {
 //			var message = text.replace(/\u0003[0-9]+/g, '');
 			var message = text;
 			if (from !== 'botbd') message = '<' + from + '> ' + message;
-			botb_api.post('battle/log_from_bot', 'message=' + encodeURIComponent(message));
+			if (!config.irc.debug) {
+				botb_api.post('battle/log_from_bot', 'message=' + encodeURIComponent(message));
+			}
 		});
 	},
 

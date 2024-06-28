@@ -30,9 +30,19 @@ function battle_data_to_response(data) {
 	return response;
 }
 
+function get_xhb_type(cover_art_url) {  // battle/current does not return hours of xhbs, so this workaround has to be done to determine the hour-count of an xhb
+	for (const xhb_type of ['ohb', '2hb', '4hb']) {
+		if (cover_art_url.search(xhb_type) > 0) {
+			return xhb_type;
+		}
+	}
+	return 'XHB';
+}
+
 
 module.exports = {
 	url_regex: url_regex,
+	get_xhb_type: get_xhb_type,
 	/**
 	 *	battle
 	 *
@@ -108,6 +118,29 @@ module.exports = {
 		});
 	},
 
+	cohb: (info, words) => {
+		botb_api.request('battle/current').then(data => {
+			data = data.filter(battle => parseInt(battle.type) === 3);
+			if (data.length === 0) throw "No ohb data returned!";
+			data.forEach(battle => {
+				if (battle.period === 'warmup' && battle.period_end_seconds > 900) {
+					return;
+				}
+				let hour_count = get_xhb_type(battle.cover_art_url);
+				let ohb_info = hour_count.toUpperCase() + " \"" + battle.title + "\" :: ";
+				if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left;
+				if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left;
+				if (battle.period == 'vote') ohb_info += "Vorting Tiem";
+				ohb_info += " :: Format: " + battle.format_tokens[0];
+				ohb_info += " :: <" + battle.profile_url.match(url_regex) + "> ";
+				bot.say(info.channel, ohb_info);
+			});
+		}).catch( error => {
+			bot.say(info.channel, 'We ALL love XHBs, but none is currently runningz :)))))))');
+			console.log(error);
+		});
+	},
+
 	/**
 	 *	entry
 	 *
@@ -175,6 +208,7 @@ module.exports = {
 		let command_help_text = {
 			battle:     `${usage} ${prefix}battle | Returns a list of the current battles taking place.`,
 			botbr:      `${usage} ${prefix}botbr <botbr> | Returns information about BotBrs whose name matched the query.`,
+			cohb:       `${usage} ${prefix}cohb | Returns a list of currently ongoing XHBs and those which start in the next 15 minutes.`,
 			entry:      `${usage} ${prefix}entry <name> | Returns information about a specific entry.`,
 			entry_id:   `${usage} ${prefix}entry_id <id> | Returns information about a specific entry by id.`,
 			google:     `${usage} ${prefix}google <query> | Returns a URL of the Google search of your query.`,
@@ -182,6 +216,7 @@ module.exports = {
 			image:      `${usage} ${prefix}image <query> | Returns a URL of the Google Images search of your query.`,
 			imdb:       `${usage} ${prefix}imdb <query> | Returns a URL of the IMDB search of your query.`,
 			levelup:    `${usage} ${prefix}levelup <botbr> | Returns BotBr's current level, current points, calculated points per year, estimated time to level up, estimated time to reach GRAND WIZARD STATUS of level 33, current boons, and calculated boons per year.`,
+			ohb:        `${usage} ${prefix}ohb | Returns a list of currently ongoing XHBs and those which are already scheduled for the future.`,
 			pix:        `${usage} ${prefix}pix <botbr> | Returns a URL of a picture of the BotBr in the flesh, if one has been submitted.`,
 			roll:       `${usage} ${prefix}roll <(c'd')n(+/-m)> | Returns a calculated dice roll with modifier from a 2d10+5 style notation. Dice count and modifier are optional. Defaults to 1d10.`,
 			top:        `${usage} ${prefix}top [class] | Returns list of top BotBrs over all or by class.`,
@@ -340,6 +375,7 @@ module.exports = {
 			let level33 = util.days_to_fulldate(days_until_level33);
 			let response = 	`Points: ${points} - Level: ${botbr.level}` +
 				` - Points per year: ${Math.round(points_per_day * 365)}` +
+				` - Points to next level: ${points_array[level + 1] - points}` +
 				` - Next level ETA: ${levelup} - for Level 33: ${level33}` +
 				` - Boons: ${boons}, Boons per year: ${Math.round(boons_per_day * 365)}`;
 			bot.say(info.channel, response);
@@ -354,7 +390,7 @@ module.exports = {
 	 */
 	lyceum: (info, words) => {
 		let title = words.slice(1).join(' ');
-		if (typeof title === 'undefined' || title.length < 3) {
+		if (typeof title === 'undefined' || title.length < 1) {
 			bot.say(info.channel, "https://battleofthebits.com/lyceum/");
 			return;
 		}
@@ -393,7 +429,8 @@ module.exports = {
 			data = data.filter(battle => parseInt(battle.type) === 3);
 			if (data.length === 0) throw "No ohb data returned!";
 			data.forEach(battle => {
-				let ohb_info = "OHB \"" + battle.title + "\" :: ";
+				let hour_count = get_xhb_type(battle.cover_art_url);
+				let ohb_info = hour_count.toUpperCase() + " \"" + battle.title + "\" :: ";
 				if (battle.period == 'warmup') ohb_info += "Starting in: " + battle.period_end_time_left;
 				if (battle.period == 'entry') ohb_info += "Time left: " + battle.period_end_time_left;
 				if (battle.period == 'vote') ohb_info += "Vorting Tiem";
@@ -402,7 +439,7 @@ module.exports = {
 				bot.say(info.channel, ohb_info);
 			});
 		}).catch( error => {
-			bot.say(info.channel, 'We ALL love OHBs, but none is currently runningz :)))))))');
+			bot.say(info.channel, 'We ALL love XHBs, but none is currently runningz :)))))))');
 			console.log(error);
 		});
 	},
