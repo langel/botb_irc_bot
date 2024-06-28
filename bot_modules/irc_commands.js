@@ -193,12 +193,22 @@ module.exports = {
 	},
 
 	format: (info, words) => {
-		let p = botb_api.request(`format/random`);
-		p.then(data => {
-			bot.say(info.channel, `${data[0].title} (${data[0].token}) -- ${data[0].medium} format (${data[0].point_class} Points) -- ${data[0].description}`);
+		let format_result;
+		if (words.slice(1).length > 0) {
+			format_result = botb_api.request('format/list?filters=token~' + words.slice(1).join(''));
+			if (format_result.length === 0) {
+				bot.say(info.channel, `No such format, n00b !!! D=`);
+				return;
+			}
+		} else {
+			format_result = botb_api.request(`format/random`);
+		}
+		format_result.then(data => {
+			bot.say(info.channel, `${data[0].title} -- ${data[0].medium} format (${data[0].point_class} Points) -- ${data[0].description} -- https://battleofthebits.com/lyceum/View/${data[0].token}+%28format%29`);
 		}).catch(error => {
 			bot.say(info.channel, `No random format found, everyone go home!!`);
 		});
+
 	},
 
 	/**
@@ -232,7 +242,7 @@ module.exports = {
 			cohb:       `${usage} ${prefix}cohb | Returns a list of currently ongoing XHBs and those which start in the next 15 minutes.`,
 			entry:      `${usage} ${prefix}entry <name> | Returns information about a specific entry.`,
 			entry_id:   `${usage} ${prefix}entry_id <id> | Returns information about a specific entry by id.`,
-			format:     `${usage} ${prefix}format | Returns a random BotB format.`,
+			format:     `${usage} ${prefix}format | Returns a random BotB format or the link to the lyceum for a given format token.`,
 			google:     `${usage} ${prefix}google <query> | Returns a URL of the Google search of your query.`,
 			help:       `${usage} ${prefix}help [command] | Returns a list of commands, or specific help with a command.`,
 			image:      `${usage} ${prefix}image <query> | Returns a URL of the Google Images search of your query.`,
