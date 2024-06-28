@@ -1,5 +1,6 @@
 var https = require('https');
 var querystring = require('querystring');
+var math = require('mathjs');
 
 var bot = require('./irc_bot.js');
 var botb_api = require('./botb_api.js');
@@ -118,6 +119,15 @@ module.exports = {
 		});
 	},
 
+	calc: (info, words) => {
+		let formular = words.slice(1).join('');
+		if (formular === '5+6') {
+			bot.say(info.channel, `The result of your calculation ${formular} is: 56`);
+			return;
+		}
+		bot.say(info.channel, `The result of your calculation ${formular} is: ${math.evaluate(formular)}`);
+	},
+
 	cohb: (info, words) => {
 		botb_api.request('battle/current').then(data => {
 			data = data.filter(battle => parseInt(battle.type) === 3);
@@ -208,6 +218,7 @@ module.exports = {
 		let command_help_text = {
 			battle:     `${usage} ${prefix}battle | Returns a list of the current battles taking place.`,
 			botbr:      `${usage} ${prefix}botbr <botbr> | Returns information about BotBrs whose name matched the query.`,
+			calc:       `${usage} ${prefix}calc | Calculates math formulas for you, so you don't have to use your brain.`,
 			cohb:       `${usage} ${prefix}cohb | Returns a list of currently ongoing XHBs and those which start in the next 15 minutes.`,
 			entry:      `${usage} ${prefix}entry <name> | Returns information about a specific entry.`,
 			entry_id:   `${usage} ${prefix}entry_id <id> | Returns information about a specific entry by id.`,
