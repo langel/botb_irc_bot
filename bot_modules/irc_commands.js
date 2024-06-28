@@ -176,6 +176,7 @@ module.exports = {
 			battle:     `${usage} ${prefix}battle | Returns a list of the current battles taking place.`,
 			botbr:      `${usage} ${prefix}botbr <botbr> | Returns information about BotBrs whose name matched the query.`,
 			entry:      `${usage} ${prefix}entry <name> | Returns information about a specific entry.`,
+			entry_id:   `${usage} ${prefix}entry_id <id> | Returns information about a specific entry by id.`,
 			google:     `${usage} ${prefix}google <query> | Returns a URL of the Google search of your query.`,
 			help:       `${usage} ${prefix}help [command] | Returns a list of commands, or specific help with a command.`,
 			image:      `${usage} ${prefix}image <query> | Returns a URL of the Google Images search of your query.`,
