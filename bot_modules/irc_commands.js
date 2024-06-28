@@ -192,6 +192,15 @@ module.exports = {
 		});
 	},
 
+	format: (info, words) => {
+		let p = botb_api.request(`format/random`);
+		p.then(data => {
+			bot.say(info.channel, `${data[0].title} (${data[0].token}) -- ${data[0].medium} format (${data[0].point_class} Points) -- ${data[0].description}`);
+		}).catch(error => {
+			bot.say(info.channel, `No random format found, everyone go home!!`);
+		});
+	},
+
 	/**
 	 *	giphy
 	 *
@@ -223,6 +232,7 @@ module.exports = {
 			cohb:       `${usage} ${prefix}cohb | Returns a list of currently ongoing XHBs and those which start in the next 15 minutes.`,
 			entry:      `${usage} ${prefix}entry <name> | Returns information about a specific entry.`,
 			entry_id:   `${usage} ${prefix}entry_id <id> | Returns information about a specific entry by id.`,
+			format:     `${usage} ${prefix}format | Returns a random BotB format.`,
 			google:     `${usage} ${prefix}google <query> | Returns a URL of the Google search of your query.`,
 			help:       `${usage} ${prefix}help [command] | Returns a list of commands, or specific help with a command.`,
 			image:      `${usage} ${prefix}image <query> | Returns a URL of the Google Images search of your query.`,
