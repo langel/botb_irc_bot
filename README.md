@@ -8,9 +8,9 @@ To install the prerequisites:
 
 ``npm install``
 
-You also need the LAME, SoX, curl and math.js packages. On Ubuntu/Debian, you can use the following command:
+You also need the LAME, SoX, and curl packages. On Ubuntu/Debian, you can use the following command:
 
-``apt-get install lame sox curl mathjs``
+``apt-get install lame sox curl``
 
 Last tested to work on node v12.x!
 
