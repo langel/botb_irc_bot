@@ -33,7 +33,7 @@ let announce = {
     battleAlerts[battle.id].start = true;
 
     let allFormats = battle.format_tokens.join(", "); // just in case XHBs contain multiple formats in future
-    let announceString = `XHB started! g0g0g0g0g0! :: ${battle.title} :: Format ${allFormats} :: <${battle.profile_url.match(commands.url_regex)}>`;
+    let announceString = `${battle.hour_count} started! g0g0g0g0g0! :: ${battle.title} :: Format ${allFormats} :: <${battle.profile_url.match(commands.url_regex)}>`;
     bot.say(alertChannel, announceString);
   },
 
@@ -43,7 +43,7 @@ let announce = {
 
     let minutes = Math.round((startTime / 1000) / 60);
     let allFormats = battle.format_tokens.join(", ");
-    let announceString = `XHB will begin in ${minutes} minutes! :: ${battle.title} :: Format ${allFormats} ${roleXHBr}`;
+    let announceString = `${battle.hour_count} will begin in ${minutes} minutes! :: ${battle.title} :: Format ${allFormats} ${roleXHBr}`;
     bot.say(alertChannel, announceString);
   },
 
@@ -64,9 +64,9 @@ let announce = {
     }
 
     let allFormats = battle.format_tokens.join(", ");
-    let announceString = `${minutes} minutes left! @ XHB :: ${battle.title} :: Format ${allFormats}`;
+    let announceString = `${minutes} minutes left! @ ${battle.hour_count} :: ${battle.title} :: Format ${allFormats}`;
     if (battleAlerts[battle.id].end2) {
-      announceString = `${minutes} minutes left! @ XHB !!! I suggest you R teh uploading !!!! :: ${battle.title} :: Format ${allFormats}`;
+      announceString = `${minutes} minutes left! @ ${battle.hour_count} !!! I suggest you R teh uploading !!!! :: ${battle.title} :: Format ${allFormats}`;
     }
     bot.say(alertChannel, announceString);
   },
@@ -76,7 +76,7 @@ let announce = {
     battleAlerts[battle.id].end = true;
 
     let allFormats = battle.format_tokens.join(", ");
-    let announceString = `Yer XHB time is teh up. slackerz. :: ${battle.title} :: Format ${allFormats}`;
+    let announceString = `Yer ${battle.hour_count} time is teh up. slackerz. :: ${battle.title} :: Format ${allFormats}`;
     bot.say(alertChannel, announceString);
 
     // remove battle from battleAlerts
@@ -98,6 +98,9 @@ let setXHBTimeouts = () => {
     data.forEach(battle => {
       if (battle.type === "3") {
         // this is an XHB
+
+        battle['hour_count'] = commands.get_xhb_type(battle.cover_art_url).toUpperCase();
+
         if (battle.period === "vote") {
           console.log(`battle ${battle.title} in voting phase, skipping...`);
           return;
