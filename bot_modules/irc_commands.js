@@ -130,7 +130,7 @@ module.exports = {
 
 	cohb: (info, words) => {
 		botb_api.request('battle/current').then(data => {
-			data = data.filter(battle => parseInt(battle.type) === 3);
+			data = data.filter(battle => parseInt(battle.type) === 3 && battle.period !== 'warmup');
 			if (data.length === 0) throw "No ohb data returned!";
 			data.forEach(battle => {
 				if (battle.period === 'warmup' && battle.period_end_seconds > 900) {
