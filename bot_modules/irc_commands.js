@@ -130,8 +130,9 @@ module.exports = {
 
 	cohb: (info, words) => {
 		botb_api.request('battle/current').then(data => {
-			data = data.filter(battle => parseInt(battle.type) === 3 && battle.period !== 'warmup');
+			data = data.filter(battle => parseInt(battle.type) === 3);
 			if (data.length === 0) throw "No ohb data returned!";
+			let msg_posted = false;
 			data.forEach(battle => {
 				if (battle.period === 'warmup' && battle.period_end_seconds > 900) {
 					return;
@@ -144,8 +145,10 @@ module.exports = {
 				if (battle.period === 'vote') ohb_info.push("Vorting Tiem");
 				ohb_info.push("Format: " + battle.format_tokens[0]);
 				ohb_info.push(`<${battle.profile_url.match(url_regex)}>`);
+				msg_posted = true;
 				bot.say(info.channel, ohb_info.join(' :: '));
 			});
+			if (!msg_posted) throw "No ohb message posted!";
 		}).catch( error => {
 			bot.say(info.channel, 'We ALL love XHBs, but none is currently runningz :)))))))');
 			console.log(error);
