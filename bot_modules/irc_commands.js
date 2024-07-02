@@ -199,17 +199,19 @@ module.exports = {
 		let format_result;
 		if (words.slice(1).length > 0) {
 			format_result = botb_api.request('format/list?filters=token~' + words.slice(1).join(''));
-			if (format_result.length === 0) {
-				bot.say(info.channel, `No such format, n00b !!! D=`);
-				return;
-			}
 		} else {
 			format_result = botb_api.request(`format/random`);
 		}
 		format_result.then(data => {
-			bot.say(info.channel, `${data[0].title} -- ${data[0].medium} format (${data[0].point_class} Points) -- ${data[0].description} -- https://battleofthebits.com/lyceum/View/${data[0].token}+%28format%29`);
+			if (data.length === 0) throw "No format data found";
+			let response = [];
+			response.push(data[0].title);
+			response.push(`${data[0].medium} format (${data[0].point_class} Points)`);
+			response.push(data[0].description);
+			response.push(`https://battleofthebits.com/lyceum/View/${data[0].token}+%28format%29`);
+			bot.say(info.channel, response.join(' :: '));
 		}).catch(error => {
-			bot.say(info.channel, `No random format found, everyone go home!!`);
+			bot.say(info.channel, `No such format, n00b !!! D=`);
 		});
 
 	},
