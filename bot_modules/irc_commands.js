@@ -252,6 +252,9 @@ module.exports = {
 			help:       `${usage} ${prefix}help [command] | Returns a list of commands, or specific help with a command.`,
 			image:      `${usage} ${prefix}image <query> | Returns a URL of the Google Images search of your query.`,
 			imdb:       `${usage} ${prefix}imdb <query> | Returns a URL of the IMDB search of your query.`,
+			kudos:      `${usage} ${prefix}kudos <key> | Returns kudos for a given key or a top list of keys with most/least kudos if no key is specified.`,
+			kudosamount:`${usage} ${prefix}kudosamount <amount> | Returns count of keys with given amount.`,
+			kudosrandom:`${usage} ${prefix}kudosrandom | Returns random saved key with kudos.`,
 			levelup:    `${usage} ${prefix}levelup <botbr> | Returns BotBr's current level, current points, calculated points per year, estimated time to level up, estimated time to reach GRAND WIZARD STATUS of level 33, current boons, and calculated boons per year.`,
 			major:      `${usage} ${prefix}major | Returns a list of currently ongoing Major Battles.`,
 			ohb:        `${usage} ${prefix}ohb | Returns a list of currently ongoing XHBs and those which are already scheduled for the future.`,
@@ -325,6 +328,22 @@ module.exports = {
 	 */
 	kudos: (info, words) => {
 		bot.say(info.channel, kudos.info(words));
+	},
+
+	/**
+	 *	return random saved key with kudos
+	 *
+	 */
+	kudosrandom: (info, words) => {
+		bot.say(info.channel, kudos.random(words));
+	},
+
+	/**
+	 *	return count of keys with given amount
+	 *
+	 */
+	kudosamount: (info, words) => {
+		bot.say(info.channel, kudos.amount(words));
 	},
 
 	/**
