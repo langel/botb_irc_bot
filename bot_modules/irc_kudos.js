@@ -86,7 +86,7 @@ module.exports = {
 		words.shift();
 		let count = 0;
 		let amount = parseInt(words);
-		if (isNaN(amount)) return 'yer numb0r is broken!!! D=';
+		if (isNaN(amount)) return 'yer numb0r is borked!!! D=';
 		let kudos = ram.get('kudos');
 		for (let prop in kudos) if (kudos[prop] === amount) count++;
 		return `There are currently ${count} different keys with ${amount} kudos.`;
