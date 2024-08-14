@@ -74,6 +74,24 @@ module.exports = {
 		return `${what} has no <3`;
 	},
 
+	random: words => {
+		let kudos = ram.get('kudos');
+		let keys = Object.keys(kudos);
+		let randomSelectKey = keys[keys.length * Math.random() << 0];
+		let randomSelectAmount = kudos[randomSelectKey];
+		return `${randomSelectKey} has ${randomSelectAmount} kudos`;
+	},
+
+	amount: words => {
+		words.shift();
+		let count = 0;
+		let amount = parseInt(words);
+		if (isNaN(amount)) return 'yer numb0r is borked!!! D=';
+		let kudos = ram.get('kudos');
+		for (let prop in kudos) if (kudos[prop] === amount) count++;
+		return `There are currently ${count} different keys with ${amount} kudos.`;
+	},
+
 	minus: words => process(words, 'minus'),
 	plus: words => process(words, 'plus')
 
