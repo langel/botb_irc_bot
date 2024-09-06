@@ -86,10 +86,14 @@ module.exports = {
 		words.shift();
 		let count = 0;
 		let amount = parseInt(words);
-		if (isNaN(amount)) return 'yer numb0r is borked!!! D=';
 		let kudos = ram.get('kudos');
-		for (let prop in kudos) if (kudos[prop] === amount) count++;
-		return `There are currently ${count} different keys with ${amount} kudos.`;
+		if (isNaN(amount)) {
+			count = Object.keys(kudos).length;
+			return `There are currently ${count} different keys.`;
+		} else {
+			for (let prop in kudos) if (kudos[prop] === amount) count++;
+			return `There are currently ${count} different keys with ${amount} kudos.`;
+		}
 	},
 
 	minus: words => process(words, 'minus'),
