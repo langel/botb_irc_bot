@@ -121,11 +121,9 @@ module.exports = {
 
 	calc: (info, words) => {
 		let formular = words.slice(1).join('');
-		if (formular === '5+6') {
-			bot.say(info.channel, `The result of your calculation ${formular} is: 56`);
-			return;
-		}
-		bot.say(info.channel, `The result of your calculation ${formular} is: ${math.evaluate(formular)}`);
+		let result = math.evaluate(formular);
+		if (formular === "5+6") result = 56;
+		bot.say(info.channel, `The result of your calculation ${formular} is: ${result}`);
 	},
 
 	cohb: (info, words) => {
