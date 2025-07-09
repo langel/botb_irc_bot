@@ -169,9 +169,23 @@ module.exports = {
 		p.then(data => {
 			if (data.length == 0) throw "No entry data returned!";
 
-			let entry;
+			var entry;
+
 			if (data.length == 1) entry = data[0];
-			if (data.length > 1) entry = data[Math.floor(Math.random() * data.length)];
+
+			if (data.length > 1) {
+				let minimum = 1000; // just making sure
+
+				for (let e of data) {
+					let match = e.title.replace(title, "").length;
+
+					if (match < minimum) {
+						minimum = match;
+						entry = e;
+					}
+				}
+			}
+
 			let response = `${entry.botbr.name} - ${entry.title} :: ${entry.profile_url}`;
 			bot.say(info.channel, response);
 		}).catch(error => {
