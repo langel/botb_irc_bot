@@ -44,6 +44,13 @@ module.exports = {
 	url_regex: url_regex,
 	get_xhb_type: get_xhb_type,
 	/**
+	 * agenda; returns link to battle agenda (xhbs)
+	 *
+	 */
+	agenda: (info, words) => {
+		bot.say(info.channel, 'https://blower5.github.io/botbspeedagenda/');
+	},
+	/**
 	 *	battle
 	 *
 	 */
@@ -238,6 +245,7 @@ module.exports = {
 		let prefix = config.command_prefix;
 		let usage = 'Usage:';
 		let command_help_text = {
+			agenda:     `${usage} ${prefix}agenda | Returns the link to our XHB agenda for the upcoming week.`,
 			battle:     `${usage} ${prefix}battle | Returns a list of the current battles taking place.`,
 			botbr:      `${usage} ${prefix}botbr <botbr> | Returns information about BotBrs whose name matched the query.`,
 			calc:       `${usage} ${prefix}calc | Calculates math formulas for you, so you don't have to use your brain.`,
